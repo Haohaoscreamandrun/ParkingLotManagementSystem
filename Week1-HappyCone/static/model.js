@@ -15,11 +15,11 @@ document.getElementById('submitImg').addEventListener('submit', async function(e
 
   // send it to backend
   let url = window.location.href
-  let response = fetch(url+"api/postimg", {
+  let response = await fetch(url+"api/postimg", {
     method: "POST",
     body: formData
   })
-  response = await (await response).json()
+  response = await response.json()
   console.log(response)
   // reset form
   document.getElementById('submitImg').reset();
