@@ -45,7 +45,7 @@ USER appuser
 COPY . .
 
 # Expose the port that the application listens on.
-EXPOSE 8001
+EXPOSE 8000
 
 # Run the application.
 CMD uvicorn main:app --host 0.0.0.0 --port 8000
