@@ -1,6 +1,7 @@
 from fastapi import *
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
+from s3 import upload_file
 
 app = FastAPI()
 
@@ -16,6 +17,7 @@ async def inex(request: Request):
 async def store_image(file: UploadFile, text: str = Form(...)):
   try:
     print(text, file.filename, file.content_type, file.file)
+    upload_file(file.file, file.filename, file.content_type)
     return JSONResponse(
       status_code = status.HTTP_200_OK,
       content={"message": "成功新增至資料庫"}
