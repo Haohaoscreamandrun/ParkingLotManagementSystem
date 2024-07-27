@@ -1,6 +1,7 @@
 from fastapi import *
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
+from typing import List
 from s3 import upload_file
 from RDS import insert_data, select_all
 
@@ -19,7 +20,21 @@ async def inex(request: Request):
   503: {'description': "資料庫連線失敗"}
 }, response_class=JSONResponse, summary="接收圖片與文字並存於關聯式資料庫中")
 async def store_image(file: UploadFile, text: str = Form(...)):
-  
+  ALLOWED_IMAGE_CONTENT_TYPES = {
+    'image/jpeg',
+    'image/png',
+    'image/gif',
+    'image/bmp',
+    'image/webp',
+    'image/tiff'
+  }
+  # Check if the file content type is allowed
+  if file.content_type not in ALLOWED_IMAGE_CONTENT_TYPES:
+      
+    raise HTTPException(
+        status_code=status.HTTP_400_BAD_REQUEST,
+        detail="Invalid file type. Only image files are allowed.")
+
   try:
 
     obj_name = upload_file(file.file, file.filename, file.content_type)

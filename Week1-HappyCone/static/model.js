@@ -38,11 +38,16 @@ document.getElementById('submitImg').addEventListener('submit', async function(e
 
   // send it to backend
   let url = window.location.href
-  let response = await fetch(url+"api/postimg", {
+  let respond = await fetch(url+"api/postimg", {
     method: "POST",
     body: formData
   })
-  response = await response.json()
-  // Reload the current page
-  location.reload();
+  let response = await respond.json()
+  if (!respond.ok){
+    alert(response.content)
+  } else {
+    // Reload the current page
+    location.reload();
+  }
+  
 })
