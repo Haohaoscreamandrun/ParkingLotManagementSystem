@@ -8,7 +8,6 @@ from RDS import insert_data, select_all
 app = FastAPI()
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
-app.mount("/loaderio-16fd09a270e82919c66dcefde9817800", StaticFiles(directory="loaderio-16fd09a270e82919c66dcefde9817800"), name="loader.io")
 
 @app.get('/', include_in_schema=False)
 async def inex(request: Request):
@@ -96,3 +95,8 @@ def get_data():
       status_code=stat,
       content = content
     )
+
+
+@app.get("/loaderio-16fd09a270e82919c66dcefde9817800")
+async def loaderIO():
+  return FileResponse("./static/loaderio-16fd09a270e82919c66dcefde9817800.txt", media_type="text/html")
