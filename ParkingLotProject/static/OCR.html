@@ -27,7 +27,8 @@
       height: 400px;
       margin: 10px;
     }
-    .bottom div img {
+    .bottom div img,
+    .bottom div canvas {
       max-width: calc(100% - 20px);
       max-height: calc(100% - 20px);
       margin: 10px;
@@ -41,7 +42,8 @@
       outline: none;
       border: none;
     }
-    .bottom div:first-child {
+    .bottom div:first-child,
+    .bottom div:nth-child(2) {
       margin-left: 0px;
       -webkit-box-align: center;
       -webkit-box-pack: center;
@@ -51,12 +53,18 @@
       margin-right: 0px;
     }
   </style>
+  <script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js' defer></script>
+  <script src="
+    https://cdn.jsdelivr.net/npm/opencv-browser@1.0.0/opencv.min.js
+    " defer></script>
+  <script src="../public/js/OCR.js" defer></script>
 </head>
 <body>
   <div class="container">
     <div class="upper">
       <input type="file" name="" id="">
-      <button>Start</button>
+      <button class="process">Process</button>
+      <button class="recognize">Recognize</button>
       <div class="progress"></div>
     </div>
     <div class="bottom">
@@ -64,11 +72,12 @@
         <img src="" alt="">
       </div>
       <div>
+        <canvas id="outputCanvas"></canvas>
+      </div>
+      <div>
         <textarea name="" id="" placeholder="text"></textarea>
       </div>
     </div>
   </div>
-<script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'></script>
-<script src="../public/js/OCR.js"></script>
 </body>
 </html>
