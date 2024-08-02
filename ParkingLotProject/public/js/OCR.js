@@ -20,6 +20,10 @@ process.addEventListener('click', async() => {
   try{
     // Load the image
     let mat = cv.imread(img)
+    // Gaussian Blur
+    let gaussian = new cv.Mat();
+    let ksize = new cv.Size(7, 7)
+    cv.GaussianBlur(mat, gaussian, ksize, 0)
     // Convert the image to grayscale
     let gray = new cv.Mat()
     cv.cvtColor(mat, gray, cv.COLOR_RGBA2GRAY)
@@ -38,45 +42,78 @@ process.addEventListener('click', async() => {
     // Find contours
     let contours = new cv.MatVector();
     let hierarchy = new cv.Mat();
-    cv.findContours(threshold, contours, hierarchy, cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE)
+    cv.findContours(edges, contours, hierarchy, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
 
     //Iterate through contours
+    let contoursArray = [];
     let licensePlate = null
     for (let i=0; i < contours.size(); i++){
       let contour = contours.get(i); //Retrieves the i-th contour from the MatVector. Each contour is represented as a list of points that outline the shape.
-      let rect = cv.boundingRect(contour); //Computes the smallest rectangle that encloses the contour. 
-      let aspectRatio = rect.width / rect.height; //This is useful for identifying the shape of the object. For example, a license plate might have a specific aspect ratio range.
-      if (aspectRatio > 1.8 && aspectRatio < 2.2){
-        console.log(`find ${i}`)
-        licensePlate = rect
+      contoursArray.push(contour)
+    }
+    contoursArray.sort((a, b) => cv.contourArea(b) - cv.contourArea(a))
+    let location = null
+    for (let i = 0; i < 10; i++) {
+      let contour = contoursArray[i];
+      // let rect = cv.boundingRect(contour); //Computes the smallest rectangle that encloses the contour. 
+      // let aspectRatio = rect.width / rect.height; //This is useful for identifying the shape of the object. For example, a license plate might have a specific aspect ratio range.
+      // if (aspectRatio > 1.7 && aspectRatio < 2.3){
+      //   licensePlate = rect
+      //   console.log('find one')
+      //   break
+      // }
+      let approx = new cv.Mat()
+      let epsilon = 0.01 * cv.arcLength(contour, true)
+      cv.approxPolyDP(contour, approx, epsilon, true)
+      console.log(approx.size().height)
+      if(approx.size().height == 4){
+        location = approx
         break
       }
     }
-    let roi = threshold.roi(licensePlate)
-    // Calculate new dimensions while maintaining aspect ratio
-    let maxWidth = 500; // Desired maximum width
-    let maxHeight = 400; // Desired maximum height
-
-    let originalWidth = mat.cols;
-    let originalHeight = mat.rows;
-
-    let newWidth, newHeight;
-
-    // Calculate new dimensions
-    if (originalWidth / originalHeight > maxWidth / maxHeight) {
-      newWidth = maxWidth;
-      newHeight = Math.round((maxWidth / originalWidth) * originalHeight);
+    // Log the location
+    if (location) {
+        console.log("Location: ", location.data32S);
     } else {
-      newHeight = maxHeight;
-      newWidth = Math.round((maxHeight / originalHeight) * originalWidth);
+        console.log("Location: Not found");
     }
+    // Create a blank image with the same dimensions as the original image
+    let mask = new cv.Mat.zeros(gray.rows, gray.cols, cv.CV_8UC1)
+    // Create an empty MatVector and add the location to it
+    let matVector = new cv.MatVector();
+    matVector.push_back(location);
+    // Draw contours on the mask image
+    cv.drawContours(mask, matVector, 0, new cv.Scalar(255), -1)
+    // Take bitwise AND between the original image and mask image
+    let cropped = new cv.Mat()
+    cv.bitwise_and(mat, mat, cropped, mask)
 
-    let resize = new cv.Mat()
-    let newSize = new cv.Size(newWidth, newHeight)
-    cv.resize(roi, resize, newSize, 0, 0, cv.INTER_CUBIC)
+  
+    // let roi = threshold.roi(licensePlate)
+    // // Calculate new dimensions while maintaining aspect ratio
+    // let maxWidth = 500; // Desired maximum width
+    // let maxHeight = 400; // Desired maximum height
+
+    // let originalWidth = mat.cols;
+    // let originalHeight = mat.rows;
+
+    // let newWidth, newHeight;
+
+    // // Calculate new dimensions
+    // if (originalWidth / originalHeight > maxWidth / maxHeight) {
+    //   newWidth = maxWidth;
+    //   newHeight = Math.round((maxWidth / originalWidth) * originalHeight);
+    // } else {
+    //   newHeight = maxHeight;
+    //   newWidth = Math.round((maxHeight / originalHeight) * originalWidth);
+    // }
+
+    // let resize = new cv.Mat()
+    // let newSize = new cv.Size(newWidth, newHeight)
+    // cv.resize(roi, resize, newSize, 0, 0, cv.INTER_CUBIC)
 
     // Display
-    cv.imshow('outputCanvas', resize)
+    cv.imshow('outputCanvas', cropped)
     
 
     imgURL = canvas.toDataURL('image/png')
@@ -87,8 +124,10 @@ process.addEventListener('click', async() => {
     edges.delete()
     threshold.delete()
     hierarchy.delete()
-    roi.delete();
-    resize.delete()
+    // approx.delete();
+    contours.delete();
+    // roi.delete();
+    // resize.delete()
   } catch (error){
     console.error(error)
   }

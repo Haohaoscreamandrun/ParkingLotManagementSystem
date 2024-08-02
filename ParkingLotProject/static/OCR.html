@@ -20,23 +20,23 @@
     .bottom {
       margin-top: 30px;
       display: flex;
+      flex-direction: column;
     }
     .bottom div {
-      flex: 1;
+      /* flex: 1; */
       border: 1px solid rgb(118, 118, 118);
       height: 400px;
       margin: 10px;
     }
     .bottom div img,
-    .bottom div canvas {
-      max-width: calc(100% - 20px);
-      max-height: calc(100% - 20px);
-      margin: 10px;
+    .bottom div canvas,
+    .bottom div textarea
+     {
+      width: calc(100% - 21px);
+      height: calc(100% - 21px);
     }
     .bottom div textarea {
       resize: none;
-      width: calc(100% - 21px);
-      height: calc(100% - 21px);
       padding: 10px;
       font-size: 20px;
       outline: none;
@@ -44,13 +44,11 @@
     }
     .bottom div:first-child,
     .bottom div:nth-child(2) {
-      margin-left: 0px;
       -webkit-box-align: center;
       -webkit-box-pack: center;
       display: -webkit-box;
     }
     .bottom div:last-child {
-      margin-right: 0px;
     }
   </style>
   <script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js' defer></script>
