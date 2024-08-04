@@ -4,7 +4,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException as StarletteHTTPException
 # router import
-from routers import api
+from .routers import api
 
 tags_meta = [
   {
@@ -29,14 +29,14 @@ app.include_router(api.router)
 
 # Static files
 
-app.mount("/static", StaticFiles(directory="../static"), name="static")
-app.mount("/public", StaticFiles(directory="../public"), name="public")
+app.mount("/static", StaticFiles(directory="./static"), name="static")
+app.mount("/public", StaticFiles(directory="./public"), name="public")
 
 # Static Pages
 
 @app.get('/', include_in_schema=False)
 async def inex(request: Request):
-  return FileResponse('../static/OCR.html', media_type="text/html")
+  return FileResponse('./static/OCR.html', media_type="text/html")
 
 # Error Handler
 

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Request, Header
 from fastapi.responses import JSONResponse
-from config.basemodel import *
+from ..config.basemodel import *
 
 router = APIRouter(
   prefix="/api",
