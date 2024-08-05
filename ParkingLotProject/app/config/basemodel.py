@@ -8,3 +8,5 @@ class Error(BaseModel):
 
 class Success(BaseModel):
     ok: bool
+
+
