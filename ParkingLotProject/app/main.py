@@ -4,13 +4,29 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException as StarletteHTTPException
 # router import
-from .routers import api
+from .routers import api, admin, cars, parkinglot, third
 
 tags_meta = [
   {
     "name": "api",
     "description": "All APIs related to the backend management system"
   },
+  {
+    "name": "admin",
+    "description": "For admin sign-in and get token"
+  },
+  {
+    "name": "parkinglot",
+    "description": "Provide the information of all or specific parking lot"
+  },
+  {
+    "name": "cars",
+    "description": "For all to get cars or specific car information and for admin to manipulate the database"
+  },
+  {
+    "name": "third",
+    "description": "Process the payment related to 3rd parties"
+  }
 ]
 
 app = FastAPI(
@@ -26,6 +42,10 @@ app = FastAPI(
 # Router include
 
 app.include_router(api.router)
+app.include_router(admin.router)
+app.include_router(parkinglot.router)
+app.include_router(cars.router)
+app.include_router(third.router)
 
 # Static files
 
@@ -36,7 +56,22 @@ app.mount("/public", StaticFiles(directory="./public"), name="public")
 
 @app.get('/', include_in_schema=False)
 async def inex(request: Request):
-  return FileResponse('./static/OCR.html', media_type="text/html")
+  return FileResponse('./static/index.html', media_type="text/html")
+
+
+@app.get('/admin', include_in_schema=False)
+async def inex(request: Request):
+  return FileResponse('./static/admin.html', media_type="text/html")
+
+
+@app.get('/choose', include_in_schema=False)
+async def inex(request: Request):
+  return FileResponse('./static/choose.html', media_type="text/html")
+
+
+@app.get('/payment', include_in_schema=False)
+async def inex(request: Request):
+  return FileResponse('./static/payment.html', media_type="text/html")
 
 # Error Handler
 
