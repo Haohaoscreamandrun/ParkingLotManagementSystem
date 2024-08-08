@@ -1,0 +1,14 @@
+/* .navbar{
+  color: white;
+} */
+.nav-brand {
+  text-decoration: none;
+  /* Remove underline */
+  color: inherit;
+  /* Inherit color from parent element */
+}
+
+.nav-brand img {
+  vertical-align: middle;
+  /* Align image with text */
+}
