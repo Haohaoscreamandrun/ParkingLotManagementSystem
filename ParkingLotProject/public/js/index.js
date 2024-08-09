@@ -1,11 +1,14 @@
-'use strict'
-let forms = document.querySelectorAll(".needs-validation")
-Array.from(forms).forEach(form => {
-  form.addEventListener('submit', event => {
-    if (!form.checkValidity()){
-      event.preventDefault()
-      event.stopPropagation()
-    }
-    form.classList.add('was-validated')
-  }, false)
-})
+import { formValidation, signInValidation, tokenValidation } from "./common/login.js";
+
+function indexFlow(){
+  // Login logic
+  // login offcanvas validation bootstrap
+  formValidation()
+  // login form function
+  let signInForm = document.querySelector('#signInForm')
+  signInForm.addEventListener('submit', event => {signInValidation(event)})
+  // token validation
+  tokenValidation()
+}
+
+indexFlow()

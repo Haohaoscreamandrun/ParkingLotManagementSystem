@@ -14,22 +14,20 @@
   <!-- Google Map -->
   <link rel="stylesheet" href="../public/css/google_map.css">
   <script src="../public/js/common/googleMap.js" defer></script>
-  <script
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC6PMNXMuek_IGCX4ExGz9f6IpnF_3NVEs&callback=initMap&libraries=places&v=weekly"
-    defer></script>
+  <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC6PMNXMuek_IGCX4ExGz9f6IpnF_3NVEs&callback=initMap&libraries=places&v=weekly"></script>
   <!-- index.js & common.css -->
-  <script src="../public/js/index.js" defer></script>
+  <script type="module" src="../public/js/index.js" defer></script>
   <link rel="stylesheet" href="../public/css/common.css">
 </head>
 <body>
   <!-- common navbar -->
-  <nav class="navbar text-bg-dark border-bottom border-body" data-bs-theme="dark">
+  <nav class="navbar text-bg-dark border-bottom border-body sticky-top" data-bs-theme="dark">
     <div class="container-fluid d-flex justify-content-between align-items-center">
       <a href="/" class="nav-brand mb-0 h3">
         <img src="../public/images/Graphicloads-Colorful-Long-Shadow-Car.256.png" alt="logo" width="30" height="30">
         Parking Lot Managing System
       </a>
-      <button class="navbar-nav btn text-center" type="button"
+      <button class="navbar-nav btn text-center" type="button" id="adminLoginCanvasBtn"
       data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">
         Admin Login
       </button>
@@ -43,10 +41,11 @@
       <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body">
-      <form class="needs-validation" novalidate>
+      <!-- login form -->
+      <form class="needs-validation" id="signInForm" novalidate>
         <div class="form-floating mb-3">
-          <input type="text" class="form-control" id="AdminAccount" autocomplete="username" placeholder="Account" required>
-          <label for="AdminAccount">Account</label>
+          <input type="text" class="form-control" id="adminAccount" autocomplete="username" placeholder="Account" required>
+          <label for="adminAccount">Account</label>
           <div class="valid-feedback">
             Looks good!
           </div>
@@ -55,17 +54,17 @@
           </div>
         </div>
         <div class="form-floating mb-3">
-          <input type="password" class="form-control" id="AdminPassword" autocomplete="current-password" placeholder="password" required>
-          <label for="AdminPassword">Password</label>
+          <input type="password" class="form-control" id="adminPassword" autocomplete="current-password" placeholder="password" required>
+          <label for="adminPassword">Password</label>
           <div class="valid-feedback">
             Looks good!
           </div>
           <div class="invalid-feedback">
-            Please provide a valid password.
+            At least 1 A-Z, 1 a-z and 1 digit of number.
           </div>
         </div>
         <div class="d-flex justify-content-between align-items-end">
-          <button type="submit" class="btn btn-lg btn-outline-light mb-1">Login</button>
+          <button type="submit" class="btn btn-lg btn-outline-light mb-1" id="loginButton">Login</button>
           <a class="btn btn-dark">Forget password?</a>
         </div>
       </form>
@@ -76,7 +75,7 @@
     <h2>Parking Lots</h2>
     <div class="row g-2">
       <!-- Parking Lots list -->
-      <div class="col rounded-3 p-2">
+      <div class="col col-12 col-md-6 rounded-3 p-2">
         <div class="row g-2">
           <div class="col p-2">
             <div class="input-group">
@@ -98,7 +97,7 @@
         </div>
       </div>
       <!-- Parking Lot info Card -->
-      <div class="col rounded-3 p-2">
+      <div class="col col-12 col-md-6 rounded-3 p-2">
         <div class="card m-2">
           <div class="card-body">
             <h5 class="card-title">Name of Parking Lot</h5>

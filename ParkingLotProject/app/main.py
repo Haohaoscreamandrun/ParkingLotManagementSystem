@@ -3,6 +3,7 @@ from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException as StarletteHTTPException
+from mysql.connector import Error as MysqlException
 # router import
 from .routers import api, admin, cars, parkinglot, third
 
@@ -75,13 +76,22 @@ async def inex(request: Request):
 
 # Error Handler
 
+
+@app.exception_handler(MysqlException)
+async def MysqlException_exception_handler(exc: MysqlException):
+  return JSONResponse(
+      status_code= status.HTTP_500_INTERNAL_SERVER_ERROR,
+      content= str(f"Code: {exc.errno}, {exc.msg}")
+  )
+
+
 @app.exception_handler(RequestValidationError)
-async def validation_exception_handler(request: Request, exc: RequestValidationError):
+async def RequestValidation_exception_handler(request: Request, exc: RequestValidationError):
   return JSONResponse(
     status_code= status.HTTP_422_UNPROCESSABLE_ENTITY,
     content={
       "error": True,
-      "message": str(f"{exc.errors()[0]['loc'][0]}:{exc.errors()[0]['msg']}")
+      "message": str(f"{exc.errors()[0]['loc'][-1]}:{exc.errors()[0]['msg']}")
     }
   )
 
