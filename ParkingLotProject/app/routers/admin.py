@@ -65,6 +65,10 @@ async def admin_login(admin: AdminCredentials):
         context = {
           "token": enconded_info
         }
+        return JSONResponse(
+            status_code=status_code,
+            content=context
+        )
       except jwt.exceptions:
         raise HTTPException(
           status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -75,11 +79,6 @@ async def admin_login(admin: AdminCredentials):
         status_code=exc.status_code,
         detail=exc.detail
     )
-  finally:
-      return JSONResponse(
-          status_code=status_code,
-          content=context
-      )
 
 @router.get("", responses= {
     200: {'model': ReturnAdmin, 'description': "Successful on decode token"}
@@ -90,10 +89,7 @@ async def admin_login(admin: AdminCredentials):
   )
 async def admin_check(Authorization: str = Header(None)):
   try:
-    return_status = ''
-    context = {}
-    print(Authorization)
-    if Authorization is None:
+    if type(Authorization) == type(None):
         return_status = status.HTTP_200_OK
         context = {
           'data' : None
@@ -108,19 +104,20 @@ async def admin_check(Authorization: str = Header(None)):
                 "account": user_data['account']
             }
         }
-  except jwt.exceptions:
+    return JSONResponse(
+        status_code=return_status,
+        content=context
+    )
+  except (jwt.ExpiredSignatureError, jwt.DecodeError, jwt.InvalidTokenError):
+    print('There are problems with jwt decoding!')
     raise HTTPException(
       status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
       detail= "jwt decode error."
     )
   except HTTPException as exc:
+    print('Something wrong with connection.')
     raise HTTPException(
         status_code=exc.status_code,
         detail=exc.detail
-    )
-  finally:
-    return JSONResponse(
-        status_code=return_status,
-        content=context
     )
   

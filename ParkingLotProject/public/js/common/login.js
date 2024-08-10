@@ -114,6 +114,14 @@ export async function signInValidation(event){
 export async function tokenValidation(){
   // get the token store in local storage
   let token = localStorage.getItem('token') || null
+  // if no token exist, redirect from admin.html
+  let uri = `http://${window.location.hostname}:${window.location.port}`
+  let isNoToken = (token === null)
+  let isAdminHTML = (location.href === uri+'/admin')
+  if (isNoToken && isAdminHTML){
+    location.href = uri
+  }
+  
   // Construct Header
   let headerContent = {}
   if (token === null){
@@ -127,7 +135,7 @@ export async function tokenValidation(){
       'Authorization': `Bearer ${token}`
     }
   }
-  let uri = `http://${window.location.hostname}:${window.location.port}`
+  
   let responseObj = await fetch(
     uri + "/api/admin/auth", 
     {
@@ -136,8 +144,13 @@ export async function tokenValidation(){
     }
   )
   let response = await responseObj.json()
-  if (responseObj.ok && response.data === null){
-    // token not exist, nothing to do
+  if (!responseObj.ok && response === 'jwt decode error.'){
+    // token decode error
+    // clear local storage
+    localStorage.removeItem('token')
+    // redirect to index with alert
+    location.href = uri
+    alert('Invalid token, please login again.')
     return
   } else if (responseObj.ok) {
     // token exist

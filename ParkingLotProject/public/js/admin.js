@@ -1,9 +1,9 @@
 import { tokenValidation } from "./common/login.js";
 
-function adminFlow (){
+async function adminFlow (){
   // token validation
-  let adminID = tokenValidation()
-
+  let adminID = await tokenValidation()
+  console.log(`Get admin data, admin Id is ${adminID}`)
   // Access the camera
   navigator.mediaDevices.getUserMedia({video: true})
   .then(stream => {
