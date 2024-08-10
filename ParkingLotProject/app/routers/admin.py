@@ -5,6 +5,7 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 from typing import Annotated
 import datetime
 import jwt
+import requests
 from ..config.basemodel import *
 from ..model.manager import admin_lookup
 from dotenv import load_dotenv
@@ -89,15 +90,18 @@ async def admin_login(admin: AdminCredentials):
   )
 async def admin_check(Authorization: str = Header(None)):
   try:
+    return_status = ''
+    context = {}
+    print(Authorization)
     if Authorization is None:
-        status_code = status.HTTP_200_OK
+        return_status = status.HTTP_200_OK
         context = {
           'data' : None
         }
-    else:
+    elif Authorization is not None:
         Authorization = Authorization.split(" ")[1]
         user_data = jwt.decode(Authorization, jwtkey, algorithms="HS256")
-        status_code = status.HTTP_200_OK
+        return_status = status.HTTP_200_OK
         context = {
             "data": {
                 "id": user_data['id'],
@@ -116,7 +120,7 @@ async def admin_check(Authorization: str = Header(None)):
     )
   finally:
     return JSONResponse(
-        status_code=status_code,
+        status_code=return_status,
         content=context
     )
   
