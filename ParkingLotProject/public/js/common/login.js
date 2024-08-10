@@ -152,7 +152,7 @@ export async function tokenValidation(){
     location.href = uri
     alert('Invalid token, please login again.')
     return
-  } else if (responseObj.ok) {
+  } else if (responseObj.ok && response.data !== null) {
     // token exist
     let adminBtn = document.querySelector('#adminLoginCanvasBtn')
     adminBtn.outerHTML = `
@@ -170,5 +170,8 @@ export async function tokenValidation(){
     })
 
     return response.data.id
+  } else if (responseObj.ok && response.data === null){
+    // token not exist
+    return
   }
 }

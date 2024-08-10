@@ -12,6 +12,11 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"
     defer></script>
+  <!-- Tesseract and openCV -->
+  <script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js' defer></script>
+  <script src="
+      https://cdn.jsdelivr.net/npm/opencv-browser@1.0.0/opencv.min.js
+      " defer></script>
   <!-- index.js & common.css -->
   <script type="module" src="../public/js/admin.js" defer></script>
   <link rel="stylesheet" href="../public/css/common.css">
@@ -50,10 +55,10 @@
           </div>
           <div class="card border-secondary mt-1">
             <div class="card-header">Recognition</div>
-            <img src="../public/images/5799-KE.jpg" alt="" class="card-img-top ratio ratio-4x3 object-fit-cover">
+            <canvas id="videoCanvas"></canvas>
             <div class="input-group">
               <span class="input-group-text" id="addon1">Plate</span>
-              <input type="text" placeholder="Recognized plate" class="form-control" disabled>
+              <input type="text" placeholder="Recognized plate" class="form-control" id="recognizedPlate" disabled>
             </div>
           </div>
         </div>

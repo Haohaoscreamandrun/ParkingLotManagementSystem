@@ -1,9 +1,11 @@
 import { tokenValidation } from "./common/login.js";
+import { recognizeLicensePlate } from "./common/tesseract.js";
 
 async function adminFlow (){
   // token validation
   let adminID = await tokenValidation()
   console.log(`Get admin data, admin Id is ${adminID}`)
+
   // Access the camera
   navigator.mediaDevices.getUserMedia({video: true})
   .then(stream => {
@@ -15,6 +17,12 @@ async function adminFlow (){
   .catch(error => {
     console.error('Error accessing media devices', error)
   })
+
+  // Periodically Capture and process
+  setInterval(async()=>{
+    await recognizeLicensePlate();
+  }, 5000)
+  
 }
 
 adminFlow()
