@@ -5,7 +5,7 @@ from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from mysql.connector import Error as MysqlException
 # router import
-from .routers import api, admin, cars, parkinglot, third
+from .routers import api, admin, cars, parkinglot, third, camera
 
 tags_meta = [
   {
@@ -27,6 +27,10 @@ tags_meta = [
   {
     "name": "third",
     "description": "Process the payment related to 3rd parties"
+  },
+  {
+    "name": "camera",
+    "description": "Reply "
   }
 ]
 
@@ -47,6 +51,7 @@ app.include_router(admin.router)
 app.include_router(parkinglot.router)
 app.include_router(cars.router)
 app.include_router(third.router)
+app.include_router(camera.router)
 
 # Static files
 
@@ -73,6 +78,7 @@ async def inex(request: Request):
 @app.get('/payment', include_in_schema=False)
 async def inex(request: Request):
   return FileResponse('./static/payment.html', media_type="text/html")
+
 
 # Error Handler
 
