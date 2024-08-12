@@ -73,10 +73,13 @@ export async function recognizeLicensePlate(){
       })
       let recognizedPlateInput = document.querySelector('#recognizedPlate')
       if (licensePlate.length > 0){
-      recognizedPlateInput.value = `${licensePlate}, conf. lv: ${confidence}`
+        recognizedPlateInput.value = `${licensePlate}, conf. lv: ${confidence}`
+        // return car plate
+        return licensePlate, confidence
       }
       // terminate worker
       await worker.terminate()
+      
     } catch (error) {
       console.error(error)
     }

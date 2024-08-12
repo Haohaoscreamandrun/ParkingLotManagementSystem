@@ -1,4 +1,4 @@
-import { recognizeLicensePlate } from "./common/tesseract.js";
+import { processVideo } from "./common/opencv.js";
 
 async function cameraFlow(){
   // Access the camera
@@ -12,11 +12,8 @@ async function cameraFlow(){
   .catch(error => {
     console.error('Error accessing media devices', error)
   })
-
-  // Periodically Capture and process
-  setInterval(async()=>{
-    await recognizeLicensePlate();
-  }, 5000)
+  
+  setTimeout(processVideo, 0);
 }
 
 cameraFlow()
