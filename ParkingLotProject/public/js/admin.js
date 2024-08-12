@@ -21,17 +21,17 @@ async function adminFlow (){
   // Periodically Capture and process
   let arrayLicense = []
   let arrayConfidence = []
-  let intervalId, license, confidence
+  let intervalId
 
   // function to check upload condition
   function checkUploadCondition(){
     let allSame = arrayLicense.every(val => val === arrayLicense[0]);
     let averageConfidence = arrayConfidence.reduce((sum, val) => sum + val, 0) / arrayConfidence.length;
-    return allSame && averageConfidence > 30;
+    return allSame || averageConfidence > 30;
   }
 
  async function processRecognition(){
-    [license, confidence] = await recognizeLicensePlate();
+    let [license, confidence] = await recognizeLicensePlate();
     if (arrayLicense.length === 3){
       arrayLicense.shift()
       arrayConfidence.shift()
