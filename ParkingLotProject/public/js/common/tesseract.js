@@ -52,8 +52,8 @@ export async function recognizeLicensePlate(){
     try{
       let worker = new Tesseract.createWorker(['eng'], 1,
         {
-          logger: m => console.log(m),
-          errorHandler: err => console.error(err)
+          // logger: m => console.log(m),
+          // errorHandler: err => console.error(err)
         }
       );
       worker = await worker
@@ -71,9 +71,7 @@ export async function recognizeLicensePlate(){
           return
         }
       })
-      let recognizedPlateInput = document.querySelector('#recognizedPlate')
       if (licensePlate.length > 0){
-        recognizedPlateInput.value = `${licensePlate}, conf. lv: ${confidence}`
         // return car plate
         return licensePlate, confidence
       }

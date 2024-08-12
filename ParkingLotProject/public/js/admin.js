@@ -19,9 +19,44 @@ async function adminFlow (){
   })
 
   // Periodically Capture and process
-  setInterval(async()=>{
-    await recognizeLicensePlate();
-  }, 5000)
+  let arrayLicense = []
+  let arrayConfidence = []
+  let intervalId
+
+  // function to check upload condition
+  function checkUploadCondition(){
+    let allSame = arrayLicense.every(val => val === arrayLicense[0]);
+    let averageConfidence = arrayConfidence.reduce((sum, val) => sum + val, 0) / arrayConfidence.length;
+    return allSame && averageConfidence > 30;
+  }
+
+  let recognizedPlateInput = document.querySelector('#recognizedPlate')
+  recognizedPlateInput.value = `${licensePlate}, conf. lv: ${confidence}`
+
+ async function processRecognition(){
+    let license, confidence = await recognizeLicensePlate();
+    if (arrayLicense.length === 3){
+      arrayLicense.shift()
+      arrayConfidence.shift()
+    }
+    arrayLicense.push(license)
+    arrayConfidence.push(confidence)
+    // check the conditions
+    if (arrayLicense.length === 3 && checkUploadCondition()){
+      // show on screen
+      let recognizedPlateInput = document.querySelector('#recognizedPlate')
+      recognizedPlateInput.value = `Successful! ${license}, conf. lv: ${arrayConfidence.reduce((sum, val) => sum + val, 0) / arrayConfidence.length}`
+      // fetch backend
+      // upload s3
+      // give 5 secs break
+      clearInterval(intervalId)
+      setTimeout(()=>{
+        intervalId = setInterval(processRecognition, 1000)
+      }, 5000)
+    }
+  }
+  // Starts
+  intervalId = setInterval(processRecognition, 1000);
   
 }
 
