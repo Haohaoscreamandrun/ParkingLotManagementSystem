@@ -1,3 +1,5 @@
+// Get the video element
+let video = document.getElementById('localVideo');
 let cap = new cv.VideoCapture(video);
 
 // take first frame of the video
