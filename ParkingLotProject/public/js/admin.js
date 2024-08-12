@@ -21,7 +21,7 @@ async function adminFlow (){
   // Periodically Capture and process
   let arrayLicense = []
   let arrayConfidence = []
-  let intervalId
+  let intervalId, license, confidence
 
   // function to check upload condition
   function checkUploadCondition(){
@@ -30,11 +30,8 @@ async function adminFlow (){
     return allSame && averageConfidence > 30;
   }
 
-  let recognizedPlateInput = document.querySelector('#recognizedPlate')
-  recognizedPlateInput.value = `${licensePlate}, conf. lv: ${confidence}`
-
  async function processRecognition(){
-    let license, confidence = await recognizeLicensePlate();
+    [license, confidence] = await recognizeLicensePlate();
     if (arrayLicense.length === 3){
       arrayLicense.shift()
       arrayConfidence.shift()
@@ -51,12 +48,13 @@ async function adminFlow (){
       // give 5 secs break
       clearInterval(intervalId)
       setTimeout(()=>{
-        intervalId = setInterval(processRecognition, 1000)
-      }, 5000)
+        intervalId = setInterval(processRecognition, 1500)
+        recognizedPlateInput.value = ""
+      }, 10000)
     }
   }
   // Starts
-  intervalId = setInterval(processRecognition, 1000);
+  intervalId = setInterval(processRecognition, 1500);
   
 }
 

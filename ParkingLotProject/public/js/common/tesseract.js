@@ -71,13 +71,18 @@ export async function recognizeLicensePlate(){
           return
         }
       })
-      if (licensePlate.length > 0){
-        // return car plate
-        return licensePlate, confidence
-      }
       // terminate worker
       await worker.terminate()
       
+      if (licensePlate.length > 0){
+        let recognizedPlateInput = document.querySelector('#recognizedPlate')
+        recognizedPlateInput.value = `Reading... ${licensePlate}, conf. lv: ${confidence}`
+        // return car plate
+        return [licensePlate, confidence]
+      } else {
+        return ["", 0]
+      }
+            
     } catch (error) {
       console.error(error)
     }
