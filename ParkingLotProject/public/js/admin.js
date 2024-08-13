@@ -25,7 +25,7 @@ async function adminFlow (){
 
   // function to check upload condition
   function checkUploadCondition(){
-    let allSame = arrayLicense.every(val => val === arrayLicense[0]);
+    let allSame = arrayLicense.every(val => val === arrayLicense[0] && val !== "" );
     let averageConfidence = arrayConfidence.reduce((sum, val) => sum + val, 0) / arrayConfidence.length;
     return allSame || averageConfidence > 30;
   }
@@ -44,6 +44,14 @@ async function adminFlow (){
       let recognizedPlateInput = document.querySelector('#recognizedPlate')
       recognizedPlateInput.value = `Successful! ${license}, conf. lv: ${arrayConfidence.reduce((sum, val) => sum + val, 0) / arrayConfidence.length}`
       // fetch backend
+      let uri = `http://${window.location.hostname}:${window.location.port}`
+      let responseObj = await fetch(`${uri}/api/camera?license=${license}`, {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+
       // upload s3
       // give 5 secs break
       clearInterval(intervalId)
