@@ -39,4 +39,4 @@ class ReturnAdmin(BaseModel):
     data: Admin | None
 
 class S3UploadURL(BaseModel):
-    url: str | None
+    data: object | None

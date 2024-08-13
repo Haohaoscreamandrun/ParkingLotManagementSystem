@@ -25,5 +25,14 @@ async def inex(request: Request):
     400: {'model': Error, "description": "Connection failed"}
 })
 def get_s3_upload_url(license: str):
-  response = create_presigned_url(license)
-  print(response)
+  try:
+    response = create_presigned_url(license)
+    return JSONResponse(
+      status_code=status.HTTP_200_OK,
+      content=response
+    )
+  except (HTTPException, StarletteHTTPException) as exc:
+    raise HTTPException(
+        status_code=exc.status_code,
+        detail=exc.detail
+    )

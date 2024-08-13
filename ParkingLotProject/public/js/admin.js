@@ -40,6 +40,9 @@ async function adminFlow (){
     arrayConfidence.push(confidence)
     // check the conditions
     if (arrayLicense.length === 3 && checkUploadCondition()){
+      // clear out previous data
+      arrayLicense = []
+      arrayConfidence = []
       // show on screen
       let recognizedPlateInput = document.querySelector('#recognizedPlate')
       recognizedPlateInput.value = `Successful! ${license}, conf. lv: ${arrayConfidence.reduce((sum, val) => sum + val, 0) / arrayConfidence.length}`
@@ -51,7 +54,8 @@ async function adminFlow (){
           'Content-Type': 'application/json'
         }
       })
-
+      let response = await responseObj.json()
+      console.log(response)
       // upload s3
       // give 5 secs break
       clearInterval(intervalId)

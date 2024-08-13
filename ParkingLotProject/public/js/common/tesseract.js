@@ -65,7 +65,7 @@ export async function recognizeLicensePlate(){
       let {data: {text: text, confidence: confidence}} = await worker.recognize(canvas)
       // process result
       let licensePlate = ''
-      text.split("\n").forEach(candidate => {
+      text.replace(/ /g, '\n').split("\n").forEach(candidate => {
         if (candidate.trim().length >= 5 && candidate.trim().length <= 7){
           licensePlate = candidate.trim()
           return

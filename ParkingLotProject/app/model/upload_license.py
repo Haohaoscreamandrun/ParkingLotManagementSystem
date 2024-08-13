@@ -24,9 +24,7 @@ def create_presigned_url(object_name):
   s3_client = session.client('s3')
   try:
     response = s3_client.generate_presigned_post(
-      bucket_name='wehelp-parkinglot.project',
-      object_name = object_name,
-      expiration = 12
+      'wehelp-parkinglot.project', object_name, ExpiresIn = 120
     )
   except ClientError as e:
     logging.error(e)
