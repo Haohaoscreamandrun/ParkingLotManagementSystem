@@ -27,7 +27,6 @@ async def inex(request: Request):
 def get_s3_upload_url(license: str):
   try:
     response = create_presigned_url(license)
-    print(response)
     return JSONResponse(
       status_code=status.HTTP_200_OK,
       content=response

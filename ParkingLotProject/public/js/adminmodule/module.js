@@ -22,6 +22,7 @@ async function postAPICamera(license){
     })
     if (responseObj.ok){
       let response = await responseObj.json()
+      console.log(response)
       return response
     } else {
       console.error(responseObj.statusText)
@@ -40,13 +41,10 @@ async function putS3(responseAPI, license){
     })
     let formDataS3 = new FormData()
     formDataS3.append('file', blob, license)
-    // Append other fields from the responseAPI
-    for (let [key, value] of Object.entries(responseAPI.fields)) {
-      formDataS3.append(key, value);
-    }
-    let responseObj = await fetch(responseAPI.url, {
+    
+    let responseObj = await fetch(responseAPI, {
       method: "PUT",
-      headers: {'Content-Type': 'application/json'},
+      headers: {'Content-Type': 'multipart/form-data'},
       body: formDataS3,
       mode: 'cors'
     })
