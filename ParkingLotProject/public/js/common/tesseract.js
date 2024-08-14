@@ -37,14 +37,16 @@ async function basicBinary(){
   let kernel  = cv.getStructuringElement(cv.MORPH_RECT, new cv.Size(2, 2));//Creates a rectangular structuring element of size 5x5 pixels. This defines the shape and size of the region used for the operation.
   cv.morphologyEx(threshold, threshold, cv.MORPH_CLOSE, kernel)// smooths the contours of the binary image by closing small gaps and holes.
 
+  // Display
+  cv.imshow('videoCanvas', threshold)
+  cv.imshow('captureCanvas', gaussian)
+
   // Delete cv
   mat.delete()
   gaussian.delete()
   gray.delete()
   edges.delete()
-
-  // Display
-  cv.imshow('videoCanvas', threshold)
+  threshold.delete()
 }
 
 // Recognize

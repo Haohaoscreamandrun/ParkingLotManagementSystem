@@ -37,23 +37,27 @@ async function putS3(responseAPI, license){
   try{
     let captured = document.getElementById('captureCanvas')
     let blob = await new Promise((resolve) => {
-      captured.toBlob((blob) => resolve(blob))
+      captured.toBlob((blob) => {
+        resolve(blob)
+      }, 'image/png')
     })
-    let formDataS3 = new FormData()
-    formDataS3.append('file', blob, license)
     
-    let responseObj = await fetch(responseAPI, {
-      method: "PUT",
-      headers: {'Content-Type': 'multipart/form-data'},
+    let formDataS3 = new FormData()
+    Object.entries(responseAPI.fields).forEach(([key, value]) => {
+      formDataS3.append(key, value)
+    })
+    formDataS3.append('file', blob, `${license}.png`)
+    console.log(formDataS3)
+    
+    let responseObj = await fetch(responseAPI.url, {
+      method: "POST",
       body: formDataS3,
       mode: 'cors'
     })
     if (responseObj.ok) {
-      let response = await responseObj.json()
-      console.log(response)
+      let response = await responseObj.text()
       return response
     } else {
-      console.error(responseObj.statusText)
       return null
     }
   } catch (error) {
@@ -68,8 +72,10 @@ export async function processRecognition(){
     arrayLicense.shift()
     arrayConfidence.shift()
   }
-  arrayLicense.push(license)
-  arrayConfidence.push(confidence)
+  if (license !== ""){
+    arrayLicense.push(license)
+    arrayConfidence.push(confidence)
+  }
   // check the conditions
   if (arrayLicense.length === 3 && checkUploadCondition()){
     // give 10 secs break
@@ -78,12 +84,12 @@ export async function processRecognition(){
       startRecognition()
       recognizedPlateInput.value = ""
     }, 10000)
-    // clear out previous data
-    arrayLicense = []
-    arrayConfidence = []
     // show on screen
     let recognizedPlateInput = document.querySelector('#recognizedPlate')
     recognizedPlateInput.value = `Successful! ${license}, conf. lv: ${arrayConfidence.reduce((sum, val) => sum + val, 0) / arrayConfidence.length}`
+    // clear out previous data
+    arrayLicense = []
+    arrayConfidence = []
     // fetch backend
     let responseAPI = await postAPICamera(license)
     // upload s3
