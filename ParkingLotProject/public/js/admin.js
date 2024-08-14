@@ -1,5 +1,5 @@
 import { tokenValidation } from "./common/login.js";
-import { processRecognition } from "./adminmodule/module.js";
+import { startRecognition } from "./adminmodule/module.js";
 
 async function adminFlow (){
   // token validation
@@ -19,7 +19,7 @@ async function adminFlow (){
   })
 
   // Starts
-  let intervalId = setInterval(processRecognition, 1500);
+  startRecognition()
   
 }
 

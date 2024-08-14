@@ -32,7 +32,7 @@ async function postAPICamera(license){
   }
 }
 
-async function postS3(responseAPI, license){
+async function putS3(responseAPI, license){
   try{
     let captured = document.getElementById('captureCanvas')
     let blob = await new Promise((resolve) => {
@@ -44,9 +44,11 @@ async function postS3(responseAPI, license){
     for (let [key, value] of Object.entries(responseAPI.fields)) {
       formDataS3.append(key, value);
     }
-    let responseObj = await fetch(response.url, {
-      method: "POST",
-      body: formDataS3
+    let responseObj = await fetch(responseAPI.url, {
+      method: "PUT",
+      headers: {'Content-Type': 'application/json'},
+      body: formDataS3,
+      mode: 'cors'
     })
     if (responseObj.ok) {
       let response = await responseObj.json()
@@ -60,6 +62,7 @@ async function postS3(responseAPI, license){
     console.error('Error uploading file:', error);
   }
 }
+let intervalId
 
 export async function processRecognition(){
   let [license, confidence] = await recognizeLicensePlate();
@@ -71,6 +74,12 @@ export async function processRecognition(){
   arrayConfidence.push(confidence)
   // check the conditions
   if (arrayLicense.length === 3 && checkUploadCondition()){
+    // give 10 secs break
+    stopRecognition()
+    setTimeout(() => {
+      startRecognition()
+      recognizedPlateInput.value = ""
+    }, 10000)
     // clear out previous data
     arrayLicense = []
     arrayConfidence = []
@@ -80,13 +89,17 @@ export async function processRecognition(){
     // fetch backend
     let responseAPI = await postAPICamera(license)
     // upload s3
-    let responseS3 = await postS3(responseAPI, license)
-    
-    // give 5 secs break
-    clearInterval(intervalId)
-    setTimeout(()=>{
-      intervalId = setInterval(processRecognition, 1500)
-      recognizedPlateInput.value = ""
-    }, 10000)
+    let responseS3 = await putS3(responseAPI, license)
   }
+}
+
+export function startRecognition(){
+  if (!intervalId){
+    intervalId = setInterval(processRecognition, 1500)
+  }
+}
+
+function stopRecognition(){
+  clearInterval(intervalId)
+  intervalId = null
 }
