@@ -2,7 +2,7 @@ from fastapi import *
 from fastapi.responses import JSONResponse, FileResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from ..config.basemodel import *
-from ..model.upload_license import *
+from ..model.s3 import *
 
 
 router = APIRouter(
@@ -27,6 +27,7 @@ async def inex(request: Request):
 def get_s3_upload_url(license: str):
   try:
     response = create_presigned_url(license)
+    print(response)
     return JSONResponse(
       status_code=status.HTTP_200_OK,
       content=response
