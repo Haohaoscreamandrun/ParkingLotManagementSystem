@@ -55,8 +55,24 @@ async function adminFlow (){
         }
       })
       let response = await responseObj.json()
-      console.log(response)
+      
       // upload s3
+      let captured = document.getElementById('captureCanvas')
+      let blob = await new Promise((resolve) => {
+        captured.toBlob((blob) => resolve(blob))
+      })
+      let formDataS3 = new FormData()
+      formDataS3.append('file', blob, license)
+      // Append other fields from the response
+      for (let [key, value] of Object.entries(response.fields)) {
+        formDataS3.append(key, value);
+      }
+      responseObj = await fetch(response.url, {
+        method: "POST",
+        body: formDataS3
+      })
+      response = await responseObj.json()
+      console.log(response)
       // give 5 secs break
       clearInterval(intervalId)
       setTimeout(()=>{

@@ -44,7 +44,7 @@
             <video class="ratio ratio-4x3 object-fit-cover" src="" id="localVideo" autoplay></video>
             <div class="card-body form">
               <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" id="enterRadio" value="enter" name="inlineRadioOptions">
+                <input class="form-check-input" type="radio" id="enterRadio" value="enter" name="inlineRadioOptions" checked>
                 <label class="form-check-label" for="enterRadio">Enter Gate</label>
               </div>
               <div class="form-check form-check-inline">
@@ -55,6 +55,7 @@
           </div>
           <div class="card border-secondary mt-1">
             <div class="card-header">Recognition</div>
+            <canvas id="captureCanvas" hidden></canvas>
             <canvas id="videoCanvas"></canvas>
             <div class="input-group">
               <span class="input-group-text" id="addon1">Plate</span>

@@ -1,4 +1,5 @@
 let video = document.getElementById('localVideo')
+let captured = document.getElementById('captureCanvas')
 let canvas = document.getElementById('videoCanvas')
 
 async function captureFrame(){
@@ -7,6 +8,9 @@ async function captureFrame(){
     canvas.width = video.videoWidth
     canvas.height = video.videoHeight
     context.drawImage(video, 0, 0, canvas.width, canvas.height)
+    captured.width = video.videoWidth
+    captured.height = video.videoHeight
+    context.drawImage(video, 0, 0, captured.width, captured.height)
   }
 
 async function basicBinary(){
