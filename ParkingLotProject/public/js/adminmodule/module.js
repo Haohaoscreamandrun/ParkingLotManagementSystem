@@ -11,62 +11,9 @@ function checkUploadCondition(){
   return allSame || averageConfidence > 30;
 }
 
-async function postAPICamera(license){
-  try{
-    let uri = `http://${window.location.hostname}:${window.location.port}`
-    let responseObj = await fetch(`${uri}/api/camera?license=${license}`, {
-      method: "POST",
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-    if (responseObj.ok){
-      let response = await responseObj.json()
-      console.log(response)
-      return response
-    } else {
-      console.error(responseObj.statusText)
-      return null
-    }
-  } catch (error) {
-    console.error('Error fetch to backend:', error)
-  }
-}
-
-async function putS3(responseAPI, license){
-  try{
-    let captured = document.getElementById('captureCanvas')
-    let blob = await new Promise((resolve) => {
-      captured.toBlob((blob) => {
-        resolve(blob)
-      }, 'image/png')
-    })
-    
-    let formDataS3 = new FormData()
-    Object.entries(responseAPI.fields).forEach(([key, value]) => {
-      formDataS3.append(key, value)
-    })
-    formDataS3.append('file', blob, `${license}.png`)
-    console.log(formDataS3)
-    
-    let responseObj = await fetch(responseAPI.url, {
-      method: "POST",
-      body: formDataS3,
-      mode: 'cors'
-    })
-    if (responseObj.ok) {
-      let response = await responseObj.text()
-      return response
-    } else {
-      return null
-    }
-  } catch (error) {
-    console.error('Error uploading file:', error);
-  }
-}
 let intervalId
 
-export async function processRecognition(){
+async function processRecognition(){
   let [license, confidence] = await recognizeLicensePlate();
   if (arrayLicense.length === 3){
     arrayLicense.shift()
@@ -90,20 +37,103 @@ export async function processRecognition(){
     // clear out previous data
     arrayLicense = []
     arrayConfidence = []
-    // fetch backend
-    let responseAPI = await postAPICamera(license)
-    // upload s3
-    let responseS3 = await putS3(responseAPI, license)
+    // Resolve the promise with the license
+    if (licensePromiseResolve) {
+      licensePromiseResolve(license);
+      licensePromiseResolve = null; // Clear the resolve function
+    }
   }
 }
 
 export function startRecognition(){
-  if (!intervalId){
-    intervalId = setInterval(processRecognition, 1500)
-  }
+  return new Promise((resolve)=>{
+    if (!intervalId){
+      // Store the resolve function
+      licensePromiseResolve = resolve  
+      intervalId = setInterval(processRecognition, 1500)
+    }
+  })
+ 
 }
 
 function stopRecognition(){
   clearInterval(intervalId)
   intervalId = null
+}
+
+
+export async function getAPICamera(license){
+  try{
+    let uri = `http://${window.location.hostname}:${window.location.port}`
+    let responseObj = await fetch(`${uri}/api/camera?license=${license}`, {
+      method: "GET",
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    let response = await responseObj.json()
+    if (responseObj.ok){
+      return response.data
+    } else {
+      throw new Error(response.message)
+    }
+  } catch (error) {
+    alert('Error fetch to backend:', error)
+  }
+}
+
+export async function postS3(responseAPI, license){
+  try{
+    let captured = document.getElementById('captureCanvas')
+    let blob = await new Promise((resolve) => {
+      captured.toBlob((blob) => {
+        resolve(blob)
+      }, 'image/png')
+    })
+    
+    let formDataS3 = new FormData()
+    Object.entries(responseAPI.fields).forEach(([key, value]) => {
+      formDataS3.append(key, value)
+    })
+    formDataS3.append('file', blob, `${license}.png`)
+    
+    let responseObj = await fetch(responseAPI.url, {
+      method: "POST",
+      body: formDataS3,
+      mode: 'cors'
+    })
+    if (responseObj.ok) {
+      let response = await responseObj.text()
+      return response
+    } else {
+      return null
+    }
+  } catch (error) {
+    console.error('Error uploading file:', error);
+  }
+}
+
+export async function postAPICamera(adminID, license){
+  try{
+    let uri = `http://${window.location.hostname}:${window.location.port}`
+    let requestBodyObj = {
+      'admin': adminID,
+      'license': license
+    }
+    let responseObj = await fetch(`${uri}/api/camera`, {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(requestBodyObj)
+    })
+    let response = await responseObj.json()
+    if (responseObj.ok){
+      return response.ok
+    } else {
+      throw new Error(response.message)
+    }
+  } catch (error) {
+    alert('Error fetch to backend:', error)
+  }
 }

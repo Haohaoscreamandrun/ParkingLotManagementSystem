@@ -86,8 +86,11 @@ async def inex(request: Request):
 @app.exception_handler(MysqlException)
 async def MysqlException_exception_handler(exc: MysqlException):
   return JSONResponse(
-      status_code= status.HTTP_500_INTERNAL_SERVER_ERROR,
-      content= str(f"Code: {exc.errno}, {exc.msg}")
+    status_code= status.HTTP_500_INTERNAL_SERVER_ERROR,
+    content= {
+      "error": True,
+      "message": str(f"Code: {exc.errno}, {exc.msg}")
+    }
   )
 
 
@@ -105,12 +108,18 @@ async def RequestValidation_exception_handler(request: Request, exc: RequestVali
 async def http_exception_handler(request: Request, exc: HTTPException):
   return JSONResponse(
     status_code=exc.status_code,
-    content=exc.detail
+    content= {
+      "error": True,
+      "message": exc.detail
+    }
   )
 
 @app.exception_handler(StarletteHTTPException)
 async def starlette_exception_handler(request: Request, exc: StarletteHTTPException):
   return JSONResponse(
     status_code=exc.status_code,
-    content=exc.detail
+    content={
+      "error": True,
+      "message": exc.detail
+    }
   )

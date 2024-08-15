@@ -39,4 +39,8 @@ class ReturnAdmin(BaseModel):
     data: Admin | None
 
 class S3UploadURL(BaseModel):
-    data: object | None
+    data: object
+
+class PostCarEnter(BaseModel):
+    admin: int
+    license: str

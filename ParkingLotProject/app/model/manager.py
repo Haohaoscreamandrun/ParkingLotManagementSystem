@@ -27,9 +27,11 @@ cnxpool = pooling.MySQLConnectionPool(
 
 # Login lookup
 async def admin_lookup(account, password):
-  sql = 'SELECT * FROM admin\
-    WHERE account = %s\
-        AND password = %s'
+  sql = '''
+    SELECT * FROM admin\
+      WHERE account = %s\
+        AND password = %s
+        '''
   val = (account, password)
   try:
     cnxconnection = cnxpool.get_connection()

@@ -20,16 +20,39 @@ async def inex(request: Request):
   return FileResponse('./static/camera.html', media_type="text/html")
 
 
-@router.post('', responses={
+@router.get('', responses={
     200: {'model': S3UploadURL, 'description': "Get the temperate URL to upload to S3 bucket, or nothing is returned."},
     400: {'model': Error, "description": "Connection failed"}
-})
+}, response_model= S3UploadURL)
 def get_s3_upload_url(license: str):
   try:
-    response = create_presigned_url(license)
+    presignedObj = create_presigned_url(license)
+    response = {
+      "data": presignedObj
+    }
     return JSONResponse(
       status_code=status.HTTP_200_OK,
       content=response
+    )
+  except (HTTPException, StarletteHTTPException) as exc:
+    raise HTTPException(
+        status_code=exc.status_code,
+        detail=exc.detail
+    )
+
+
+@router.post('', responses={
+    200: {'model': Success, 'description': "Get the temperate URL to upload to S3 bucket, or nothing is returned."},
+    400: {'model': Error, "description": "Connection failed"}
+}, response_model=Success)
+def post_enter_RDS(data: PostCarEnter):
+  print(data)
+  try:
+    return JSONResponse(
+      status_code=status.HTTP_200_OK,
+      content={
+        "ok": True
+      }
     )
   except (HTTPException, StarletteHTTPException) as exc:
     raise HTTPException(

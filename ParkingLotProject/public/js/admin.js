@@ -1,5 +1,5 @@
 import { tokenValidation } from "./common/login.js";
-import { startRecognition } from "./adminmodule/module.js";
+import { startRecognition, getAPICamera, postAPICamera, postS3 } from "./adminmodule/module.js";
 
 async function adminFlow (){
   // token validation
@@ -19,8 +19,17 @@ async function adminFlow (){
   })
 
   // Starts
-  startRecognition()
-  
+  let license = await startRecognition()
+
+  // get backend
+  let responseGet = await getAPICamera(license)
+  console.log(responseGet)
+  // upload s3
+  let responseS3 = await postS3(responseGet, license)
+  console.log(responseS3)
+  // post backend
+  let responsePost = await postAPICamera(adminID, license)
+  console.log(responsePost)
 }
 
 adminFlow()
