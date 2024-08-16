@@ -3,7 +3,7 @@ from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from typing import Annotated
-import datetime
+from datetime import datetime, timedelta
 import jwt
 import requests
 from ..config.basemodel import *
@@ -85,7 +85,7 @@ async def admin_login(admin: AdminCredentials):
       # construct token
       try:
         # token expired in 1 day
-        expiration = datetime.datetime.now() + datetime.timedelta(days=1)
+        expiration = datetime.now() + timedelta(days=1)
         for admin_credentials in myresult:
           jwt_info = {
               "id" : admin_credentials[0],

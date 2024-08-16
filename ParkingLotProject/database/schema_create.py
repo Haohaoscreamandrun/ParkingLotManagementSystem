@@ -205,7 +205,7 @@ CREATE TABLE cars (\
 	id BIGINT PRIMARY KEY AUTO_INCREMENT,\
 		plate_number VARCHAR(7) NOT NULL,\
 			enter_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\
-				green_light TIMESTAMP DEFAULT 0,\
+				green_light TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\
 					lot_id BIGINT NOT NULL,\
 						FOREIGN KEY (lot_id) REFERENCES parking_lot(id))
 '''

@@ -199,6 +199,10 @@ export function render_chosen_lot(list){
 export function render_lot_input(){
   let input = document.querySelector('#chosenLot')
   let dropdown = document.querySelector('#lotDropDown')
+  let firstChild = dropdown.children[0].children[0]
+  // default as first one
+  input.value = `${firstChild.innerText}, ID: ${firstChild.id}`
+  // change upon selection
   dropdown.addEventListener('click', event => {
     if (event.target.classList.contains('dropdown-item')){
       let lot_name = event.target.innerText
@@ -206,4 +210,68 @@ export function render_lot_input(){
       input.value = `${lot_name}, ID: ${lot_id}`
     }
   })
+}
+
+export async function render_cars_list(){
+  let input = document.querySelector('#chosenLot')
+  
+  fetch_cars_render()
+  // listen to input
+  input.addEventListener('input', fetch_cars_render)
+}
+
+async function fetch_cars_render(){
+  let input = document.querySelector('#chosenLot')  
+  // get lot_id
+  let inputString = input.value
+  let lot_id = inputString.split(':')[1].trim()
+  // fetch
+  try{
+    console.log('Enter render_cars_list try loop')
+    let uri = `http://${window.location.hostname}:${window.location.port}`
+    let responseObj = await fetch(`${uri}/api/cars?lot_id=${lot_id}`, {
+      method: "GET",
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    
+    let response = await responseObj.json()
+    
+    if (responseObj.ok && response.data === null){
+      console.log("enter no cars loop")
+      // no cars in this lot
+      let carsListGroup = document.querySelector('#carsListGroup')
+      let button = document.createElement('button')
+      button.type = 'button'
+      button.classList.add('list-group-item', 'list-group-item-action')
+      button.innerText = "Currently Empty in this parking lot!"
+      // append button
+      carsListGroup.appendChild(button)
+    } else if (responseObj.ok && response.data.length > 0){
+      console.log('enter yes cars')
+      let carsListGroup = document.querySelector('#carsListGroup')
+      response.data.forEach((car) => {
+        let car_id = car.id
+        let license = car.license
+        let enter_time = car.enter_time
+        
+        // construct button list
+        let button = document.createElement('button')
+        button.type = 'button'
+        button.id = car_id
+        button.classList.add('list-group-item', 'list-group-item-action')
+        button.innerText = `&#128663 車牌號碼: ${license} &#9203 入場時間: ${enter_time}`
+
+        // append button
+        carsListGroup.appendChild(button)
+      })
+    } else {
+      console.log("enter new Error loop")
+      throw new Error(response.message)
+    }
+  } catch (error) {
+    alert('Error fetch to backend:', error)
+    console.log(error)
+  }
 }

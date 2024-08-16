@@ -2,6 +2,7 @@ from fastapi import *
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException as StarletteHTTPException
+from datetime import datetime
 from typing import Annotated
 from ..config.basemodel import *
 from ..model.user import *
@@ -27,18 +28,18 @@ router = APIRouter(
 )
 async def get_cars_info(lot_id: int):
   try:
-    myresult = await cars_in_parking_lot(lot_id)
+    myresult = cars_in_parking_lot(lot_id)
     if len(myresult) > 0:
       response_content_list = []
       for result in myresult:
         response_content = {
           'car_id' : result[0],
           'license': result[1],
-          'enter_time' : result[2],
-          'green_light' : result[3],
+          'enter_time': datetime.strftime(result[2], "%Y-%M-%D %H:%M:%S"),
+          'green_light': datetime.strftime(result[3], "%Y-%M-%D %H:%M:%S"),
           'parking_lot_id': result[4]
         }
-        response_content_list.push(response_content)
+        response_content_list.append(response_content)
       return JSONResponse(
         status_code= status.HTTP_200_OK,
         content= {
