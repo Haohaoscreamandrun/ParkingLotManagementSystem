@@ -1,4 +1,4 @@
-from mysql.connector import pooling, Error
+import mysql.connector
 from dotenv import load_dotenv
 import os
 load_dotenv()
@@ -17,7 +17,7 @@ dbconfig = {
     'database': 'parkinglot'
 }
 
-cnxpool = pooling.MySQLConnectionPool(
+cnxpool = mysql.connector.pooling.MySQLConnectionPool(
     pool_name="mypool",
     pool_size=5,
     # Reset session variables when the connection is returned to the pool.

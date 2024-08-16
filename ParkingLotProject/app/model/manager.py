@@ -1,4 +1,4 @@
-from mysql.connector import pooling, Error
+import mysql.connector
 from dotenv import load_dotenv
 import os
 load_dotenv()
@@ -17,7 +17,7 @@ dbconfig = {
     'database' : 'parkinglot'
 }
 
-cnxpool = pooling.MySQLConnectionPool(
+cnxpool = mysql.connector.pooling.MySQLConnectionPool(
     pool_name="mypool",
     pool_size=5,
     # Reset session variables when the connection is returned to the pool.
@@ -39,8 +39,8 @@ async def admin_lookup(account, password):
     mycursor.execute(sql, val)
     myresult = mycursor.fetchall()
       
-  except Error:
-    raise Error
+  except mysql.connector.Error:
+    raise mysql.connector.Error
   
   finally:
     # close connection
@@ -66,8 +66,8 @@ async def vacancy_lookup(admin):
     mycursor.execute(sql, val)
     myresult = mycursor.fetchall()
 
-  except Error:
-    raise Error
+  except mysql.connector.Error:
+    raise mysql.connector.Error
 
   finally:
     # close connection
