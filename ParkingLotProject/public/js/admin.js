@@ -20,16 +20,15 @@ async function adminFlow (){
 
   // Starts
   let license = await startRecognition()
-
   // get backend
   let responseGet = await getAPICamera(license)
-  console.log(responseGet)
   // upload s3
   let responseS3 = await postS3(responseGet, license)
-  console.log(responseS3)
-  // post backend
-  let responsePost = await postAPICamera(adminID, license)
-  console.log(responsePost)
+  if (responseS3){
+    // post backend
+    let responsePost = await postAPICamera(adminID, license)
+    console.log(responsePost)
+  }
 }
 
 adminFlow()

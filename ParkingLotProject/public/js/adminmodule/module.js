@@ -12,6 +12,7 @@ function checkUploadCondition(){
 }
 
 let intervalId
+let licensePromiseResolve; // Shared variable to hold the resolve function of the promise
 
 async function processRecognition(){
   let [license, confidence] = await recognizeLicensePlate();
@@ -103,10 +104,9 @@ export async function postS3(responseAPI, license){
       mode: 'cors'
     })
     if (responseObj.ok) {
-      let response = await responseObj.text()
-      return response
+      return true
     } else {
-      return null
+      return false
     }
   } catch (error) {
     console.error('Error uploading file:', error);

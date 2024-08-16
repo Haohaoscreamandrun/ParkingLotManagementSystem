@@ -48,3 +48,36 @@ async def admin_lookup(account, password):
       cnxconnection.close()
       print("MySQL connection is closed")
       return myresult
+
+
+async def vacancy_lookup(admin):
+  sql = '''
+  SELECT COUNT(*) AS total_rows,\
+    parking_lot.total_space AS total_space\
+      parking_lot.id\
+        FROM cars\
+          JOIN parking_lot ON cars.lot_id = parking_lot.id\
+            WHERE parking_lot.admin = %s
+            '''
+  val = (admin,)
+  try:
+    cnxconnection = cnxpool.get_connection()
+    mycursor = cnxconnection.cursor()
+    mycursor.execute(sql, val)
+    myresult = mycursor.fetchall()
+
+  except Error:
+    raise Error
+
+  finally:
+    # close connection
+      mycursor.close()
+      cnxconnection.close()
+      print("MySQL connection is closed")
+      return myresult
+  
+async def car_enter(lot_id, license):
+  sql = '''INSERT INTO cars (plate_number, lot_id)\
+    VALUES (%s, %s)
+    '''
+  val = (license, lot_id)

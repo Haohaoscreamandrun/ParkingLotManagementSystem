@@ -3,6 +3,7 @@ from fastapi.responses import JSONResponse, FileResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from ..config.basemodel import *
 from ..model.s3 import *
+from ..model.manager import *
 
 
 router = APIRouter(
@@ -46,8 +47,12 @@ def get_s3_upload_url(license: str):
     400: {'model': Error, "description": "Connection failed"}
 }, response_model=Success)
 def post_enter_RDS(data: PostCarEnter):
-  print(data)
+  
   try:
+    admin = data['admin']
+    license = data['license']
+    vacancy_result = vacancy_lookup(admin, license)
+    print(vacancy_result)
     return JSONResponse(
       status_code=status.HTTP_200_OK,
       content={
