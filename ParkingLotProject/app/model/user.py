@@ -24,3 +24,25 @@ cnxpool = mysql.connector.pooling.MySQLConnectionPool(
     pool_reset_session=True,
     **dbconfig
 )
+
+def cars_in_parking_lot(lot_id):
+  sql = '''
+  SELECT * FROM cars \
+    WHERE lot_id = %s
+    '''
+  val = (lot_id,)
+  try:
+    cnxconnection = cnxpool.get_connection()
+    mycursor = cnxconnection.cursor()
+    mycursor.execute(sql, val)
+    myresult = mycursor.fetchall()
+
+  except mysql.connector.Error:
+    raise mysql.connector.Error
+
+  finally:
+    # close connection
+    mycursor.close()
+    cnxconnection.close()
+    print("MySQL connection is closed")
+    return myresult

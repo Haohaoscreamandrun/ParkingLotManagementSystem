@@ -167,3 +167,13 @@ export function open_enter_bar(){
     enterGate.src = closedSrc
   }, 5000)
 }
+
+
+export async function get_parking_lots(adminID){
+  
+}
+
+
+export function render_chosen_lot(){
+
+}

@@ -18,18 +18,6 @@ async function adminFlow (){
     console.error('Error accessing media devices', error)
   })
 
-  // // Starts
-  // let license = await startRecognition()
-  // console.log('License:', license);
-  // // get backend
-  // let responseGet = await getAPICamera(license)
-  // // upload s3
-  // let responseS3 = await postS3(responseGet, license)
-  // if (responseS3){
-  //   // post backend
-  //   let responsePost = await postAPICamera(adminID, license)
-  //   console.log(responsePost)
-  // }
   function handleLicenseUpdate(license){
     console.log('Recognized License:', license)
     getAPICamera(license).then(responseGet => {

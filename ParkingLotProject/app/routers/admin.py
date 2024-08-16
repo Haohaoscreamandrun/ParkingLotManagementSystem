@@ -7,14 +7,14 @@ import datetime
 import jwt
 import requests
 from ..config.basemodel import *
-from ..model.manager import admin_lookup
+from ..model.manager import *
 from dotenv import load_dotenv
 import os
 load_dotenv()
 jwtkey = os.getenv('JWTKEY')
 
 router = APIRouter(
-    prefix="/api/admin/auth",
+    prefix="/api/admin",
     tags=['admin'],
     responses={
         422: {'model': Error, 'description': "Transmission format error"},
@@ -22,7 +22,45 @@ router = APIRouter(
     }
 )
 
-@router.put("", responses={
+@router.get("", responses={
+    200: {'model': ReturnAdminParkingLotsObj, 'description': "Successful on decode token"}
+},
+    response_class=JSONResponse,
+    response_model=ReturnAdminParkingLotsObj,
+    summary="The API to reply admin controls parking lots"
+)
+async def get_lots_by_admin(admin: int):
+  
+  try:
+    parking_lots = admin_parking_lot_lookup(admin)
+    if len(parking_lots) > 0:
+      response_content_list = []
+      for parking_lot in parking_lots:
+        response_content = {
+          'lot_id': parking_lot[0],
+          'lot_name': parking_lot[1]
+        }
+        response_content_list.push(response_content)
+        return JSONResponse(
+          status_code=status.HTTP_200_OK,
+          content={
+              'data': response_content_list
+          }
+        )
+    else:
+      return JSONResponse(
+          status_code=status.HTTP_200_OK,
+          content={
+              'data': None
+          }
+      )
+  except (HTTPException, StarletteHTTPException) as exc:
+    raise HTTPException(
+        status_code=exc.status_code,
+        detail=exc.detail
+    )
+
+@router.put("/auth", responses={
       200: {'model': Token, 'description': "Login attempt successful, give admin user a token"},
       400: {'model': Error, "description": "Login failed"}
     }, 
@@ -80,7 +118,8 @@ async def admin_login(admin: AdminCredentials):
         detail=exc.detail
     )
 
-@router.get("", responses= {
+
+@router.get("/auth", responses={
     200: {'model': ReturnAdmin, 'description': "Successful on decode token"}
     },
     response_class=JSONResponse,

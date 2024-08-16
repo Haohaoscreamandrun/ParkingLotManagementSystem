@@ -81,23 +81,39 @@
           </div>
         </div>
       </div>
-      <div class="col col-12 col-md-6 rounded-3">
-        <!-- List of cars information -->
-        <div class="p-2 d-flex flex-column justify-content-center">
-          <h4>List of cars information</h4>
-          <div class="input-group">
-            <span class="input-group-text" id="addon2">Search by number</span>
-            <input type="text" placeholder="Number of plate" class="form-control" aria-label="license plate"
-              aria-describedby="addon2">
+      <div class="col col-12 col-md-6 rounded-3 container">
+        <div class="row">
+          <!-- dropdown menu for parking lot -->
+          <div class="col col-12 p-2">
+            <h4>Chosen Parking Lot</h4>
+            <div class="input-group mb-3">
+              <button class="btn btn-warning dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Parking lot
+              </button>
+              <ul class="dropdown-menu">
+                <li><button class="dropdown-item" type="button">多多站收費停車場(中華站)</button></li>
+              </ul>
+              <input type="text" class="form-control" id="chosenLot" readonly>
+            </div>
           </div>
-          <div class="list-group">
-            <button type="button" class="list-group-item list-group-item-action">License plate 1</button>
-            <button type="button" class="list-group-item list-group-item-action">License plate 2</button>
-            <button type="button" class="list-group-item list-group-item-action">License plate 3</button>
-            <button type="button" class="list-group-item list-group-item-action">License plate 4</button>
-            <button type="button" class="list-group-item list-group-item-action">License plate 5</button>
+          <!-- List of cars information -->
+          <div class="col col-12 p-2 d-flex flex-column justify-content-center">
+            <h4>List of cars information</h4>
+            <div class="input-group">
+              <span class="input-group-text" id="addon2">Search by number</span>
+              <input type="text" placeholder="Number of plate" class="form-control" aria-label="license plate"
+                aria-describedby="addon2">
+            </div>
+            <div class="list-group" id="">
+              <button type="button" class="list-group-item list-group-item-action">License plate 1</button>
+              <button type="button" class="list-group-item list-group-item-action">License plate 2</button>
+              <button type="button" class="list-group-item list-group-item-action">License plate 3</button>
+              <button type="button" class="list-group-item list-group-item-action">License plate 4</button>
+              <button type="button" class="list-group-item list-group-item-action">License plate 5</button>
+            </div>
           </div>
         </div>
+          
       </div>
       <div class="col col-12 col-md-6 rounded-3">
         <!-- Chosen car information -->

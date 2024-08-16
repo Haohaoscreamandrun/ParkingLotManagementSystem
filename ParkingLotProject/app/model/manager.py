@@ -50,6 +50,25 @@ async def admin_lookup(account, password):
       return myresult
 
 
+async def admin_parking_lot_lookup(admin):
+  sql = '''SELECT (id, name) FROM parking_lot WHERE admin_id = %s'''
+  val = (admin,)
+  try:
+    cnxconnection = cnxpool.get_connection()
+    mycursor = cnxconnection.cursor()
+    mycursor.execute(sql, val)
+    myresult = mycursor.fetchall()
+
+  except mysql.connector.Error:
+    raise mysql.connector.Error
+
+  finally:
+    # close connection
+    mycursor.close()
+    cnxconnection.close()
+    print("MySQL connection is closed")
+    return myresult
+
 async def double_license(license):
   sql = '''SELECT * FROM cars WHERE plate_number = %s'''
   val = (license,)

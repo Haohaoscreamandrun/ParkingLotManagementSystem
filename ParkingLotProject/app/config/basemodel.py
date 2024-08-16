@@ -1,5 +1,7 @@
 from pydantic import BaseModel, Field, field_validator, ValidationError
+from typing import List, Optional
 import re
+from datetime import datetime
 
 
 class Error(BaseModel):
@@ -38,9 +40,32 @@ class Token(BaseModel):
 class ReturnAdmin(BaseModel):
     data: Admin | None
 
+
 class S3UploadURL(BaseModel):
     data: object
+
 
 class PostCarEnter(BaseModel):
     admin: int
     license: str
+
+
+class ReturnCars(BaseModel):
+    car_id: int
+    license: str
+    enter_time: datetime
+    green_light: datetime
+    parking_lot_id: int
+
+
+class ReturnCarsObj(BaseModel):
+    data: Optional[List[ReturnCars]]
+
+
+class ReturnAdminParkingLots(BaseModel):
+    lot_id : int
+    lot_name : str
+
+
+class ReturnAdminParkingLotsObj(BaseModel):
+    data: Optional[List[ReturnAdminParkingLots]]
