@@ -84,7 +84,7 @@ async def inex(request: Request):
 
 
 @app.exception_handler(MysqlException)
-async def MysqlException_exception_handler(exc: MysqlException):
+async def MysqlException_exception_handler(request: Request, exc: MysqlException):
   return JSONResponse(
     status_code= status.HTTP_500_INTERNAL_SERVER_ERROR,
     content= {

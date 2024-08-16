@@ -50,14 +50,33 @@ async def admin_lookup(account, password):
       return myresult
 
 
+async def double_license(license):
+  sql = '''SELECT * FROM cars WHERE plate_number = %s'''
+  val = (license,)
+  try:
+    cnxconnection = cnxpool.get_connection()
+    mycursor = cnxconnection.cursor()
+    mycursor.execute(sql, val)
+    myresult = mycursor.fetchall()
+
+  except mysql.connector.Error:
+    raise mysql.connector.Error
+
+  finally:
+    # close connection
+    mycursor.close()
+    cnxconnection.close()
+    print("MySQL connection is closed")
+    return myresult
+
 async def vacancy_lookup(admin):
   sql = '''
-  SELECT COUNT(*) AS total_rows,\
-    parking_lot.total_space AS total_space\
+  SELECT COUNT(cars.id) AS total_cars,\
+    parking_lot.total_space AS total_space,\
       parking_lot.id\
         FROM cars\
-          JOIN parking_lot ON cars.lot_id = parking_lot.id\
-            WHERE parking_lot.admin = %s
+          RIGHT JOIN parking_lot ON cars.lot_id = parking_lot.id\
+            WHERE parking_lot.admin_id = %s
             '''
   val = (admin,)
   try:
@@ -71,13 +90,27 @@ async def vacancy_lookup(admin):
 
   finally:
     # close connection
-      mycursor.close()
-      cnxconnection.close()
-      print("MySQL connection is closed")
-      return myresult
+    mycursor.close()
+    cnxconnection.close()
+    print("MySQL connection is closed")
+    return myresult
   
 async def car_enter(lot_id, license):
   sql = '''INSERT INTO cars (plate_number, lot_id)\
     VALUES (%s, %s)
     '''
   val = (license, lot_id)
+  try:
+      cnxconnection = cnxpool.get_connection()
+      mycursor = cnxconnection.cursor()
+      mycursor.execute(sql, val)
+      cnxconnection.commit()
+      print(mycursor.rowcount, "record processed.")
+  except mysql.connector.Error:
+    raise mysql.connector.Error
+
+  finally:
+    # close connection
+    mycursor.close()
+    cnxconnection.close()
+    print("MySQL connection is closed")

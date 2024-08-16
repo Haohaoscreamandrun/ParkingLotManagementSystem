@@ -11,10 +11,13 @@ function checkUploadCondition(){
   return allSame || averageConfidence > 30;
 }
 
-let intervalId
-let licensePromiseResolve; // Shared variable to hold the resolve function of the promise
+let intervalId = null
+let licensePromiseResolve = null; // Shared variable to hold the resolve function of the promise
+let licenseCallback = null
+let recognizedPlateInput = document.querySelector('#recognizedPlate')
 
 async function processRecognition(){
+  console.log('ProcessRecognition is triggered')
   let [license, confidence] = await recognizeLicensePlate();
   if (arrayLicense.length === 3){
     arrayLicense.shift()
@@ -24,42 +27,59 @@ async function processRecognition(){
     arrayLicense.push(license)
     arrayConfidence.push(confidence)
   }
+  console.log('Array License:', arrayLicense); // Debugging line
+  console.log('Array Confidence:', arrayConfidence); // Debugging line
   // check the conditions
   if (arrayLicense.length === 3 && checkUploadCondition()){
-    // give 10 secs break
-    stopRecognition()
-    setTimeout(() => {
-      startRecognition()
-      recognizedPlateInput.value = ""
-    }, 10000)
+     console.log('Upload Condition Met'); // Debugging line
     // show on screen
-    let recognizedPlateInput = document.querySelector('#recognizedPlate')
     recognizedPlateInput.value = `Successful! ${license}, conf. lv: ${arrayConfidence.reduce((sum, val) => sum + val, 0) / arrayConfidence.length}`
     // clear out previous data
     arrayLicense = []
     arrayConfidence = []
+    // return license to callback
+    if (licenseCallback){
+      licenseCallback(license)
+    }
     // Resolve the promise with the license
     if (licensePromiseResolve) {
+      console.log('Resolving Promise with License:', license); // Debugging line
       licensePromiseResolve(license);
       licensePromiseResolve = null; // Clear the resolve function
     }
+    // give 10 secs break
+    stopRecognition()
+    setTimeout(() => {
+      console.log('Restarting Recognition'); // Debugging line
+      startRecognition(licenseCallback)
+      recognizedPlateInput.value = ""
+    }, 10000)
   }
 }
 
-export function startRecognition(){
+export function startRecognition(callback){
+  console.log('StartRecognition is triggered')
+  licenseCallback = callback
   return new Promise((resolve)=>{
-    if (!intervalId){
-      // Store the resolve function
-      licensePromiseResolve = resolve  
-      intervalId = setInterval(processRecognition, 1500)
+    if (intervalId){
+      clearInterval(intervalId)
+      console.log('Cleared Existing Interval')
     }
+    // Store the resolve function
+    licensePromiseResolve = resolve
+    // Start new interval
+    intervalId = setInterval(processRecognition, 1500)
+    console.log('Start New Interval')
   })
  
 }
 
 function stopRecognition(){
-  clearInterval(intervalId)
-  intervalId = null
+  if (intervalId){
+    console.log('StopRecognition is triggered and interval is cleared')
+    clearInterval(intervalId)
+    intervalId = null
+  }
 }
 
 
@@ -136,4 +156,14 @@ export async function postAPICamera(adminID, license){
   } catch (error) {
     alert('Error fetch to backend:', error)
   }
+}
+
+export function open_enter_bar(){
+  let enterGate = document.querySelector('#enterGate')
+  let closedSrc = enterGate.src
+  let openSrc = '../public/images/gate-open.jpg'
+  enterGate.src = openSrc
+  setTimeout(()=>{
+    enterGate.src = closedSrc
+  }, 5000)
 }

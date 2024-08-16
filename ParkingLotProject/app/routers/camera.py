@@ -43,22 +43,35 @@ def get_s3_upload_url(license: str):
 
 
 @router.post('', responses={
-    200: {'model': Success, 'description': "Get the temperate URL to upload to S3 bucket, or nothing is returned."},
+    200: {'model': Success, 'description': "Get the enter signal or not."},
     400: {'model': Error, "description": "Connection failed"}
 }, response_model=Success)
-def post_enter_RDS(data: PostCarEnter):
+async def post_enter_RDS(data: PostCarEnter):
   
   try:
-    admin = data['admin']
-    license = data['license']
-    vacancy_result = vacancy_lookup(admin, license)
-    print(vacancy_result)
-    return JSONResponse(
-      status_code=status.HTTP_200_OK,
-      content={
-        "ok": True
-      }
-    )
+    admin = data.admin
+    license = data.license
+    # check vacancy
+    vacancy_result = await vacancy_lookup(admin)
+    vacancy = vacancy_result[0][1]-vacancy_result[0][0]
+    lot_id = vacancy_result[0][2]
+    # check double
+    double = await double_license(license)
+    if vacancy > 0 and len(double) == 0:
+      await car_enter(lot_id, license)
+      return JSONResponse(
+        status_code=status.HTTP_200_OK,
+        content={
+          "ok": True
+        }
+      )
+    else:
+      return JSONResponse(
+        status_code=status.HTTP_200_OK,
+        content={
+          "ok": False
+        }
+      )
   except (HTTPException, StarletteHTTPException) as exc:
     raise HTTPException(
         status_code=exc.status_code,
