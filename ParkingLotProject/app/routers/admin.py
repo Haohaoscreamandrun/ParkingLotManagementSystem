@@ -32,7 +32,7 @@ router = APIRouter(
 async def get_lots_by_admin(admin: int):
   
   try:
-    parking_lots = admin_parking_lot_lookup(admin)
+    parking_lots = await admin_parking_lot_lookup(admin)
     if len(parking_lots) > 0:
       response_content_list = []
       for parking_lot in parking_lots:
@@ -40,7 +40,7 @@ async def get_lots_by_admin(admin: int):
           'lot_id': parking_lot[0],
           'lot_name': parking_lot[1]
         }
-        response_content_list.push(response_content)
+        response_content_list.append(response_content)
         return JSONResponse(
           status_code=status.HTTP_200_OK,
           content={

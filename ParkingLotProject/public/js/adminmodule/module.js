@@ -17,7 +17,6 @@ let licenseCallback = null
 let recognizedPlateInput = document.querySelector('#recognizedPlate')
 
 async function processRecognition(){
-  console.log('ProcessRecognition is triggered')
   let [license, confidence] = await recognizeLicensePlate();
   if (arrayLicense.length === 3){
     arrayLicense.shift()
@@ -28,7 +27,6 @@ async function processRecognition(){
     arrayConfidence.push(confidence)
   }
   console.log('Array License:', arrayLicense); // Debugging line
-  console.log('Array Confidence:', arrayConfidence); // Debugging line
   // check the conditions
   if (arrayLicense.length === 3 && checkUploadCondition()){
      console.log('Upload Condition Met'); // Debugging line
@@ -43,7 +41,6 @@ async function processRecognition(){
     }
     // Resolve the promise with the license
     if (licensePromiseResolve) {
-      console.log('Resolving Promise with License:', license); // Debugging line
       licensePromiseResolve(license);
       licensePromiseResolve = null; // Clear the resolve function
     }
@@ -58,25 +55,21 @@ async function processRecognition(){
 }
 
 export function startRecognition(callback){
-  console.log('StartRecognition is triggered')
   licenseCallback = callback
   return new Promise((resolve)=>{
     if (intervalId){
       clearInterval(intervalId)
-      console.log('Cleared Existing Interval')
     }
     // Store the resolve function
     licensePromiseResolve = resolve
     // Start new interval
     intervalId = setInterval(processRecognition, 1500)
-    console.log('Start New Interval')
   })
  
 }
 
 function stopRecognition(){
   if (intervalId){
-    console.log('StopRecognition is triggered and interval is cleared')
     clearInterval(intervalId)
     intervalId = null
   }
@@ -170,10 +163,47 @@ export function open_enter_bar(){
 
 
 export async function get_parking_lots(adminID){
-  
+  try{
+    let uri = `http://${window.location.hostname}:${window.location.port}`
+    let responseObj = await fetch(`${uri}/api/admin?admin=${adminID}`, {
+      method: "GET",
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    let response = await responseObj.json()
+    if (responseObj.ok){
+      return response.data
+    } else {
+      throw new Error(response.message)
+    }
+  } catch (error) {
+    alert('Error fetch to backend:', error)
+  }
 }
 
 
-export function render_chosen_lot(){
+export function render_chosen_lot(list){
+  let dropdown = document.querySelector('#lotDropDown')
+  list.forEach((lot) => {
+    let listEle = document.createElement('li')
+    let button =document.createElement('button')
+    button.innerText = lot.lot_name
+    button.id = lot.lot_id
+    button.classList.add('dropdown-item')
+    listEle.appendChild(button)
+    dropdown.appendChild(listEle)
+  })
+}
 
+export function render_lot_input(){
+  let input = document.querySelector('#chosenLot')
+  let dropdown = document.querySelector('#lotDropDown')
+  dropdown.addEventListener('click', event => {
+    if (event.target.classList.contains('dropdown-item')){
+      let lot_name = event.target.innerText
+      let lot_id = event.target.id
+      input.value = `${lot_name}, ID: ${lot_id}`
+    }
+  })
 }

@@ -1,11 +1,16 @@
 import { tokenValidation } from "./common/login.js";
-import { startRecognition, getAPICamera, postAPICamera, postS3, open_enter_bar } from "./adminmodule/module.js";
+import { startRecognition, getAPICamera, postAPICamera, postS3, open_enter_bar, get_parking_lots, render_chosen_lot, render_lot_input } from "./adminmodule/module.js";
 
 async function adminFlow (){
   // token validation
   let adminID = await tokenValidation()
   console.log(`Get admin data, admin Id is ${adminID}`)
 
+  // get parking lot list
+  let parkingLotList = await get_parking_lots(adminID)
+  console.log(parkingLotList)
+  render_chosen_lot(parkingLotList)
+  render_lot_input()
   // Access the camera
   navigator.mediaDevices.getUserMedia({video: true})
   .then(stream => {

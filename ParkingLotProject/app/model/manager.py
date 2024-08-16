@@ -51,7 +51,7 @@ async def admin_lookup(account, password):
 
 
 async def admin_parking_lot_lookup(admin):
-  sql = '''SELECT (id, name) FROM parking_lot WHERE admin_id = %s'''
+  sql = '''SELECT id, name FROM parking_lot WHERE admin_id = %s'''
   val = (admin,)
   try:
     cnxconnection = cnxpool.get_connection()
