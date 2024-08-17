@@ -157,8 +157,12 @@ export async function tokenValidation(){
     let adminBtn = document.querySelector('#adminLoginCanvasBtn')
     adminBtn.outerHTML = `
       <div class="d-flex align-items-center text-info">
-        <div class="px-3">Hello, ${response.data.account}!</div>
-        <button class="navbar-nav btn text-center" type="button" id="adminLogoutBtn">Log out</button>
+        <div class="px-3">
+          Hello, ${response.data.account}!
+        </div>
+        <button class="navbar-nav btn text-center" type="button" id="adminLogoutBtn">
+        Log out
+        </button>
       </div>
     `
     let logoutBtn = document.querySelector('#adminLogoutBtn')

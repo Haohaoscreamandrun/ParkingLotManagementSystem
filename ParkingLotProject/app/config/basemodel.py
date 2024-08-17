@@ -1,4 +1,5 @@
 from pydantic import BaseModel, Field, field_validator, ValidationError
+from pydantic_extra_types.coordinate import Coordinate
 from typing import List, Optional
 import re
 from datetime import datetime
@@ -69,3 +70,17 @@ class ReturnAdminParkingLots(BaseModel):
 
 class ReturnAdminParkingLotsObj(BaseModel):
     data: Optional[List[ReturnAdminParkingLots]]
+
+class RetrunParkingLot(BaseModel):
+    id : int
+    name : str
+    coordinate: Coordinate
+    address: Optional[str]
+    total_space: int
+    parking_fee: int
+    admin_id: int
+
+
+class RetrunParkingLotObj(BaseModel):
+    data: Optional[List[RetrunParkingLot]]
+

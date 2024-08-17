@@ -46,3 +46,75 @@ def cars_in_parking_lot(lot_id):
     cnxconnection.close()
     print("MySQL connection is closed")
     return myresult
+
+
+def car_by_license(license):
+  sql = '''
+  SELECT * FROM cars \
+    WHERE license = %s
+    '''
+  val = (license,)
+  try:
+    cnxconnection = cnxpool.get_connection()
+    mycursor = cnxconnection.cursor()
+    mycursor.execute(sql, val)
+    myresult = mycursor.fetchall()
+
+  except mysql.connector.Error:
+    raise mysql.connector.Error
+
+  finally:
+    # close connection
+    mycursor.close()
+    cnxconnection.close()
+    print("MySQL connection is closed")
+    return myresult
+
+
+def parkinglot_by_id(id):
+  sql = '''
+  SELECT * FROM parking_lot\
+    WHERE id = %s
+    '''
+  val = (id,)
+  try:
+    cnxconnection = cnxpool.get_connection()
+    mycursor = cnxconnection.cursor()
+    mycursor.execute(sql, val)
+    myresult = mycursor.fetchall()
+
+  except mysql.connector.Error:
+    raise mysql.connector.Error
+
+  finally:
+    # close connection
+    mycursor.close()
+    cnxconnection.close()
+    print("MySQL connection is closed")
+    return myresult
+
+
+def parkinglot_by_localtion(lat, lon, number):
+  
+  sql = '''
+  SELECT id, name, coordinate, address, total_space, parking_fee,\
+    ST_Distance_Sphere(coordinate, POINT(%s, %s)) AS distance\
+      FROM parking_lot ORDER BY distance LIMIT %s;
+      '''
+  val = (lon, lat, number)
+
+  try:
+    cnxconnection = cnxpool.get_connection()
+    mycursor = cnxconnection.cursor()
+    mycursor.execute(sql, val)
+    myresult = mycursor.fetchall()
+  
+  except mysql.connector.Error:
+    raise mysql.connector.Error
+
+  finally:
+    # close connection
+    mycursor.close()
+    cnxconnection.close()
+    print("MySQL connection is closed")
+    return myresult

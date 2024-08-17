@@ -95,6 +95,42 @@
               </ul>
               <input type="text" class="form-control" id="chosenLot" readonly>
             </div>
+            <div id="lotDetailCard" class="card">
+              <div class="card-body">
+                <h5 class="card-title placeholder-glow" id="parkingLotName">
+                  <span class="placeholder col-12"></span>
+                </h5>
+                <h6 class="card-subtitle text-body-secondary mb-3 placeholder-glow" id="parkingLotAddress">
+                  <span class="placeholder col-5"></span>
+                </h6>
+                <div class="container align-content-center">
+                  <div class="row g-1">
+                    <div class="col-4">
+                      <div class="p-1">Parking fee:</div>
+                    </div>
+                    <div class="col-8">
+                      <div class="p-1 placeholder-glow" id="parkingLotFee">
+                        <span class="placeholder col-10"></span>
+                      </div>
+                    </div>
+                    <div class="col-4">
+                      <div class="p-1">Current Vacancy:</div>
+                    </div>
+                    <div class="col-4">
+                      <div class="p-1 placeholder-glow" id="parkingLotSpace">
+                        <span class="placeholder col-8"></span>
+                      </div>
+                    </div>
+                    <div class="col-4">
+                      <div class="p-1 placeholder-glow" id="parkingLotVacancy">
+                        <span class="placeholder col-8"></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                </ul>
+              </div>
+            </div>
           </div>
           <!-- List of cars information -->
           <div class="col col-12 p-2 d-flex flex-column justify-content-center">
@@ -102,10 +138,14 @@
             <div class="input-group">
               <span class="input-group-text" id="addon2">Search by number</span>
               <input type="text" placeholder="Number of plate" class="form-control" aria-label="license plate"
-                aria-describedby="addon2">
+                aria-describedby="addon2" id="searchCars">
             </div>
             <div class="list-group" id="carsListGroup">
-              
+              <div class="d-flex justify-content-center">
+                <div class="spinner-grow text-secondary mt-2" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -116,7 +156,7 @@
         <div class="p-2">
           <h4>Chosen car information</h4>
           <div class="card">
-            <img src="../public/images/WM-8888.jpg" alt="..." class="card-img-top">
+            <img src="../public/images/car-graphic.jpg" alt="..." class="card-img-top" id="cardImgTop">
             <div class="card-body">
               <div class="card-title">
                 <h5>Chosen car details</h5>
@@ -127,13 +167,13 @@
                     <label for="licenseplate" class="col-form-label">Recognized plate:</label>
                   </div>
                   <div class="col-7">
-                    <input type="text" class="form-control" name="licenseplate" id="licenseplate" value="WM8688">
+                    <input type="text" class="form-control" name="licenseplate" id="licenseplate">
                   </div>
                   <div class="col-5">
                     <label for="timestamp" class="col-form-label">Enter time stamp:</label>
                   </div>
                   <div class="col-7">
-                    <input type="datetime-local" class="form-control" name="timestamp" id="timestamp" value="2024-08-05T11:34"  disabled>
+                    <input type="datetime-local" class="form-control" name="timestamp" id="timestamp"   disabled>
                   </div>
                   <div class="col-5">
                     <label for="parkingfee" class="col-form-label">Parking fee subtotal:</label>
@@ -141,7 +181,7 @@
                   <div class="col-7">
                     <div class="input-group">
                       <span class="input-group-text">$NTD</span>
-                      <input type="text" class="form-control" id="parkingfee" value="120" disabled>
+                      <input type="text" class="form-control" id="parkingfee" disabled>
                     </div>
                   </div>
                   <div class="col-5">
