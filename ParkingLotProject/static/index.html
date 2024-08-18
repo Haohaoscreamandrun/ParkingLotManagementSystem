@@ -86,50 +86,51 @@
         </div>
         <div class="row g-2">
           <div class="col p-2">
-            <div class="list-group">
+            <div class="list-group scrollable-list" id="parkingLotList">
               <button type="button" class="list-group-item list-group-item-action">Name of parking lot 1</button>
               <button type="button" class="list-group-item list-group-item-action">Name of parking lot 2</button>
               <button type="button" class="list-group-item list-group-item-action">Name of parking lot 3</button>
               <button type="button" class="list-group-item list-group-item-action">Name of parking lot 4</button>
               <button type="button" class="list-group-item list-group-item-action">Name of parking lot 5</button>
             </div>
+            <div class="scrollspy-example" data-bs-spy="scroll" data-bs-target="#parkingLotList" data-bs-smooth-scroll="true"
+              tabindex="0">
+            </div>
           </div>
         </div>
       </div>
       <!-- Parking Lot info Card -->
       <div class="col col-12 col-md-6 rounded-3 p-2">
-        <div class="card m-2">
+        <div id="lotDetailCard" class="card m-2">
           <div class="card-body">
-            <h5 class="card-title">Name of Parking Lot</h5>
-            <h6 class="card-subtitle text-body-secondary mb-3">address of parking lot</h6>
+            <h5 class="card-title placeholder-glow" id="parkingLotName">
+              <span class="placeholder col-12"></span>
+            </h5>
+            <h6 class="card-subtitle text-body-secondary mb-3 placeholder-glow" id="parkingLotAddress">
+              <span class="placeholder col-5"></span>
+            </h6>
             <div class="container align-content-center">
               <div class="row g-1">
-                <div class="col-4">
-                  <div class="p-1">Opening Hours:</div>
-                </div>
-                <div class="col-8">
-                  <div class="p-1">From 08:00 to 22:00</div>
-                </div>
                 <div class="col-4">
                   <div class="p-1">Parking fee:</div>
                 </div>
                 <div class="col-8">
-                  <div class="p-1">TWD $30/hr</div>
-                </div>
-                <div class="col-4">
-                  <div class="p-1">Charging Station:</div>
-                </div>
-                <div class="col-8">
-                  <div class="p-1">No</div>
+                  <div class="p-1 placeholder-glow" id="parkingLotFee">
+                    <span class="placeholder col-10"></span>
+                  </div>
                 </div>
                 <div class="col-4">
                   <div class="p-1">Current Vacancy:</div>
                 </div>
                 <div class="col-4">
-                  <div class="p-1">37 Normal</div>
+                  <div class="p-1 placeholder-glow" id="parkingLotSpace">
+                    <span class="placeholder col-8"></span>
+                  </div>
                 </div>
                 <div class="col-4">
-                  <div class="p-1">3 Electric</div>
+                  <div class="p-1 placeholder-glow" id="parkingLotVacancy">
+                    <span class="placeholder col-8"></span>
+                  </div>
                 </div>
               </div>
             </div>

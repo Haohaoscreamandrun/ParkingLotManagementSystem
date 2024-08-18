@@ -110,3 +110,10 @@
   display: block;
   /* Remove any bottom space caused by inline-block default */
 }
+
+.scrollable-list
+{
+  max-height: 220px;
+  overflow-y: auto;
+}
+

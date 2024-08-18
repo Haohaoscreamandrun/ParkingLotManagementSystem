@@ -1,10 +1,20 @@
 import { uri } from "../common/server.js";
 
-export function getLocation() {
+export async function getLocation() {
   if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(get_parking_lots_by_coordinate, showError);
+    try{  
+      let position = await new Promise((resolve, reject) => {
+      navigator.geolocation.getCurrentPosition(resolve, reject);
+       })
+      let parkingLots = await get_parking_lots_by_coordinate(position)
+      return parkingLots
+    } catch(error){
+      showError(error)
+      return null
+    } 
   } else {
     alert("Geolocation is not supported by this browser.")
+    return null
   }
 }
 
@@ -37,7 +47,7 @@ async function get_parking_lots_by_coordinate(position){
     })
     let response = await responseObj.json()
     if (responseObj.ok && response.data.length > 0){
-      render_scrollBar_lots(response.data)
+      return (response.data)
     } else {
       throw new Error(response.message)
     }
@@ -46,7 +56,7 @@ async function get_parking_lots_by_coordinate(position){
   }
 }
 
-function render_scrollBar_lots(data){
+export function render_scrollBar_lots(data){
   let scrollBarLots = document.querySelector('#scrollBarLots')
   data.forEach(lot => {
     let newDiv = document.createElement('div')
