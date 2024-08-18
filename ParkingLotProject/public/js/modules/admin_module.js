@@ -293,7 +293,7 @@ async function fetch_cars_render(){
       // store it in temp storage
       temp_storage_cars = response.data
       // update vacancy
-      render_vacancy()
+      render_vacancy(temp_storage_cars)
       // render first ten cars
       response.data.slice(0, 10).forEach((car) => {
         render_cars(car)
@@ -326,11 +326,11 @@ function render_cars(car){
   carsListGroup.appendChild(button)
 }
 
-function render_vacancy(){
+async function render_vacancy(temp_storage_cars){
   let parkingLotSpace = document.querySelector('#parkingLotSpace')
   let parkingLotVacancy = document.querySelector('#parkingLotVacancy')
   let parkingLotSpaceInt = parseInt(parkingLotSpace.innerText.split(' ')[0])
-  parkingLotVacancy.innerHTML = `${parkingLotSpaceInt - temp_storage_cars.length} Vacancy`
+  parkingLotVacancy.innerHTML = `${parkingLotSpaceInt - await temp_storage_cars.length} Vacancy`
 }
 
 // function of search car
@@ -386,7 +386,7 @@ export function render_car_card(){
       if (hours < 1){
         subTotal = parkingLotFeeInt
       }else if(hours >=1 && minutes < 30){
-        subTotal = parkingLotFeeInt * 1.5
+        subTotal = parkingLotFeeInt * (hours + 0.5)
       }else if(hours >=1 && minutes >= 30){
         subTotal = parkingLotFeeInt * (hours + 1)
       }
