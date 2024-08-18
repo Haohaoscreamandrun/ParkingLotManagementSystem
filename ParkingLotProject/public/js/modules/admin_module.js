@@ -285,10 +285,12 @@ async function fetch_cars_render(){
     } else if (responseObj.ok && response.data.length > 0){
 
       // store it in temp storage
-      temp_storage_cars = response.data
+      temp_storage_cars = await response.data
       // update vacancy
       render_vacancy(temp_storage_cars)
       // render first ten cars
+      let carsListGroup = document.querySelector('#carsListGroup')
+      carsListGroup.innerHTML = ''
       response.data.slice(0, 10).forEach((car) => {
         render_cars(car)
       })
@@ -303,8 +305,6 @@ async function fetch_cars_render(){
 }
 
 function render_cars(car){
-  let carsListGroup = document.querySelector('#carsListGroup')
-  carsListGroup.innerHTML = ''
   let car_id = car.car_id
   let license = car.license
   let enter_time = new Date(car.enter_time).toLocaleString()
