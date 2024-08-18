@@ -97,10 +97,17 @@ def parkinglot_by_id(id):
 def parkinglot_by_localtion(lat, lon, number):
   
   sql = '''
-  SELECT id, name, coordinate, address, total_space, parking_fee,\
-    ST_Distance_Sphere(coordinate, POINT(%s, %s)) AS distance\
-      FROM parking_lot ORDER BY distance LIMIT %s;
-      '''
+  SELECT id,\
+    name,\
+    ST_X(coordinate) AS longitude,\
+      ST_Y(coordinate) AS latitude,\
+        address,\
+          total_space,\
+            parking_fee,\
+              admin_id,\
+                ST_Distance_Sphere(coordinate, POINT(%s, %s)) AS distance\
+                  FROM parking_lot ORDER BY distance LIMIT %s;
+                  '''
   val = (lon, lat, number)
 
   try:

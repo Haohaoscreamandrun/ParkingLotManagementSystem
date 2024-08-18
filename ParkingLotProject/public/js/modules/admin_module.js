@@ -230,7 +230,7 @@ export async function get_parking_lot_by_id(lotID){
   }
 }
 
-function render_parking_lot_card(lot){
+export function render_parking_lot_card(lot){
   let parkingLotName = document.querySelector('#parkingLotName')
   let parkingLotAddress = document.querySelector('#parkingLotAddress')
   let parkingLotFee = document.querySelector('#parkingLotFee')
