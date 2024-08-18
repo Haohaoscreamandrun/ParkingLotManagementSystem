@@ -18,7 +18,11 @@ async function adminFlow (){
   // render car card
   render_car_card()
   // Access the camera
-  navigator.mediaDevices.getUserMedia({video: true})
+  navigator.mediaDevices.getUserMedia({
+    video: {
+      facingMode: {ideal: 'environment'}// Request the back camera, but fallback to the front camera if necessary
+    }
+  })
   .then(stream => {
     // Get the video element
     let video = document.getElementById('localVideo');
