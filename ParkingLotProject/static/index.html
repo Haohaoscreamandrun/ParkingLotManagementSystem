@@ -86,12 +86,13 @@
         </div>
         <div class="row g-2">
           <div class="col p-2">
-            <div class="list-group scrollable-list" id="parkingLotList">
-              <button type="button" class="list-group-item list-group-item-action">Name of parking lot 1</button>
-              <button type="button" class="list-group-item list-group-item-action">Name of parking lot 2</button>
-              <button type="button" class="list-group-item list-group-item-action">Name of parking lot 3</button>
-              <button type="button" class="list-group-item list-group-item-action">Name of parking lot 4</button>
-              <button type="button" class="list-group-item list-group-item-action">Name of parking lot 5</button>
+            <div class="list-group scrollable-list d-flex flex-column align-items-center" id="parkingLotList">
+              <div class="spinner-grow text-secondary mt-2" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </div>
+            <div class="scrollspy-example" data-bs-spy="scroll" data-bs-target="#parkingLotList" data-bs-smooth-scroll="true"
+              tabindex="0">
             </div>
             <div class="scrollspy-example" data-bs-spy="scroll" data-bs-target="#parkingLotList" data-bs-smooth-scroll="true"
               tabindex="0">
@@ -101,42 +102,48 @@
       </div>
       <!-- Parking Lot info Card -->
       <div class="col col-12 col-md-6 rounded-3 p-2">
-        <div id="lotDetailCard" class="card m-2">
-          <div class="card-body">
-            <h5 class="card-title placeholder-glow" id="parkingLotName">
-              <span class="placeholder col-12"></span>
-            </h5>
-            <h6 class="card-subtitle text-body-secondary mb-3 placeholder-glow" id="parkingLotAddress">
-              <span class="placeholder col-5"></span>
-            </h6>
-            <div class="container align-content-center">
-              <div class="row g-1">
-                <div class="col-4">
-                  <div class="p-1">Parking fee:</div>
-                </div>
-                <div class="col-8">
-                  <div class="p-1 placeholder-glow" id="parkingLotFee">
-                    <span class="placeholder col-10"></span>
+        <div class="row g-2">
+            <div id="lotDetailCard" class="card m-2">
+              <div class="card-body">
+                <h5 class="card-title placeholder-glow" id="parkingLotName">
+                  <span class="placeholder col-12"></span>
+                </h5>
+                <h6 class="card-subtitle text-body-secondary mb-3 placeholder-glow" id="parkingLotAddress">
+                  <span class="placeholder col-5"></span>
+                </h6>
+                <div class="container align-content-center">
+                  <div class="row g-1">
+                    <div class="col-4">
+                      <div class="p-1">Parking fee:</div>
+                    </div>
+                    <div class="col-8">
+                      <div class="p-1 placeholder-glow" id="parkingLotFee">
+                        <span class="placeholder col-10"></span>
+                      </div>
+                    </div>
+                    <div class="col-4">
+                      <div class="p-1">Current Vacancy:</div>
+                    </div>
+                    <div class="col-4">
+                      <div class="p-1 placeholder-glow" id="parkingLotSpace">
+                        <span class="placeholder col-8"></span>
+                      </div>
+                    </div>
+                    <div class="col-4">
+                      <div class="p-1 placeholder-glow" id="parkingLotVacancy">
+                        <span class="placeholder col-8"></span>
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <div class="col-4">
-                  <div class="p-1">Current Vacancy:</div>
-                </div>
-                <div class="col-4">
-                  <div class="p-1 placeholder-glow" id="parkingLotSpace">
-                    <span class="placeholder col-8"></span>
-                  </div>
-                </div>
-                <div class="col-4">
-                  <div class="p-1 placeholder-glow" id="parkingLotVacancy">
-                    <span class="placeholder col-8"></span>
-                  </div>
-                </div>
+                </ul>
+              </div>
+              <div class="card-footer d-grid">
+                <button type="button" class="btn btn-info">Find My Car Here</button>
               </div>
             </div>
-            </ul>
-          </div>
         </div>
+        
       </div>
     </div>
     <div class="row g-2">
