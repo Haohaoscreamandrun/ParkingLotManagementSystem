@@ -211,7 +211,7 @@ export function render_lot_input(){
   })
 }
 
-async function get_parking_lot_by_id(lotID){
+export async function get_parking_lot_by_id(lotID){
   try{
     let responseObj = await fetch(`${uri}/api/parkinglot/${lotID}`, {
       method: "GET",
@@ -320,7 +320,7 @@ function render_cars(car){
   carsListGroup.appendChild(button)
 }
 
-async function render_vacancy(temp_storage_cars){
+export async function render_vacancy(temp_storage_cars){
   let parkingLotSpace = document.querySelector('#parkingLotSpace')
   let parkingLotVacancy = document.querySelector('#parkingLotVacancy')
   let parkingLotSpaceInt = parseInt(parkingLotSpace.innerText.split(' ')[0])

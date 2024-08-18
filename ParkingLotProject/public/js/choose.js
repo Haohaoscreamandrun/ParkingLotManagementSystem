@@ -1,5 +1,5 @@
 import { formValidation, signInValidation, tokenValidation } from "./common/login.js";
-import { getLocation, scrollClick, clickSearch } from "./modules/choose_module.js";
+import { getLocation, render_scrollBar_lots, scrollClick, clickSearch } from "./modules/choose_module.js";
 
 async function chooseFlow(){
   // Login logic
@@ -12,7 +12,8 @@ async function chooseFlow(){
   let adminID = await tokenValidation()
   
   // render scrollbar
-  getLocation()
+  let parkingLots = await getLocation()
+  render_scrollBar_lots(parkingLots)
   // scroll bar illustrate
   let scrollUpBtn = document.querySelector('#scrollUpBtn')
   let scrollDownBtn = document.querySelector('#scrollDownBtn')
