@@ -1,3 +1,4 @@
+import { uri } from "../common/server.js";
 
 export function getLocation() {
   if (navigator.geolocation) {
@@ -28,7 +29,6 @@ async function get_parking_lots_by_coordinate(position){
   let lat = position.coords.latitude
   let lon = position.coords.longitude
    try{
-    let uri = `http://${window.location.hostname}:${window.location.port}`
     let responseObj = await fetch(`${uri}/api/parkinglot?latitude=${lat}&longitude=${lon}`, {
       method: "GET",
       headers: {
@@ -81,7 +81,6 @@ export async function clickSearch(event){
   if (event.target.classList[0] === 'scrollBarLotsList'){
     let lot_id = event.target.id
     try{
-      let uri = `http://${window.location.hostname}:${window.location.port}`
       let responseObj = await fetch(`${uri}/api/cars?lot_id=${lot_id}`, {
         method: "GET",
         headers: {

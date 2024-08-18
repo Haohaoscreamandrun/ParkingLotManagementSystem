@@ -1,5 +1,5 @@
 import { recognizeLicensePlate } from "../common/tesseract.js";
-
+import { uri } from "../common/server.js";
 // Periodically Capture and process
 let arrayLicense = []
 let arrayConfidence = []
@@ -78,7 +78,6 @@ function stopRecognition(){
 
 export async function getAPICamera(license){
   try{
-    let uri = `http://${window.location.hostname}:${window.location.port}`
     let responseObj = await fetch(`${uri}/api/camera?license=${license}`, {
       method: "GET",
       headers: {
@@ -128,7 +127,6 @@ export async function postS3(responseAPI, license){
 
 export async function postAPICamera(adminID, license){
   try{
-    let uri = `http://${window.location.hostname}:${window.location.port}`
     let requestBodyObj = {
       'admin': adminID,
       'license': license
@@ -164,7 +162,6 @@ export function open_enter_bar(){
 
 export async function get_parking_lots(adminID){
   try{
-    let uri = `http://${window.location.hostname}:${window.location.port}`
     let responseObj = await fetch(`${uri}/api/admin?admin=${adminID}`, {
       method: "GET",
       headers: {
@@ -216,7 +213,6 @@ export function render_lot_input(){
 
 async function get_parking_lot_by_id(lotID){
   try{
-    let uri = `http://${window.location.hostname}:${window.location.port}`
     let responseObj = await fetch(`${uri}/api/parkinglot/${lotID}`, {
       method: "GET",
       headers: {
@@ -265,8 +261,6 @@ async function fetch_cars_render(){
   let lot_id = inputString.split(':')[1].trim()
   // fetch
   try{
-    
-    let uri = `http://${window.location.hostname}:${window.location.port}`
     let responseObj = await fetch(`${uri}/api/cars?lot_id=${lot_id}`, {
       method: "GET",
       headers: {

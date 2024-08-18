@@ -1,4 +1,5 @@
 'use strict'
+import { uri } from "./server.js"
 
 // Login form front-end validation
 export async function formValidation(){
@@ -65,7 +66,6 @@ export async function signInValidation(event){
   // fetch to back-end api
   try{
     showSpinner()
-    let uri = `http://${window.location.hostname}:${window.location.port}`
     let responseObj = await fetch(uri+'/api/admin/auth', {
       method: "PUT",
       headers: {
@@ -115,7 +115,6 @@ export async function tokenValidation(){
   // get the token store in local storage
   let token = localStorage.getItem('token') || null
   // if no token exist, redirect from admin.html
-  let uri = `http://${window.location.hostname}:${window.location.port}`
   let isNoToken = (token === null)
   let isAdminHTML = (location.href === uri+'/admin')
   if (isNoToken && isAdminHTML){
