@@ -74,11 +74,13 @@ class ReturnAdminParkingLotsObj(BaseModel):
 class RetrunParkingLot(BaseModel):
     id : int
     name : str
-    coordinate: Coordinate
+    longitude: float
+    latitude: float
     address: Optional[str]
     total_space: int
     parking_fee: int
     admin_id: int
+    distance: Optional[int]
 
 
 class RetrunParkingLotObj(BaseModel):

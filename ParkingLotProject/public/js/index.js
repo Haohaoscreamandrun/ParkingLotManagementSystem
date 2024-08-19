@@ -1,6 +1,5 @@
 import { formValidation, signInValidation, tokenValidation } from "./common/login.js";
-import { getLocation } from "./modules/choose_module.js";
-import { render_parking_lots_list, render_lot_card,search_lots_by_address } from "./modules/index_module.js";
+import { getLocation, render_parking_lots_list, render_lot_card,search_lots_by_address } from "./modules/index_module.js";
 
 async function indexFlow(){
   // Login logic
@@ -29,8 +28,6 @@ async function indexFlow(){
   let searchInput = document.querySelector('#searchInput')
   searchInput.addEventListener('input', event => search_lots_by_address(event, parkingLots))
 
-  // // render map
-  // addMarkers(parkingLots)
 }
 
 indexFlow()

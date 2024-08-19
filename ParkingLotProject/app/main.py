@@ -70,13 +70,13 @@ async def inex(request: Request):
   return FileResponse('./static/admin.html', media_type="text/html")
 
 
-@app.get('/choose', include_in_schema=False)
-async def inex(request: Request):
+@app.get('/choose/{lotID}', include_in_schema=False)
+async def inex(request: Request, lotID: int):
   return FileResponse('./static/choose.html', media_type="text/html")
 
 
-@app.get('/payment', include_in_schema=False)
-async def inex(request: Request):
+@app.get('/payment/{license}', include_in_schema=False)
+async def inex(request: Request, license: str):
   return FileResponse('./static/payment.html', media_type="text/html")
 
 

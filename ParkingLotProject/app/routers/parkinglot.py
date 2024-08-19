@@ -81,11 +81,12 @@ async def get_parking_lot_by_ID(lotID: str):
         response_content = {
             'id': result[0],
             'name': result[1],
-            'coordinate': mapping(wkb.loads(result[2])),
-            'address': result[3],
-            'total_space': result[4],
-            'parking_fee': result[5],
-            'admin_id': result[6]
+            'longitude':  result[2],
+            'latitude': result[3],
+            'address': result[4],
+            'total_space': result[5],
+            'parking_fee': result[6],
+            'admin_id': result[7]
         }
         response_content_list.append(response_content)
       return JSONResponse(

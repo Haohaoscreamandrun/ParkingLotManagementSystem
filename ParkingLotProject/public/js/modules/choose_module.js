@@ -1,60 +1,6 @@
 import { uri } from "../common/server.js";
 
-export async function getLocation() {
-  if (navigator.geolocation) {
-    try{  
-      let position = await new Promise((resolve, reject) => {
-      navigator.geolocation.getCurrentPosition(resolve, reject);
-       })
-      let parkingLots = await get_parking_lots_by_coordinate(position)
-      return parkingLots
-    } catch(error){
-      showError(error)
-      return null
-    } 
-  } else {
-    alert("Geolocation is not supported by this browser.")
-    return null
-  }
-}
 
-function showError(error) {
-  switch(error.code) {
-    case error.PERMISSION_DENIED:
-        alert("User denied the request for Geolocation.")
-        break;
-    case error.POSITION_UNAVAILABLE:
-        alert("Location information is unavailable.")
-        break;
-    case error.TIMEOUT:
-        alert("The request to get user location timed out.")
-        break;
-    case error.UNKNOWN_ERROR:
-        alert("An unknown error occurred.")
-        break;
-  }
-}
-
-async function get_parking_lots_by_coordinate(position){
-  let lat = position.coords.latitude
-  let lon = position.coords.longitude
-   try{
-    let responseObj = await fetch(`${uri}/api/parkinglot?latitude=${lat}&longitude=${lon}`, {
-      method: "GET",
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-    let response = await responseObj.json()
-    if (responseObj.ok && response.data.length > 0){
-      return (response.data)
-    } else {
-      throw new Error(response.message)
-    }
-  } catch (error) {
-    console.log('Error fetch to backend:', error)
-  }
-}
 
 export function render_scrollBar_lots(data){
   let scrollBarLots = document.querySelector('#scrollBarLots')

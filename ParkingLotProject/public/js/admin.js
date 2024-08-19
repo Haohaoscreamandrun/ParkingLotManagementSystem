@@ -17,6 +17,8 @@ async function adminFlow (){
   
   // render car card
   render_car_card()
+
+  
   // Access the camera
   navigator.mediaDevices.getUserMedia({
     video: {

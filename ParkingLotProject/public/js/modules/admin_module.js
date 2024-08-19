@@ -193,20 +193,22 @@ export function render_chosen_lot(list){
   })
 }
 
-export function render_lot_input(){
+export async function render_lot_input(){
   let input = document.querySelector('#chosenLot')
   let dropdown = document.querySelector('#lotDropDown')
   let firstChild = dropdown.children[0].children[0]
   // default as first one
   input.value = `${firstChild.innerText}, ID: ${firstChild.id}`
-  get_parking_lot_by_id(firstChild.id)
+  let lots = await get_parking_lot_by_id(firstChild.id)
+  render_parking_lot_card(lots[0])
   // change upon selection
-  dropdown.addEventListener('click', event => {
+  dropdown.addEventListener('click', async function(event) {
     if (event.target.classList.contains('dropdown-item')){
       let lot_name = event.target.innerText
       let lot_id = event.target.id
       input.value = `${lot_name}, ID: ${lot_id}`
-      get_parking_lot_by_id(lot_id)
+      let lots = await get_parking_lot_by_id(lot_id)
+      render_parking_lot_card(lots[0])
     }
   })
 }
@@ -221,12 +223,12 @@ export async function get_parking_lot_by_id(lotID){
     })
     let response = await responseObj.json()
     if (responseObj.ok){
-      render_parking_lot_card(response.data[0])
+      return response.data
     } else {
       throw new Error(response.message)
     }
   } catch (error) {
-    alert('Error fetch to backend:', error)
+    console.log('Error fetch to backend:', error)
   }
 }
 

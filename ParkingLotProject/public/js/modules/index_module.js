@@ -1,6 +1,71 @@
 import { uri } from "../common/server.js"
 import { render_vacancy, render_parking_lot_card } from "./admin_module.js"
 
+export async function getLocation() {
+  if (navigator.geolocation) {
+    try{  
+      let position = await new Promise((resolve, reject) => {
+      navigator.geolocation.getCurrentPosition(resolve, reject);
+       })
+      let parkingLots = await get_parking_lots_by_coordinate(position)
+      return parkingLots
+    } catch(error){
+      showError(error)
+      return null
+    } 
+  } else {
+    alert("Geolocation is not supported by this browser.")
+    return null
+  }
+}
+
+function showError(error) {
+  switch(error.code) {
+    case error.PERMISSION_DENIED:
+        alert("User denied the request for Geolocation.")
+        break;
+    case error.POSITION_UNAVAILABLE:
+        alert("Location information is unavailable.")
+        break;
+    case error.TIMEOUT:
+        alert("The request to get user location timed out.")
+        break;
+    case error.UNKNOWN_ERROR:
+        alert("An unknown error occurred.")
+        break;
+  }
+}
+
+export async function get_parking_lots_by_coordinate(position=undefined, latitude=undefined, longitude=undefined){
+  let lat, lon
+  if (position !== undefined){
+    lat = position.coords.latitude
+    lon = position.coords.longitude
+  } else if (latitude !== undefined && longitude !== undefined){
+    lat = latitude
+    lon = longitude
+  }
+  
+   try{
+    let responseObj = await fetch(`${uri}/api/parkinglot?latitude=${lat}&longitude=${lon}`, {
+      method: "GET",
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    let response = await responseObj.json()
+    if (responseObj.ok && response.data.length > 0){
+      return (response.data)
+    } else {
+      throw new Error(response.message)
+    }
+  } catch (error) {
+    console.log('Error fetch to backend:', error)
+  }
+}
+
+
+
 export function render_parking_lots_list(data, query = ""){  
   let parkingLotList = document.querySelector('#parkingLotList')
   parkingLotList.innerHTML = ''
@@ -87,7 +152,16 @@ export function render_lot_card(event, placeholderNode, lotsArray, lotID=null) {
   })
   render_parking_lot_card(lot_data)
   get_cars_by_lot(lot_id)
-    
+  // process button of finding car
+  let button = document.querySelector('#findCarButton')
+  button.id = `getLot${lot_id}`
+  button.disabled = false
+  button.addEventListener('click', event => direct_find_car_btn(event))
+}
+
+function direct_find_car_btn(event){
+  let lot_id = event.target.id.split('getLot')[1]
+  window.location.href = `${uri}/choose/${lot_id}`
 }
 
 export function search_lots_by_address(event, lotsArray){
@@ -97,4 +171,3 @@ export function search_lots_by_address(event, lotsArray){
   })
   render_parking_lots_list(queryResult, query)
 }
-

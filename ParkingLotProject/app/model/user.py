@@ -73,9 +73,16 @@ def car_by_license(license):
 
 def parkinglot_by_id(id):
   sql = '''
-  SELECT * FROM parking_lot\
-    WHERE id = %s
-    '''
+  SELECT id,\
+    name,\
+    ST_X(coordinate) AS longitude,\
+      ST_Y(coordinate) AS latitude,\
+        address,\
+          total_space,\
+            parking_fee,\
+              admin_id FROM parking_lot\
+                WHERE id = %s
+                '''
   val = (id,)
   try:
     cnxconnection = cnxpool.get_connection()

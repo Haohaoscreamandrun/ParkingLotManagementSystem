@@ -46,7 +46,7 @@
 // }
 
 
-import { getLocation } from "../modules/choose_module.js";
+import { getLocation } from "../modules/index_module.js";
 import { render_lot_card } from "../modules/index_module.js";
 
 let map;
