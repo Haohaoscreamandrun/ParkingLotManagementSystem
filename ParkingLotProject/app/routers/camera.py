@@ -49,10 +49,10 @@ def get_s3_upload_url(license: str):
 async def post_enter_RDS(data: PostCarEnter):
   
   try:
-    admin = data.admin
+    lot_id = data.lotID
     license = data.license
     # check vacancy
-    vacancy_result = await vacancy_lookup(admin)
+    vacancy_result = await vacancy_lookup(lot_id)
     vacancy = vacancy_result[0][1]-vacancy_result[0][0]
     lot_id = vacancy_result[0][2]
     # check double

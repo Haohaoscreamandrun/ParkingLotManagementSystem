@@ -51,7 +51,7 @@ else:
 	sql = '''
 	INSERT INTO admin (account, password) VALUES (%s, %s)
 	'''
-	for i in range(3623):
+	for i in range(5):
 		val = (f'admin{i:04}', f'Admin{i:04}') # fill 0 to the 4 digits in front
 		try:
 			mycursor.execute(sql, val)
@@ -59,11 +59,13 @@ else:
 			print(i, 'admin complete!')
 		except mysql.connector.errors.ProgrammingError as e:
 			print(e)
+
+
 # Create parking_lot table
 sql = '''CREATE TABLE parking_lot( \
 	id BIGINT AUTO_INCREMENT PRIMARY KEY, \
 	  name VARCHAR(50) NOT NULL, \
-	    coordinate POINT NOT NULL, \
+	    coordinate POINT NOT NULL SRID 4326, \
 			    address VARCHAR(225), \
 				    total_space INT NOT NULL, \
 							parking_fee INT NOT NULL, \
@@ -102,16 +104,13 @@ if len(myresult) != 0:
 	print("Data is already inserted.")
 	pass
 else:
-	sql = '''
-	INSERT INTO parking_lot\
-		(name, coordinate, address, total_space, parking_fee, admin_id)\
-			VALUES (%s, ST_GeomFromText('POINT(%s %s)'), %s, %s, %s, %s)
-			'''
+	
 	# Assuming EPSG:3826 for Taiwan Geodetic Coordinate System
 	proj_from = 'epsg:3826'  # EPSG:3826 - TWD97
 	proj_to = 'epsg:4326'  # WGS84
 	transformer = Transformer.from_crs(proj_from, proj_to, always_xy=True)
-	# Function to Extract the First Integer
+
+	# Function to Extract the First Integer of parking fee
 	def extract_first_integer(s):
 		if s is None:
 			return None
@@ -124,32 +123,42 @@ else:
 				return number
 		return None
 	
-	admin_index = 1
-	def commit_db(name, longitude, latitude, address,
-               total_space, parking_fee):
-		# Construct val
-		values = (name, longitude, latitude, total_space, parking_fee)
+	sql = '''
+	INSERT INTO parking_lot\
+		(name, coordinate, address, total_space, parking_fee, admin_id)\
+			VALUES (%s, ST_GeomFromText('POINT(%s %s)', 4326), %s, %s, %s, %s)
+			'''
+
+	
+	def commit_db(name, latitude, longitude, address,
+               total_space, parking_fee, index):
+		
+		# Construct filter val that should not be empty
+		not_null = (name, latitude, longitude, total_space, parking_fee)
 		# the logic to skip any empty value
 		skip_this = False
-		for v in values:
+		for v in not_null:
 			if v is None or v == "" :
 				skip_this = True
 				continue
 		if skip_this:
 			return skip_this
+		
 		# try insert
 		try:
-			admin_id = admin_index
-			val = (name, longitude, latitude, address,
-                    total_space, parking_fee, admin_id)
-			mycursor.execute(sql, val)
-			mydb.commit()
-			print("Looping... ", admin_index, "record inserted.")
-			return skip_this
+			if not skip_this:
+				import random
+				admin_id = random.randint(1, 5)
+				val = (name, latitude, longitude, address,
+											total_space, parking_fee, admin_id)
+				mycursor.execute(sql, val)
+				print("Looping... ", index, "th parking lot is inserted.")
 		except mysql.connector.errors.ProgrammingError as e:
 			print(e)
 
+# loop taipei data
 	for index, data in enumerate(taipei_parking_lots['features']):
+		# construct data
 		name = data['properties']['gatename']
 		longitude, latitude = transformer.transform(
 			data['geometry']['coordinates'][0][0], data['geometry']['coordinates'][0][1])
@@ -157,14 +166,12 @@ else:
 		total_space = int(data['properties']['num_s']
 		                  ) if data['properties']['num_s'] is not None else None
 		parking_fee = extract_first_integer(data['properties']['feeb'])
-		skip = commit_db(name, longitude, latitude, address,
-                   total_space, parking_fee)
-		if skip:
-			continue
-		else:
-			admin_index += 1
 		
-		
+		commit_db(name, latitude, longitude, address,
+                   total_space, parking_fee, index)
+	mydb.commit()
+
+# loop new taipei data	
 	for index, data in enumerate(new_taipei_parking_lots):
 		name = data['NAME']
 		longitude, latitude = transformer.transform(
@@ -172,14 +179,11 @@ else:
 		address = data['ADDRESS']
 		total_space = int(data["TOTALCAR"]) if data["TOTALCAR"] is not None else None 
 		parking_fee = extract_first_integer(data["PAYEX"])
-		skip = commit_db(name, longitude, latitude, address,
-                   total_space, parking_fee)
-		if skip:
-			continue
-		else:
-			admin_index += 1
-		
+		commit_db(name, latitude, longitude, address,
+                   total_space, parking_fee, index)
+	mydb.commit()
 
+# loop Taoyuan data
 	for index, data in enumerate(taoyuan_parking_lots['parkingLots']):
 		name = data['parkName']
 		longitude = data['wgsY']
@@ -187,14 +191,9 @@ else:
 		address = data['address']
 		total_space = int(data["totalSpace"]) if data["totalSpace"] is not None else None
 		parking_fee = extract_first_integer(data["payGuide"])
-		skip = commit_db(name, longitude, latitude, address,
-                   total_space, parking_fee)
-		if skip:
-			continue
-		else:
-			admin_index += 1
-
-	print(admin_index)
+		commit_db(name, latitude, longitude, address,
+                   total_space, parking_fee, index)
+	mydb.commit()
 
 
 # Create table cars

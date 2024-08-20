@@ -120,7 +120,6 @@ export async function tokenValidation(){
   if (isNoToken && isAdminHTML){
     location.href = uri
   }
-  
   // Construct Header
   let headerContent = {}
   if (token === null){
@@ -143,7 +142,7 @@ export async function tokenValidation(){
     }
   )
   let response = await responseObj.json()
-  if (!responseObj.ok && response === 'jwt decode error.'){
+  if (!responseObj.ok && response.message === 'jwt decode error.'){
     // token decode error
     // clear local storage
     localStorage.removeItem('token')

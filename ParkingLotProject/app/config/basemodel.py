@@ -47,7 +47,7 @@ class S3UploadURL(BaseModel):
 
 
 class PostCarEnter(BaseModel):
-    admin: int
+    lotID: int
     license: str
 
 

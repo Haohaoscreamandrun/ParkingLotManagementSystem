@@ -28,7 +28,7 @@ router = APIRouter(
 )
 async def get_parking_lots(latitude: float, longitude: float, number: int = 15):
   try:
-    myresult = parkinglot_by_localtion(latitude, longitude, number)
+    myresult = parkinglot_by_localtion(latitude, longitude, number, 3000)
     if len(myresult) > 0:
       response_content_list = []
       for result in myresult:

@@ -5,8 +5,9 @@ import { uri } from "../common/server.js";
 export function render_scrollBar_lots(data){
   let scrollBarLots = document.querySelector('#scrollBarLots')
   data.forEach(lot => {
-    let newDiv = document.createElement('div')
-    newDiv.classList.add('scrollBarLotsList')
+    let newDiv = document.createElement('button')
+    newDiv.type = 'button'
+    newDiv.classList.add('scrollBarLotsList', 'btn')
     newDiv.id = lot.id
     newDiv.innerText = lot.name
     scrollBarLots.appendChild(newDiv)
@@ -98,17 +99,17 @@ export async function clickSearch(event){
           }
 
           let img = document.createElement('img');
-          img.src = `https://s3.ap-southeast-2.amazonaws.com/wehelp-parkinglot.project/${item.license}.png`;
+          img.src = `https://d3ryi88x00jzt7.cloudfront.net/${item.license}.png`;
           img.alt = item.license;
           img.classList.add('d-block', 'w-100');
 
           let captionDiv = document.createElement('div');
           captionDiv.classList.add('carousel-caption', 'd-none', 'd-md-block');
           
-          let captionText = document.createElement('h5');
-          captionText.textContent = item.license;
+          // let captionText = document.createElement('h5');
+          // captionText.textContent = item.license;
           
-          captionDiv.appendChild(captionText);
+          // captionDiv.appendChild(captionText);
           carouselItem.appendChild(img);
           carouselItem.appendChild(captionDiv);
           innerContainer.appendChild(carouselItem);

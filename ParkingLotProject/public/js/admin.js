@@ -1,5 +1,5 @@
 import { tokenValidation } from "./common/login.js";
-import { startRecognition, getAPICamera, postAPICamera, postS3, open_enter_bar, get_parking_lots, render_chosen_lot, render_lot_input, render_cars_list, search_cars_by_input, render_car_card } from "./modules/admin_module.js";
+import { startRecognition, getAPICamera, postAPICamera, postS3, open_enter_bar, get_parking_lots, render_chosen_lot, render_lot_input, search_cars_by_input, render_car_card } from "./modules/admin_module.js";
 
 async function adminFlow (){
   // token validation
@@ -12,7 +12,6 @@ async function adminFlow (){
   // render lot and detail
   render_lot_input()
   // render car list
-  await render_cars_list()
   search_cars_by_input()
   
   // render car card
@@ -41,7 +40,8 @@ async function adminFlow (){
       return postS3(responseGet, license)
     }).then(responseS3 => {
       if (responseS3){
-        return postAPICamera(adminID, license)
+        let lotID = document.getElementById('chosenLot').value.split(": ")[1]
+        return postAPICamera(lotID, license)
       }
     }).then(responsePost=>{
       if(responsePost){

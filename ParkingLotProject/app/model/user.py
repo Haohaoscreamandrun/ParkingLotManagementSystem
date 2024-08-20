@@ -1,4 +1,5 @@
 import mysql.connector
+import math
 from dotenv import load_dotenv
 import os
 load_dotenv()
@@ -75,8 +76,8 @@ def parkinglot_by_id(id):
   sql = '''
   SELECT id,\
     name,\
-    ST_X(coordinate) AS longitude,\
-      ST_Y(coordinate) AS latitude,\
+    ST_Longitude(coordinate) AS longitude,\
+      ST_Latitude(coordinate) AS latitude,\
         address,\
           total_space,\
             parking_fee,\
@@ -101,21 +102,39 @@ def parkinglot_by_id(id):
     return myresult
 
 
-def parkinglot_by_localtion(lat, lon, number):
+def parkinglot_by_localtion(lat, lng, number, radius=0):
   
   sql = '''
   SELECT id,\
     name,\
-    ST_X(coordinate) AS longitude,\
-      ST_Y(coordinate) AS latitude,\
+    ST_Longitude(coordinate) AS longitude,\
+      ST_Latitude(coordinate) AS latitude,\
         address,\
           total_space,\
             parking_fee,\
               admin_id,\
-                ST_Distance_Sphere(coordinate, POINT(%s, %s)) AS distance\
-                  FROM parking_lot ORDER BY distance LIMIT %s;
-                  '''
-  val = (lon, lat, number)
+                ST_Distance_Sphere(coordinate, ST_GeomFromText('POINT(%s %s)', 4326)) AS distance\
+                  FROM parking_lot \
+                    WHERE MBRContains(ST_GeomFromText(%s, 4326), coordinate)\
+                      AND ST_Distance_Sphere(coordinate, ST_GeomFromText('POINT(%s %s)', 4326)) < %s \
+                        ORDER BY distance LIMIT %s;
+                        '''
+  degrees_lat = radius / 111320
+  degrees_lng = radius / (111320 * math.cos(math.radians(lat)))
+  min_lat = lat - degrees_lat
+  max_lat = lat + degrees_lat
+  min_lng = lng - degrees_lng
+  max_lng = lng + degrees_lng
+  bounding_box = f'''
+  POLYGON((\
+    {min_lat} {min_lng},\
+    {max_lat} {min_lng},\
+    {max_lat} {max_lng},\
+    {min_lat} {max_lng},\
+    {min_lat} {min_lng}\
+    ))
+    '''
+  val = (lat, lng, bounding_box, lat, lng, radius, number)
 
   try:
     cnxconnection = cnxpool.get_connection()

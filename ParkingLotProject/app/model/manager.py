@@ -88,16 +88,15 @@ async def double_license(license):
     print("MySQL connection is closed")
     return myresult
 
-async def vacancy_lookup(admin):
+async def vacancy_lookup(lot_id):
   sql = '''
   SELECT COUNT(cars.id) AS total_cars,\
     parking_lot.total_space AS total_space,\
       parking_lot.id\
         FROM cars\
-          RIGHT JOIN parking_lot ON cars.lot_id = parking_lot.id\
-            WHERE parking_lot.admin_id = %s
-            '''
-  val = (admin,)
+          WHERE lot_id = %s
+          '''
+  val = (lot_id,)
   try:
     cnxconnection = cnxpool.get_connection()
     mycursor = cnxconnection.cursor()

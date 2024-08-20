@@ -41,12 +41,12 @@ async def get_lots_by_admin(admin: int):
           'lot_name': parking_lot[1]
         }
         response_content_list.append(response_content)
-        return JSONResponse(
-          status_code=status.HTTP_200_OK,
-          content={
-              'data': response_content_list
-          }
-        )
+      return JSONResponse(
+        status_code=status.HTTP_200_OK,
+        content={
+            'data': response_content_list
+        }
+      )
     else:
       return JSONResponse(
           status_code=status.HTTP_200_OK,

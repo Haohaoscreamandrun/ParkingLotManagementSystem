@@ -125,10 +125,10 @@ export async function postS3(responseAPI, license){
   }
 }
 
-export async function postAPICamera(adminID, license){
+export async function postAPICamera(lotID, license){
   try{
     let requestBodyObj = {
-      'admin': adminID,
+      'lotID': lotID,
       'license': license
     }
     let responseObj = await fetch(`${uri}/api/camera`, {
@@ -201,6 +201,7 @@ export async function render_lot_input(){
   input.value = `${firstChild.innerText}, ID: ${firstChild.id}`
   let lots = await get_parking_lot_by_id(firstChild.id)
   render_parking_lot_card(lots[0])
+  fetch_cars_render(firstChild.id)
   // change upon selection
   dropdown.addEventListener('click', async function(event) {
     if (event.target.classList.contains('dropdown-item')){
@@ -209,6 +210,7 @@ export async function render_lot_input(){
       input.value = `${lot_name}, ID: ${lot_id}`
       let lots = await get_parking_lot_by_id(lot_id)
       render_parking_lot_card(lots[0])
+      fetch_cars_render(lot_id)
     }
   })
 }
@@ -245,25 +247,13 @@ export function render_parking_lot_card(lot){
   
 }
 
-export async function render_cars_list(){
-  let input = document.querySelector('#chosenLot')
-  
-  fetch_cars_render()
-  // listen to input
-  input.addEventListener('input', fetch_cars_render)
-}
-
 // store the cars information in variable
 let temp_storage_cars
 
-async function fetch_cars_render(){
-  let input = document.querySelector('#chosenLot')  
-  // get lot_id
-  let inputString = input.value
-  let lot_id = inputString.split(':')[1].trim()
+async function fetch_cars_render(lotID){
   // fetch
   try{
-    let responseObj = await fetch(`${uri}/api/cars?lot_id=${lot_id}`, {
+    let responseObj = await fetch(`${uri}/api/cars?lot_id=${lotID}`, {
       method: "GET",
       headers: {
         'Content-Type': 'application/json'
@@ -275,6 +265,9 @@ async function fetch_cars_render(){
     if (responseObj.ok && response.data === null){
       
       // no cars in this lot
+      // update vacancy
+      render_vacancy(null,true)
+      // update car list
       let carsListGroup = document.querySelector('#carsListGroup')
       carsListGroup.innerHTML = ''
       let button = document.createElement('button')
@@ -283,6 +276,7 @@ async function fetch_cars_render(){
       button.innerText = "Currently Empty in this parking lot!"
       // append button
       carsListGroup.appendChild(button)
+
 
     } else if (responseObj.ok && response.data.length > 0){
 
@@ -321,12 +315,16 @@ function render_cars(car){
   // append button
   carsListGroup.appendChild(button)
 }
-
-export async function render_vacancy(temp_storage_cars){
+// render vacancy
+export async function render_vacancy(temp_storage_cars=null, noupdate=false){
   let parkingLotSpace = document.querySelector('#parkingLotSpace')
   let parkingLotVacancy = document.querySelector('#parkingLotVacancy')
   let parkingLotSpaceInt = parseInt(parkingLotSpace.innerText.split(' ')[0])
-  parkingLotVacancy.innerHTML = `${parkingLotSpaceInt - await temp_storage_cars.length} Vacancy`
+  if (noupdate === true){
+    parkingLotVacancy.innerHTML = `${parkingLotSpaceInt} Vacancy`
+  } else {
+    parkingLotVacancy.innerHTML = `${parkingLotSpaceInt - await temp_storage_cars.length} Vacancy`
+    }
 }
 
 // function of search car
@@ -363,7 +361,7 @@ export function render_car_card(){
       let parkingFee = document.querySelector('#parkingfee')
       let paidCheck = document.querySelector('#paidCheck')
       let unpaidCheck = document.querySelector('#unpaidCheck')
-      cardImgTop.src = `https://s3.ap-southeast-2.amazonaws.com/wehelp-parkinglot.project/${queryResult[0].license}.png`
+      cardImgTop.src = `https://d3ryi88x00jzt7.cloudfront.net/${queryResult[0].license}.png`
       licensePlate.value = queryResult[0].license
       timeStamp.value = formatDateForInput(new Date(queryResult[0].enter_time))
       // Calculate passed time
