@@ -92,10 +92,12 @@ async def vacancy_lookup(lot_id):
   sql = '''
   SELECT COUNT(cars.id) AS total_cars,\
     parking_lot.total_space AS total_space,\
-      parking_lot.id\
-        FROM cars\
-          WHERE lot_id = %s
-          '''
+      parking_lot.id AS lot_id\
+        FROM parking_lot\
+          LEFT JOIN cars ON cars.lot_id = parking_lot.id\
+            WHERE parking_lot.id = %s\
+              GROUP BY parking_lot.total_space, parking_lot.id\
+              '''
   val = (lot_id,)
   try:
     cnxconnection = cnxpool.get_connection()

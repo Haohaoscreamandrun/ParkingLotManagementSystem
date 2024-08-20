@@ -80,6 +80,7 @@ def post_api_camera(lot_id, license_plate):
     try:
         # Define the URL and request body
         url = "https://parkinglot.haohaoscreamandrun.online/api/camera"
+        # url = "http://127.0.0.1:8000/api/camera"
         request_body = {
             'lotID': lot_id,
             'license': license_plate
@@ -96,6 +97,7 @@ def post_api_camera(lot_id, license_plate):
             # Return the value of 'ok' key if present
             print('Post request succeed!')
         else:
+            print(response.json())
             print('Post request failed!')
     except Exception as error:
         # Handle exceptions and alert the user
@@ -114,4 +116,5 @@ def flow():
   lot_id = random.randint(1,3088)
   post_api_camera(lot_id, new_license_plate)
 
-flow()
+for i in range(10000):
+    flow()

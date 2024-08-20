@@ -51,7 +51,7 @@ else:
 	sql = '''
 	INSERT INTO admin (account, password) VALUES (%s, %s)
 	'''
-	for i in range(5):
+	for i in range(10):
 		val = (f'admin{i:04}', f'Admin{i:04}') # fill 0 to the 4 digits in front
 		try:
 			mycursor.execute(sql, val)
@@ -70,7 +70,8 @@ sql = '''CREATE TABLE parking_lot( \
 				    total_space INT NOT NULL, \
 							parking_fee INT NOT NULL, \
 								admin_id BIGINT NOT NULL, \
-									FOREIGN KEY (admin_id) REFERENCES admin(id))
+									FOREIGN KEY (admin_id) REFERENCES admin(id),\
+										SPATIAL INDEX(coordinate))
 										'''
 
 try:
@@ -148,7 +149,7 @@ else:
 		try:
 			if not skip_this:
 				import random
-				admin_id = random.randint(1, 5)
+				admin_id = random.randint(1, 10)
 				val = (name, latitude, longitude, address,
 											total_space, parking_fee, admin_id)
 				mycursor.execute(sql, val)
