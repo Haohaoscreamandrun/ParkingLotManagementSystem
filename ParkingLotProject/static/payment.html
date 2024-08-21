@@ -17,6 +17,77 @@
   <link rel="stylesheet" href="../public/css/common.css">
 </head>
 <body>
+  <!-- common navbar -->
+  <nav class="navbar text-bg-dark border-bottom border-body sticky-top" data-bs-theme="dark">
+    <div class="container-fluid d-flex justify-content-between align-items-center">
+      <a href="/" class="nav-brand mb-0 h3">
+        <img src="../public/images/Graphicloads-Colorful-Long-Shadow-Car.256.png" alt="logo" width="30" height="30">
+        Parking Lot Managing System
+      </a>
+      <button class="navbar-nav btn text-center" type="button" id="adminLoginCanvasBtn" data-bs-toggle="offcanvas"
+        data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">
+        Admin Login
+      </button>
+    </div>
+  </nav>
+  <!-- offcanvas -->
+  <div class="offcanvas offcanvas-end" data-bs-theme="dark" data-bs-scroll="true" tabindex="-1"
+    id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">Admin Login</h5>
+      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+      <!-- login form -->
+      <form class="needs-validation" id="signInForm" novalidate>
+        <div class="form-floating mb-3">
+          <input type="text" class="form-control" id="adminAccount" autocomplete="username" placeholder="Account"
+            required>
+          <label for="adminAccount">Account</label>
+          <div class="valid-feedback">
+            Looks good!
+          </div>
+          <div class="invalid-feedback">
+            Please provide a valid account.
+          </div>
+        </div>
+        <div class="form-floating mb-3">
+          <input type="password" class="form-control" id="adminPassword" autocomplete="current-password"
+            placeholder="password" required>
+          <label for="adminPassword">Password</label>
+          <div class="valid-feedback">
+            Looks good!
+          </div>
+          <div class="invalid-feedback">
+            At least 1 A-Z, 1 a-z and 1 digit of number.
+          </div>
+        </div>
+        <div class="d-flex justify-content-between align-items-end">
+          <button type="submit" class="btn btn-lg btn-outline-light mb-1" id="loginButton">Login</button>
+          <a class="btn btn-dark">Forget password?</a>
+        </div>
+      </form>
+    </div>
+    <div class="card m-4">
+      <div class="card-body">
+        <h5 class="card-title">Demo Account</h5>
+        <div class="card-text text-info pb-2">
+          Account for demo/test <br>
+          Do not use for commercial purpose!
+        </div>
+        <div class="form-floating mb-3">
+          <input type="text" class="form-control" id="demoAccount" autocomplete="username" placeholder="Account"
+            value="admin0001" disabled>
+          <label for="demoAccount">Account</label>
+        </div>
+        <div class="form-floating mb-3">
+          <input type="text" class="form-control" id="demoPassword" autocomplete="current-password" placeholder="password"
+            value="Admin0001" disabled>
+          <label for="demoPassword">Password</label>
+        </div>
+      </div>
+    </div>
+  </div>
   
 </body>
 </html>

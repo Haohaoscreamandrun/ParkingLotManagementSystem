@@ -1,3 +1,4 @@
+import { uri } from "./common/server.js";
 import { formValidation, signInValidation, tokenValidation } from "./common/login.js";
 import { render_scrollBar_lots, scrollClick, clickSearch,searchCarByLicense, renderCarDetails, renderCarousal, preloadImages } from "./modules/choose_module.js";
 import { get_parking_lots_by_coordinate } from "./modules/index_module.js";
@@ -71,6 +72,7 @@ async function chooseFlow(){
   // listen to payment button
   let paymentBtn = document.querySelector('.btn-primary')
   paymentBtn.addEventListener('click', event => {
+    event.preventDefault()
     let carID = event.target.id
     window.location.href = `${uri}/payment/${carID}`
   })
