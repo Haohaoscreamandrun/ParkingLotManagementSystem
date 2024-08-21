@@ -1,5 +1,6 @@
 import { tokenValidation } from "./common/login.js";
 import { startRecognition, getAPICamera, postAPICamera, postS3, open_enter_bar, get_parking_lots, render_chosen_lot, render_lot_input, search_cars_by_input, render_car_card } from "./modules/admin_module.js";
+import { startCamera, drawNoCameraMessage } from "./common/camera.js";
 
 async function adminFlow (){
   // token validation
@@ -18,23 +19,17 @@ async function adminFlow (){
   render_car_card()
 
   
-  // Access the camera
-  navigator.mediaDevices.getUserMedia({
-    video: {
-      facingMode: {ideal: 'environment'}// Request the back camera, but fallback to the front camera if necessary
-    }
-  })
-  .then(stream => {
-    // Get the video element
-    let video = document.getElementById('localVideo');
-    // Set the srcObject of the video element to the stream
-    video.srcObject = stream;
-  })
-  .catch(error => {
-    console.error('Error accessing media devices', error)
-  })
+  let denyCameraBtn = document.getElementById('denyCamera')
+  let agreeCameraBtn = document.getElementById('agreeCamera')
+  
+  denyCameraBtn.addEventListener('click', cameraWarning)
+  agreeCameraBtn.addEventListener('click', cameraWarning)
+  
+}
 
-  function handleLicenseUpdate(license){
+adminFlow()
+
+function handleLicenseUpdate(license){
     console.log('Recognized License:', license)
     getAPICamera(license).then(responseGet => {
       return postS3(responseGet, license)
@@ -54,8 +49,18 @@ async function adminFlow (){
       console.error('Error in processing:', error)
     })
   }
-  // Start recognition with callback
-  startRecognition(handleLicenseUpdate)
-}
 
-adminFlow()
+function cameraWarning(event){
+  let option = event.target.id
+  if( option === 'denyCamera'){
+    return false
+  }else if( option === 'agreeCamera'){
+    let validCamera = startCamera()
+    if (validCamera){
+      // Start recognition with callback
+      startRecognition(handleLicenseUpdate)
+    }else if(!validCamera){
+      drawNoCameraMessage()
+    }
+  }
+}

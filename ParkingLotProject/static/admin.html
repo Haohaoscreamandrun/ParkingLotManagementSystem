@@ -41,7 +41,34 @@
         <div class="d-flex flex-column justify-content-center p-2">
           <h4>Camera</h4>
           <div class="card text-center border-secondary">
-            <video class="ratio ratio-4x3 object-fit-cover" src="" id="localVideo" autoplay></video>
+            <div class="container position-relative" id="startBtn">
+              
+              <button type="button" class="img-fluid position-absolute top-50 start-50 translate-middle w-50 h-50 btn btn-link z-3"
+                data-bs-toggle="modal" data-bs-target="#staticBackdrop" aria-label="Open modal">
+                <img src="../public/images/play-solid.svg" alt="Play button" class="img-fluid h-50">
+              </button>
+              <video class="ratio ratio-4x3 object-fit-cover position-relative" src="" id="localVideo" autoplay playsinline></video>
+            </div>
+            <!-- Modal -->
+            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+              aria-labelledby="staticBackdropLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Camera Warning!</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body text-start">
+                    To use the camera for license plate recognition, please click <mark>Agree to open camera</mark>.  <br>   
+                    If you prefer not to use this feature, click <mark>Close to continue viewing</mark>this page without OCR functionality.
+                  </div>
+                  <div class="modal-footer">
+                    <button id="denyCamera" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button id="agreeCamera" type="button" class="btn btn-primary" data-bs-dismiss="modal">Agree</button>
+                  </div>
+                </div>
+              </div>
+            </div>
             <div class="card-body form">
               <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" id="enterRadio" value="enter" name="inlineRadioOptions" checked>

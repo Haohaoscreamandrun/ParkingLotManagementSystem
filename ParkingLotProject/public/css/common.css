@@ -11,6 +11,11 @@
   /* Align image with text */
 }
 
+#startBtn:hover
+{
+  cursor: pointer;
+}
+
 #scrollUpBtn {
   background-image: url("../images/left-arrow.png");
 }
