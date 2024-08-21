@@ -52,7 +52,7 @@ def cars_in_parking_lot(lot_id):
 def car_by_license(license):
   sql = '''
   SELECT * FROM cars \
-    WHERE license = %s
+    WHERE plate_number = %s
     '''
   val = (license,)
   try:

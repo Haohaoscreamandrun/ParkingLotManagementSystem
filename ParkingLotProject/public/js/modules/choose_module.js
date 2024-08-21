@@ -1,5 +1,5 @@
 import { uri } from "../common/server.js";
-
+import { formatDateForInput } from "./admin_module.js";
 
 
 export function render_scrollBar_lots(data){
@@ -33,9 +33,10 @@ export function scrollClick(direction){
   },15)
 }
 
-let temp_storage_cars
+
 export async function clickSearch(event){
   if (event.target.classList[0] === 'scrollBarLotsList'){
+
     let lot_id = event.target.id
     try{
       let responseObj = await fetch(`${uri}/api/cars?lot_id=${lot_id}`, {
@@ -46,76 +47,9 @@ export async function clickSearch(event){
       })
       
       let response = await responseObj.json()
-      let carouselExampleIndicators = document.querySelector('#carouselExampleIndicators')
-      if (responseObj.ok && response.data === null){
-        // no cars in this lot
-        carouselExampleIndicators.innerHTML = `
-        <div class="carousel-indicators">
-          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"
-            aria-current="true" aria-label="Slide 1"></button>
-        </div>
-        <div class="carousel-inner rounded-3">
-          <div class="carousel-item active">
-            <img src="../public/images/car-graphic.jpg" alt="..." class="d-block w-100">
-            <div class="carousel-caption d-none d-md-block">
-              <h5 class="text-dark">This Lot is empty!</h5>
-            </div>
-          </div>
-        </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-          <span class="carousel-control-next-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Next</span>
-        </button>
-        `
-      } else if (responseObj.ok && response.data.length > 0){
-
-        // store it in temp storage
-        temp_storage_cars = response.data
-        // Get references to carousel indicators and inner container
-        let indicatorsContainer = document.querySelector('#carouselExampleIndicators .carousel-indicators');
-        let innerContainer = document.querySelector('#carouselExampleIndicators .carousel-inner');
-        response.data.forEach((item, index) => {
-          // Create carousel indicator
-          let indicator = document.createElement('button');
-          indicator.type = 'button';
-          indicator.dataset.bsTarget = '#carouselExampleIndicators';
-          indicator.dataset.bsSlideTo = index;
-          if (index === 0) {
-            indicator.classList.add('active');
-            indicator.setAttribute('aria-current', 'true');
-          }
-          indicator.setAttribute('aria-label', `Slide ${index + 1}`);
-          indicatorsContainer.appendChild(indicator);
-
-          // Create carousel item
-          let carouselItem = document.createElement('div');
-          carouselItem.classList.add('carousel-item');
-          if (index === 0) {
-            carouselItem.classList.add('active');
-          }
-
-          let img = document.createElement('img');
-          img.src = `https://d3ryi88x00jzt7.cloudfront.net/${item.license}.png`;
-          img.alt = item.license;
-          img.classList.add('d-block', 'w-100');
-
-          let captionDiv = document.createElement('div');
-          captionDiv.classList.add('carousel-caption', 'd-none', 'd-md-block');
-          
-          // let captionText = document.createElement('h5');
-          // captionText.textContent = item.license;
-          
-          // captionDiv.appendChild(captionText);
-          carouselItem.appendChild(img);
-          carouselItem.appendChild(captionDiv);
-          innerContainer.appendChild(carouselItem);
-
-        })
-
+      
+      if (responseObj.ok){
+        return response.data
       } else {
         console.log("enter new Error loop")
         throw new Error(response.message)
@@ -124,5 +58,143 @@ export async function clickSearch(event){
       alert('Error fetch to backend:', error)
       console.log(error)
     }
+  }
+}
+
+
+// pre-load img
+export function preloadImages(dataArray){
+  let preloadImgList = [];
+  dataArray.forEach(data => {
+    let license = data.license
+    let url = `https://d3ryi88x00jzt7.cloudfront.net/${license}.png`
+    let img = new Image();
+    img.src = url
+    preloadImgList.push(img)
+  })
+  return preloadImgList
+}
+
+export function renderCarousal(dataArray=null, waiting=false, preloadImgList=null){
+  // Get references to carousel indicators and inner container
+  let indicatorsContainer = document.querySelector('#carouselExampleIndicators .carousel-indicators');
+  let innerContainer = document.querySelector('#carouselExampleIndicators .carousel-inner');
+  if (waiting === true){
+    innerContainer.innerHTML = `
+      <div class="carousel-item d-flex flex-column justify-content-center align-items-center active">
+        <div class="spinner-grow text-light" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+      `
+  } else if (dataArray === null){
+
+    // render default picture when no cars
+    innerContainer.innerHTML = `
+       <div class="carousel-item active">
+         <img src="../public/images/car-graphic.jpg" alt="..." class="d-block w-100">
+         <div class="carousel-caption d-none d-md-block">
+           <h5 class="text-dark">This Lot is empty!</h5>
+         </div>
+       </div>
+      `
+  }else{
+    // render carousal if there's car
+    dataArray = dataArray.slice(0, 5)
+    preloadImgList = preloadImgList.slice(0, 5)
+    
+    // clear container data
+    indicatorsContainer.innerHTML =  ''
+    innerContainer.innerHTML = ''
+    dataArray.forEach((item, index) => {
+      
+      // Create carousel indicator
+      let indicator = document.createElement('button');
+      indicator.type = 'button';
+      indicator.dataset.bsTarget = '#carouselExampleIndicators';
+      indicator.dataset.bsSlideTo = index;
+      if (index === 0) {
+        indicator.classList.add('active');
+        indicator.setAttribute('aria-current', 'true');
+      }
+      indicator.setAttribute('aria-label', `Slide ${index + 1}`);
+      indicatorsContainer.appendChild(indicator);
+
+      // Create carousel item
+      let carouselItem = document.createElement('div');
+      carouselItem.classList.add('carousel-item');
+      if (index === 0) {
+        carouselItem.classList.add('active');
+      }
+      let img = document.createElement('img');
+      img.src = preloadImgList[index].src
+      img.alt = item.license;
+      img.classList.add('d-block', 'w-100');
+
+      let captionDiv = document.createElement('div');
+      captionDiv.classList.add('carousel-caption', 'd-none', 'd-md-block');
+      
+      // captionDiv.appendChild(captionText);
+      carouselItem.appendChild(img);
+      carouselItem.appendChild(captionDiv);
+      innerContainer.appendChild(carouselItem);
+
+    })
+  }
+}
+
+export function searchCarByLicense(event, carsArray){
+  let query = event.target.value
+  let queryResult = carsArray.filter(car => { 
+    return car.license.toLowerCase().includes(query.toLowerCase())
+  })
+  if (queryResult.length > 5){
+    queryResult = queryResult.slice(0, 5)
+  }
+  return queryResult
+}
+
+
+export function renderCarDetails(index, lotObj, carsArray){
+  
+  let licensePlate = document.getElementById('licenseplate')
+  let enterTime = document.getElementById('timestamp')
+  let parkingFee = document.querySelector('#parkingfee')
+  let paymentBtn = document.querySelector('.btn-primary')
+  let currentCar = carsArray[index]
+
+  if (carsArray.length === 0){
+    licensePlate.value = 'Find no car with thy string.'
+    enterTime.value = ''
+    parkingFee.value = ''
+    paymentBtn.disabled = true
+  } else {
+    licensePlate.value = currentCar.license
+    enterTime.value = formatDateForInput(new Date(currentCar.enter_time))
+    
+    // Calculate passed time
+    let passedTime = new Date() - new Date(currentCar.enter_time)
+    let totalSeconds = Math.floor(passedTime / 1000)
+    let minutes = Math.floor(totalSeconds / 60)
+    let hours = Math.floor(minutes / 60)
+    minutes = Math.floor(minutes % 60)
+    let parkingLotFee = lotObj[0].parking_fee
+    
+    // under one hour => one hour fee
+    // over one hour => less than 30 mins => 1.5 hour fee
+    // over one hour => more than 30 mins => 2 hours fee
+    let subTotal = 0
+    if (hours < 1){
+      subTotal = parkingLotFee
+    }else if(hours >=1 && minutes < 30){
+      subTotal = parkingLotFee * (hours + 0.5)
+    }else if(hours >=1 && minutes >= 30){
+      subTotal = parkingLotFee * (hours + 1)
+    }
+    parkingFee.value = subTotal
+
+    // render payment button
+    paymentBtn.disabled = false
+    paymentBtn.id = currentCar.car_id
   }
 }

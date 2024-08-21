@@ -75,8 +75,8 @@ async def inex(request: Request, lotID: int):
   return FileResponse('./static/choose.html', media_type="text/html")
 
 
-@app.get('/payment/{license}', include_in_schema=False)
-async def inex(request: Request, license: str):
+@app.get('/payment/{car_id}', include_in_schema=False)
+async def inex(request: Request, car_id: str):
   return FileResponse('./static/payment.html', media_type="text/html")
 
 

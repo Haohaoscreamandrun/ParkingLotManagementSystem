@@ -400,7 +400,7 @@ export function render_car_card(){
 }
 
 
-function formatDateForInput(date) {
+export function formatDateForInput(date) {
     let year = date.getFullYear();
     let month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
     let day = String(date.getDate()).padStart(2, '0');
