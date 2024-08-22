@@ -22,12 +22,12 @@ export async function startCamera(){
   })
 }
 
-export function drawNoCameraMessage() {
+export function drawCameraMessage(message) {
   let video = document.querySelector('#localVideo')  
   let canvas = document.getElementById('videoCanvas');
   let context = canvas.getContext('2d');
 
-  if (canvas.hidden === true){
+  if (canvas.hidden){
     video.hidden = true
     canvas.hidden= false
   }
@@ -41,5 +41,5 @@ export function drawNoCameraMessage() {
   context.textAlign = 'center';
 
   // Draw the text in the center of the canvas
-  context.fillText('No Camera', canvas.width / 2, canvas.height / 2);
+  context.fillText(message, canvas.width / 2, canvas.height / 2);
 }

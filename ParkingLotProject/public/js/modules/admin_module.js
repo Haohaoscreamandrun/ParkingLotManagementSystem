@@ -1,6 +1,6 @@
 import { recognizeLicensePlate } from "../common/tesseract.js";
 import { uri } from "../common/server.js";
-import { startCamera, drawNoCameraMessage } from "../common/camera.js";
+import { startCamera, drawCameraMessage } from "../common/camera.js";
 // Periodically Capture and process
 let arrayLicense = []
 let arrayConfidence = []
@@ -33,6 +33,7 @@ async function processRecognition(){
      console.log('Upload Condition Met'); // Debugging line
     // show on screen
     recognizedPlateInput.value = `Successful! ${license}, conf. lv: ${arrayConfidence.reduce((sum, val) => sum + val, 0) / arrayConfidence.length}`
+    drawCameraMessage(`Welcome! ${license}`)
     // clear out previous data
     arrayLicense = []
     arrayConfidence = []
@@ -197,7 +198,7 @@ export function handleLicenseUpdate(license){
       // Start recognition with callback
       startRecognition(handleLicenseUpdate)
     }else if(!validCamera){
-      drawNoCameraMessage()
+      drawCameraMessage('No Camera')
     }
   }
 }
