@@ -3,7 +3,7 @@ import { cameraWarning } from "./modules/admin_module.js";
 
 async function cameraFlow(){
   // token validation
-  await tokenValidation()
+  tokenValidation()
   let denyCameraBtn = document.getElementById('denyCamera')
   let agreeCameraBtn = document.getElementById('agreeCamera')
   

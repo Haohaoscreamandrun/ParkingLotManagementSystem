@@ -168,10 +168,10 @@ export function handleLicenseUpdate(license){
     }).then(responseS3 => {
       let lotID
       // at admin
-      if (responseS3 && window.location.href.contains('admin')){
+      if (responseS3 && window.location.href.includes('admin')){
         lotID = document.getElementById('chosenLot').value.split(": ")[1]
       // at camera
-      } else if(responseS3 && window.location.href.contains('camera')){
+      } else if(responseS3 && window.location.href.includes('camera')){
         lotID = window.location.href.split('/')[4]
       }
       return postAPICamera(lotID, license)
@@ -187,12 +187,12 @@ export function handleLicenseUpdate(license){
     })
   }
 
-  export function cameraWarning(event){
+  export async function cameraWarning(event){
   let option = event.target.id
   if( option === 'denyCamera'){
     return false
   }else if( option === 'agreeCamera'){
-    let validCamera = startCamera()
+    let validCamera = await startCamera()
     if (validCamera){
       // Start recognition with callback
       startRecognition(handleLicenseUpdate)

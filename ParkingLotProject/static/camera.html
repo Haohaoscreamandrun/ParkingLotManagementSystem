@@ -141,16 +141,24 @@
                 <label class="form-check-label" for="exitRadio">Exit Gate</label>
               </div>
             </div>
+            <div class="card-footer">
+              <div class="input-group">
+                <span class="input-group-text" id="addon1">Plate</span>
+                <input type="text" placeholder="Recognized plate" class="form-control" id="recognizedPlate" disabled>
+              </div>
+            </div>
           </div>
-          <div class="card border-secondary mt-1">
+          <div class="card border-secondary mt-1" hidden>
             <div class="card-header">Recognition</div>
             <canvas id="captureCanvas" hidden></canvas>
             <canvas id="videoCanvas"></canvas>
-            <div class="input-group">
-              <span class="input-group-text" id="addon1">Plate</span>
-              <input type="text" placeholder="Recognized plate" class="form-control" id="recognizedPlate" disabled>
-            </div>
           </div>
+        </div>
+      </div>
+      <div class="col col-12">
+        <div class="p-2 rounded-3">
+          <h4>Gate Status</h4>
+          <img src="../public/images/gate-close.jpg" class="img-fluid" alt="" id="enterGate">
         </div>
       </div>
     </div>
