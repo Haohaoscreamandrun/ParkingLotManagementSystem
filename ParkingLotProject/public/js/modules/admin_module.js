@@ -50,6 +50,14 @@ async function processRecognition(){
     stopRecognition()
     setTimeout(() => {
       console.log('Restarting Recognition'); // Debugging line
+      let video = document.querySelector('#localVideo')  
+      let canvas = document.getElementById('videoCanvas');
+
+      if (!canvas.hidden && window.location.href.includes('camera')){
+        video.hidden = false
+        canvas.hidden= true
+      }
+      
       startRecognition(licenseCallback)
       recognizedPlateInput.value = ""
     }, 10000)
