@@ -16,11 +16,6 @@ router = APIRouter(
 )
 
 
-@router.get('/{parkinglotID}', include_in_schema=False)
-async def inex(request: Request):
-  return FileResponse('./static/camera.html', media_type="text/html")
-
-
 @router.get('', responses={
     200: {'model': S3UploadURL, 'description': "Get the temperate URL to upload to S3 bucket, or nothing is returned."},
     400: {'model': Error, "description": "Connection failed"}

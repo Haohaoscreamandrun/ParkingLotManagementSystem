@@ -153,6 +153,7 @@ export async function tokenValidation(){
   } else if (responseObj.ok && response.data !== null) {
     // token exist
     let adminBtn = document.querySelector('#adminLoginCanvasBtn')
+    
     adminBtn.outerHTML = `
       <div class="d-flex align-items-center text-info">
         <div class="px-3">

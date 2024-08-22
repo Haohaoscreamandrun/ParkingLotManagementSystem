@@ -80,6 +80,11 @@ async def inex(request: Request, car_id: str):
   return FileResponse('./static/payment.html', media_type="text/html")
 
 
+@app.get('/camera/{parkinglotID}', include_in_schema=False)
+async def inex(request: Request):
+  return FileResponse('./static/camera.html', media_type="text/html")
+
+
 # Error Handler
 
 

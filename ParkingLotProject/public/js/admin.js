@@ -1,6 +1,5 @@
 import { tokenValidation } from "./common/login.js";
-import { startRecognition, getAPICamera, postAPICamera, postS3, open_enter_bar, get_parking_lots, render_chosen_lot, render_lot_input, search_cars_by_input, render_car_card } from "./modules/admin_module.js";
-import { startCamera, drawNoCameraMessage } from "./common/camera.js";
+import { get_parking_lots, render_chosen_lot, render_lot_input, search_cars_by_input, render_car_card, cameraWarning } from "./modules/admin_module.js";
 
 async function adminFlow (){
   // token validation
@@ -28,39 +27,3 @@ async function adminFlow (){
 }
 
 adminFlow()
-
-function handleLicenseUpdate(license){
-    console.log('Recognized License:', license)
-    getAPICamera(license).then(responseGet => {
-      return postS3(responseGet, license)
-    }).then(responseS3 => {
-      if (responseS3){
-        let lotID = document.getElementById('chosenLot').value.split(": ")[1]
-        return postAPICamera(lotID, license)
-      }
-    }).then(responsePost=>{
-      if(responsePost){
-        console.log('Allows car enter!')
-        open_enter_bar()
-      }else{
-        console.log('Wait for vacancy!')
-      }
-    }).catch(error=>{
-      console.error('Error in processing:', error)
-    })
-  }
-
-function cameraWarning(event){
-  let option = event.target.id
-  if( option === 'denyCamera'){
-    return false
-  }else if( option === 'agreeCamera'){
-    let validCamera = startCamera()
-    if (validCamera){
-      // Start recognition with callback
-      startRecognition(handleLicenseUpdate)
-    }else if(!validCamera){
-      drawNoCameraMessage()
-    }
-  }
-}

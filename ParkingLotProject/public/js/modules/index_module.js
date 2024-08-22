@@ -123,7 +123,7 @@ export async function get_cars_by_lot(lotID) {
   }
 }
 
-export function render_lot_card(event, placeholderNode, lotsArray, lotID=null) {
+export async function render_lot_card(event, placeholderNode, lotsArray, lotID=null) {
   let parent, self, lot_id
   
   if(event.target.classList.contains('list-group-item')){
@@ -151,15 +151,31 @@ export function render_lot_card(event, placeholderNode, lotsArray, lotID=null) {
     return lot.id === parseInt(lot_id)
   })
   render_parking_lot_card(lot_data)
-  get_cars_by_lot(lot_id)
+  await get_cars_by_lot(lot_id)
   // process button of finding car
-  let button = document.querySelector('#findCarButton')
-  button.id = `getLot${lot_id}`
-  button.disabled = false
-  button.addEventListener('click', event => direct_find_car_btn(event))
+  let findCarButton = document.querySelector('#findCarButton')
+  findCarButton.id = `getLot${lot_id}`
+  findCarButton.disabled = false
+  findCarButton.addEventListener('click', event => directToChoose(event))
+  // process button of enter parking lot
+  let vacancy = parseInt(document.querySelector('#parkingLotVacancy').innerText.split(' ')[0])
+  let enterLotButton = document.querySelector('#enterButton')
+  enterLotButton.id = `getCamera${lot_id}`
+  if (vacancy > 0){
+    enterLotButton.disabled = false
+    enterLotButton.addEventListener('click', event => directToCamera(event))
+  } else {
+    enterLotButton.innerText = 'Currently full!'
+  }
+  
 }
 
-function direct_find_car_btn(event){
+function directToCamera(event){
+  let lot_id = event.target.id.split('getCamera')[1]
+  window.location.href = `${uri}/camera/${lot_id}`
+}
+
+function directToChoose(event){
   let lot_id = event.target.id.split('getLot')[1]
   window.location.href = `${uri}/choose/${lot_id}`
 }

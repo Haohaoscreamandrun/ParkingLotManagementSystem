@@ -1,5 +1,6 @@
 import { recognizeLicensePlate } from "../common/tesseract.js";
 import { uri } from "../common/server.js";
+import { startCamera, drawNoCameraMessage } from "../common/camera.js";
 // Periodically Capture and process
 let arrayLicense = []
 let arrayConfidence = []
@@ -157,6 +158,48 @@ export function open_enter_bar(){
   setTimeout(()=>{
     enterGate.src = closedSrc
   }, 5000)
+}
+
+
+export function handleLicenseUpdate(license){
+    console.log('Recognized License:', license)
+    getAPICamera(license).then(responseGet => {
+      return postS3(responseGet, license)
+    }).then(responseS3 => {
+      let lotID
+      // at admin
+      if (responseS3 && window.location.href.contains('admin')){
+        lotID = document.getElementById('chosenLot').value.split(": ")[1]
+      // at camera
+      } else if(responseS3 && window.location.href.contains('camera')){
+        lotID = window.location.href.split('/')[4]
+      }
+      return postAPICamera(lotID, license)
+    }).then(responsePost=>{
+      if(responsePost){
+        console.log('Allows car enter!')
+        open_enter_bar()
+      }else{
+        console.log('Wait for vacancy!')
+      }
+    }).catch(error=>{
+      console.error('Error in processing:', error)
+    })
+  }
+
+  export function cameraWarning(event){
+  let option = event.target.id
+  if( option === 'denyCamera'){
+    return false
+  }else if( option === 'agreeCamera'){
+    let validCamera = startCamera()
+    if (validCamera){
+      // Start recognition with callback
+      startRecognition(handleLicenseUpdate)
+    }else if(!validCamera){
+      drawNoCameraMessage()
+    }
+  }
 }
 
 
