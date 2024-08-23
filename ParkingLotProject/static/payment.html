@@ -88,6 +88,56 @@
       </div>
     </div>
   </div>
+  <div class="card m-3">
+    <div class="row g-0">
+      <!-- car image -->
+      <div class="col-12 col-md-4 col-lg-3 col-xl-2 d-flex flex-column justify-content-center">
+        <img src="../public/images/car-graphic.jpg" alt="" class="img-fluid rounded-start">
+      </div>
+      <!-- car details -->
+      <div class="col-12 col-md-8 col-lg-6 col-xl-5 col-xxl-4">
+        <div class="card-body">
+          <h5 class="card-title">Confirmed Car Detail</h5>
+          <form action="">
+            <div class="row g-1 align-items-center">
+              <div class="col-5">
+                <label for="licenseplate" class="col-form-label">Recognized plate:</label>
+              </div>
+              <div class="col-7">
+                <input type="text" class="form-control" name="licenseplate" id="licenseplate" disabled>
+              </div>
+              <div class="col-5">
+                <label for="timestamp" class="col-form-label">Enter time stamp:</label>
+              </div>
+              <div class="col-7">
+                <input type="datetime-local" class="form-control" name="timestamp" id="timestamp" disabled>
+              </div>
+              <div class="col-5">
+                <label for="parkingfee" class="col-form-label">Parking fee subtotal:</label>
+              </div>
+              <div class="col-7">
+                <div class="input-group">
+                  <span class="input-group-text">$NTD</span>
+                  <input type="text" class="form-control" id="parkingfee" disabled>
+                </div>
+              </div>
+              <div class="col-5">
+                <label for="paymentstatus" class="col-form-label">Payment status:</label>
+              </div>
+              <div class="form-check col-3">
+                <input type="radio" class="form-check-input" name="paymentCheck" id="paidCheck" disabled checked>
+                <label for="paidCheck" class="form-check-label">Paid</label>
+              </div>
+              <div class="form-check col-3">
+                <input type="radio" class="form-check-input" name="paymentCheck" id="unpaidCheck" disabled>
+                <label for="unpaidCheck" class="form-check-label">Not Yet</label>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
   
 </body>
 </html>
