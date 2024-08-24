@@ -14,12 +14,13 @@ router = APIRouter(
     }
 )
 
-@router.post("", responses={
+@router.post("/credit", responses={
     200: {'model': Success, 'description': "Successful on payment"},
     400: {'model': Error, "description": "Failed payment"}
   },
     response_class=JSONResponse,
     summary="The API to make payment to 3rd parties"
 )
-async def payment():
+async def payment_credit(postPayment: PostPrimePayment):
+  print(postPayment.prime, postPayment.car.id, postPayment.car.sub_total)
   pass

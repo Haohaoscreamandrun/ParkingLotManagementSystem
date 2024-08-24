@@ -86,3 +86,11 @@ class RetrunParkingLot(BaseModel):
 class RetrunParkingLotObj(BaseModel):
     data: Optional[List[RetrunParkingLot]]
 
+
+class PostCarPayment(BaseModel):
+    id: int
+    sub_total: int
+
+class PostPrimePayment(BaseModel):
+    prime: str
+    car: PostCarPayment

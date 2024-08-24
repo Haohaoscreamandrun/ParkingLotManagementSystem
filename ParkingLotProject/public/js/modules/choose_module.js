@@ -2,7 +2,7 @@ import { uri } from "../common/server.js";
 import { formatDateForInput } from "./admin_module.js";
 
 
-export function render_scrollBar_lots(data){
+export async function render_scrollBar_lots(data){
   let scrollBarLots = document.querySelector('#scrollBarLots')
   data.forEach(lot => {
     let newDiv = document.createElement('button')
@@ -63,7 +63,7 @@ export async function clickSearch(event){
 
 
 // pre-load img
-export function preloadImages(dataArray){
+export async function preloadImages(dataArray){
   let preloadImgList = [];
   dataArray.forEach(data => {
     let license = data.license
@@ -75,7 +75,7 @@ export function preloadImages(dataArray){
   return preloadImgList
 }
 
-export function renderCarousal(dataArray=null, waiting=false, preloadImgList=null){
+export async function renderCarousal(dataArray=null, waiting=false, preloadImgList=null){
   // Get references to carousel indicators and inner container
   let indicatorsContainer = document.querySelector('#carouselExampleIndicators .carousel-indicators');
   let innerContainer = document.querySelector('#carouselExampleIndicators .carousel-inner');
@@ -143,7 +143,7 @@ export function renderCarousal(dataArray=null, waiting=false, preloadImgList=nul
   }
 }
 
-export function searchCarByLicense(event, carsArray){
+export async function searchCarByLicense(event, carsArray){
   let query = event.target.value
   let queryResult = carsArray.filter(car => { 
     return car.license.toLowerCase().includes(query.toLowerCase())
@@ -155,7 +155,7 @@ export function searchCarByLicense(event, carsArray){
 }
 
 
-export function renderCarDetails(index, lotObj, carsArray){
+export async function renderCarDetails(index, lotObj, carsArray){
   
   let licensePlate = document.getElementById('licenseplate')
   let enterTime = document.getElementById('timestamp')
@@ -173,28 +173,33 @@ export function renderCarDetails(index, lotObj, carsArray){
     enterTime.value = formatDateForInput(new Date(currentCar.enter_time))
     
     // Calculate passed time
-    let passedTime = new Date() - new Date(currentCar.enter_time)
-    let totalSeconds = Math.floor(passedTime / 1000)
-    let minutes = Math.floor(totalSeconds / 60)
-    let hours = Math.floor(minutes / 60)
-    minutes = Math.floor(minutes % 60)
-    let parkingLotFee = lotObj[0].parking_fee
-    
-    // under one hour => one hour fee
-    // over one hour => less than 30 mins => 1.5 hour fee
-    // over one hour => more than 30 mins => 2 hours fee
-    let subTotal = 0
-    if (hours < 1){
-      subTotal = parkingLotFee
-    }else if(hours >=1 && minutes < 30){
-      subTotal = parkingLotFee * (hours + 0.5)
-    }else if(hours >=1 && minutes >= 30){
-      subTotal = parkingLotFee * (hours + 1)
-    }
+    let [hours, minutes, subTotal] = pastTimetoFee(currentCar.enter_time, lotObj[0].parking_fee)
     parkingFee.value = subTotal
 
     // render payment button
     paymentBtn.disabled = false
     paymentBtn.id = currentCar.car_id
   }
+}
+
+export function pastTimetoFee(enterTime, parkingLotRate){
+  // Calculate passed time
+  let passedTime = new Date() - new Date(enterTime)
+  let totalSeconds = Math.floor(passedTime / 1000)
+  let minutes = Math.floor(totalSeconds / 60)
+  let hours = Math.floor(minutes / 60)
+  minutes = Math.floor(minutes % 60)
+  
+  // under one hour => one hour fee
+  // over one hour => less than 30 mins => 1.5 hour fee
+  // over one hour => more than 30 mins => 2 hours fee
+  let subTotal = 0
+  if (hours < 1){
+    subTotal = parkingLotRate
+  }else if(hours >=1 && minutes < 30){
+    subTotal = parkingLotRate * (hours + 0.5)
+  }else if(hours >=1 && minutes >= 30){
+    subTotal = parkingLotRate * (hours + 1)
+  }
+  return [hours, minutes, subTotal]
 }

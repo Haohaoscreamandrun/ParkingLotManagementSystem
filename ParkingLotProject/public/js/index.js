@@ -4,29 +4,37 @@ import { getLocation, render_parking_lots_list, render_lot_card,search_lots_by_a
 async function indexFlow(){
   // Login logic
   // login offcanvas validation bootstrap
-  formValidation()
+  await formValidation()
   // login form function
   let signInForm = document.querySelector('#signInForm')
-  signInForm.addEventListener('submit', event => {signInValidation(event)})
+  signInForm.addEventListener('submit', async event => {
+    await signInValidation(event)
+  })
   // token validation
-  tokenValidation()
+  await tokenValidation()
 
   // render parking lots
   let parkingLotList = document.querySelector('#parkingLotList')
   let parkingLots = await getLocation()
-  render_parking_lots_list(parkingLots)
+  await render_parking_lots_list(parkingLots)
   
   // store the placeholder
   const placeholderNode = document.querySelector('#lotDetailCard').cloneNode(true)
 
   // listen to click on list-item
-  parkingLotList.addEventListener('click', (event)=> {
-    render_lot_card(event, placeholderNode, parkingLots)
+  parkingLotList.addEventListener('click', async (event)=> {
+    await render_lot_card(event, placeholderNode, parkingLots)
   })
 
   // listen to search input
   let searchInput = document.querySelector('#searchInput')
-  searchInput.addEventListener('input', event => search_lots_by_address(event, parkingLots))
+  searchInput.addEventListener('input', async event => {
+    await search_lots_by_address(event, parkingLots)
+  })
+
+  // trigger click for first parking lot
+  let fisrtParkingLot = parkingLotList.firstChild
+  fisrtParkingLot.click()
 
 }
 

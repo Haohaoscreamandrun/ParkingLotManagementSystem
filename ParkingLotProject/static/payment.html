@@ -17,6 +17,8 @@
   <!-- index.js & common.css -->
   <script type="module" src="../public/js/payment.js" defer></script>
   <link rel="stylesheet" href="../public/css/common.css">
+  <!-- font awesome -->
+  <script src="https://kit.fontawesome.com/698455ed47.js" crossorigin="anonymous"></script>
 </head>
 <body>
   <!-- common navbar -->
@@ -99,46 +101,79 @@
         <div class="card">
           <div class="row g-0">
             <!-- car image -->
-            <div class="col-12 col-md-4 col-lg-3 col-xl-2 d-flex flex-column justify-content-center">
-              <img src="../public/images/car-graphic.jpg" alt="" class="img-fluid rounded-start">
+            <div class="col-12 col-md-4 d-flex flex-column justify-content-center">
+              <img src="../public/images/car-graphic.jpg" alt="" class="img-fluid rounded-start" id="carImage">
             </div>
             <!-- car details -->
-            <div class="col-12 col-md-8 col-lg-6 col-xl-5 col-xxl-4">
+            <div class="col-12 col-md-8 ">
               <div class="card-body">
                 <h5 class="card-title mb-3">Confirmed Car Detail</h5>
                 <form action="">
-                  <div class="row g-1 align-items-center">
+                  <div class="row g-1 align-items-center placeholder-glow">
                     <div class="col-5">
-                      <label for="licenseplate" class="col-form-label">Recognized plate:</label>
+                      <label for="licensePlate" class="col-form-label">Recognized plate:</label>
                     </div>
                     <div class="col-7">
-                      <input type="text" class="form-control" name="licenseplate" id="licenseplate" disabled>
+                      <input type="text" class="form-control placeholder" name="licensePlate" id="licensePlate" readonly>
                     </div>
                     <div class="col-5">
-                      <label for="timestamp" class="col-form-label">Enter time stamp:</label>
+                      <label for="timeStamp" class="col-form-label">Enter time stamp:</label>
                     </div>
                     <div class="col-7">
-                      <input type="datetime-local" class="form-control" name="timestamp" id="timestamp" disabled>
+                      <input type="datetime-local" class="form-control placeholder" name="timeStamp" id="timeStamp" readonly>
                     </div>
                     <div class="col-5">
-                      <label for="parkingfee" class="col-form-label">Parking fee subtotal:</label>
+                      <label for="totalTime" class="col-form-label">Total Parking time:</label>
+                    </div>
+                    <div class="col-7">
+                      <input type="text" class="form-control placeholder" name="totalTime" id="totalTime" readonly>
+                    </div>
+                    <div class="col-5">
+                      <label for="parkingLot" class="col-form-label">Parked at:</label>
+                    </div>
+                    <div class="col-7">
+                      <input type="text" class="form-control placeholder" name="parkingLot" id="parkingLot" readonly>
+                    </div>
+                    <div class="col-5">
+                      <label for="parkingRate" class="col-form-label">Parking rate:</label>
                     </div>
                     <div class="col-7">
                       <div class="input-group">
-                        <span class="input-group-text">$NTD</span>
-                        <input type="text" class="form-control" id="parkingfee" disabled>
+                        <input type="text" class="form-control placeholder" id="parkingRate" readonly>
+                        <span class="input-group-text">$NTD/hr</span>
+                      </div>
+                    </div>
+                    <div class="col-5">
+                      <label for="parkingFee" class="col-form-label">Parking fee subtotal:</label>
+                    </div>
+                    <div class="col-7">
+                      <div class="input-group">
+                        <input type="text" class="form-control placeholder" name="parkingFee" id="parkingFee" readonly>
+                        <span class="input-group-text" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html='true' data-bs-title="<p class='fw-lighter'>More than half an hour will be counted as an hour.</p>">$NTD</span>
                       </div>
                     </div>
                     <div class="col-5">
                       <label for="paymentstatus" class="col-form-label">Payment status:</label>
                     </div>
-                    <div class="form-check col-3">
+                    <div class="form-check col-2">
                       <input type="radio" class="form-check-input" name="paymentCheck" id="paidCheck" disabled checked>
                       <label for="paidCheck" class="form-check-label">Paid</label>
                     </div>
-                    <div class="form-check col-3">
+                    <div class="form-check col-2">
                       <input type="radio" class="form-check-input" name="paymentCheck" id="unpaidCheck" disabled>
                       <label for="unpaidCheck" class="form-check-label">Not Yet</label>
+                    </div>
+                    <div class="form-check col-2">
+                      <input type="radio" class="form-check-input" name="paymentCheck" id="overTimeCheck" disabled>
+                      <label for="overTimeCheck" class="form-check-label">Overtime</label>
+                    </div>
+                    <div class="col-12" id="paidWarning" hidden>
+                      <div class="row alert alert-warning d-flex align-items-center" role="alert">
+                        <i class="col-1 fa-solid fa-circle-exclamation"></i>
+                        <div class="col-11">
+                          You've already paid, please leave the parking lot within 15 mins.
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </form>
@@ -163,23 +198,39 @@
               </li>
             </ul>
           </div>
-          <div class="card-body">
-            <h5 class="card-title">Pay by credit card</h5>
-            <div class="form-floating mb-3">
-              <div class="form-control" id="card-number"></div>
-              <label for="card-number">Card number</label>
+          <div class="card-body row">
+            <div class="col col-6 text-start">
+              <h5 class="card-title">Pay by credit card</h5>
             </div>
-            <div class="form-floating mb-3">
-              <div class="form-control" id="card-expiration-date"></div>
-              <label for="card-expiration-date">Expiration Date</label>
+            <div class="col col-6 text-end">
+              <img src="https://www.tappaysdk.com/_nuxt/img/tappay_logo.6f41c84.svg" alt="" class="image-fluid" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html='true' data-bs-title="<p class='fw-lighter'>TapPay manages credit card payment information without storing any credit card details on this site.</p>">
             </div>
-            <div class="form-floating mb-3">
-              <div class="form-control" id="card-ccv"></div>
-              <label for="card-ccv">CCV</label>
-            </div>
-            <div class=" d-grid">
-              <button type="submit" class="btn btn-info" id="tappayBtn" disabled>Proceed with this payment</button>
-            </div>
+            <!-- TapPay credit card form -->
+            <form class="col col-12 row" id="tapPayCreditCardForm">
+              <div class="col col-12 mt-3">
+                <div class="form-floating mb-3">
+                  <div class="form-control d-flex flex-row align-items-end" id="card-number">
+                    <i class="pe-1 fa-regular fa-credit-card" id="creditCardIcon"></i>
+                  </div>
+                  <label for="card-number">Card number</label>
+                </div>
+              </div>
+              <div class="col col-12">
+                <div class="form-floating mb-3">
+                  <div class="form-control" id="card-expiration-date"></div>
+                  <label for="card-expiration-date">Expiration Date</label>
+                </div>
+              </div>
+              <div class="col col-12">
+                <div class="form-floating mb-3">
+                  <div class="form-control" id="card-ccv"></div>
+                  <label for="card-ccv">CCV</label>
+                </div>
+              </div>
+              <div class=" d-grid">
+                <button type="submit" class="btn btn-info" id="tappayBtn" disabled>Proceed with this payment</button>
+              </div>
+            </form>
           </div>
         </div>
       </div>

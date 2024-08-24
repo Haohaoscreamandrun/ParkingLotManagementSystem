@@ -66,7 +66,7 @@ export async function get_parking_lots_by_coordinate(position=undefined, latitud
 
 
 
-export function render_parking_lots_list(data, query = ""){  
+export async function render_parking_lots_list(data, query = ""){  
   let parkingLotList = document.querySelector('#parkingLotList')
   parkingLotList.innerHTML = ''
   //render message if no data
@@ -180,10 +180,10 @@ function directToChoose(event){
   window.location.href = `${uri}/choose/${lot_id}`
 }
 
-export function search_lots_by_address(event, lotsArray){
+export async function search_lots_by_address(event, lotsArray){
   let query = event.target.value
   let queryResult = lotsArray.filter(lot => {
     return lot.address.toLowerCase().includes(query.toLowerCase())
   })
-  render_parking_lots_list(queryResult, query)
+  await render_parking_lots_list(queryResult, query)
 }

@@ -70,7 +70,7 @@ async def get_cars_info(lot_id: int):
     )
 
 
-@router.get("/{license}", responses={
+@router.get("/{car_ID}", responses={
     200: {'model': ReturnCarsObj, 'description': "Successful on retrieve specific car information"},
     400: {'model': Error, "description": "Failed to connect relational database"}
   },
@@ -78,9 +78,9 @@ async def get_cars_info(lot_id: int):
     response_model=ReturnCarsObj,
     summary="The API to reply specific car information based on license record"
 )
-async def get_car_by_license(license: str):
+async def get_car_by_ID(car_ID: str):
   try:
-    myresult = car_by_license(license)
+    myresult = car_by_carID(car_ID)
     if len(myresult) > 0:
       response_content_list = []
       for result in myresult:

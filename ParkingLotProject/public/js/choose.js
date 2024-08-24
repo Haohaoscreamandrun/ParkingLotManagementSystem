@@ -7,12 +7,14 @@ import { get_parking_lot_by_id } from "./modules/admin_module.js";
 async function chooseFlow(){
   // Login logic
   // login offcanvas validation bootstrap
-  formValidation()
+  await formValidation()
   // login form function
   let signInForm = document.querySelector('#signInForm')
-  signInForm.addEventListener('submit', event => {signInValidation(event)})
+  signInForm.addEventListener('submit', async event => { 
+    await signInValidation(event)
+  })
   // token validation
-  tokenValidation()
+  await tokenValidation()
   
   // render scrollbar
   let lot_id = parseInt(window.location.href.split("/")[4])
@@ -20,7 +22,7 @@ async function chooseFlow(){
   let lots = await get_parking_lots_by_coordinate(undefined, lot[0].latitude, lot[0].longitude)
   let scrollBar = document.querySelector('#scrollBarLots')
   scrollBar.innerHTML = ''
-  render_scrollBar_lots(lots)
+  await render_scrollBar_lots(lots)
 
   // scroll bar illustrate
   let scrollUpBtn = document.querySelector('#scrollUpBtn')
@@ -35,15 +37,15 @@ async function chooseFlow(){
   let scrollWindow = document.querySelector('#scrollBarLots')
   scrollWindow.addEventListener('click', async (event) => {
     // render carousal to spinner
-    renderCarousal(null, true)
+    await renderCarousal(null, true)
     // get original cars result
     original_storage_cars = await clickSearch(event)
     // preload images
-    preloadImgList = preloadImages(original_storage_cars)
+    preloadImgList = await preloadImages(original_storage_cars)
     //render carousel
-    renderCarousal(original_storage_cars, false, preloadImgList)
+    await renderCarousal(original_storage_cars, false, preloadImgList)
     // render the first car detail
-    renderCarDetails(0, lot, original_storage_cars)
+    await renderCarDetails(0, lot, original_storage_cars)
     // pass the original cars list to temp
     temp_storage_cars = original_storage_cars
   })
@@ -57,16 +59,16 @@ async function chooseFlow(){
   let carouselContainer = document.getElementById('carouselExampleIndicators')
   carouselContainer.addEventListener('slide.bs.carousel', async (event) => {
     let index = event.to
-    renderCarDetails(index, lot,temp_storage_cars)
+    await renderCarDetails(index, lot,temp_storage_cars)
   })
 
   // listen to plate input and search
   let searchInput = document.querySelector('#searchCars')
-  searchInput.addEventListener('input', event =>{
-    temp_storage_cars = searchCarByLicense(event, original_storage_cars)
-    preloadImgList = preloadImages(temp_storage_cars)
-    renderCarousal(temp_storage_cars, false, preloadImgList)
-    renderCarDetails(0, lot, temp_storage_cars)
+  searchInput.addEventListener('input', async event =>{
+    temp_storage_cars = await searchCarByLicense(event, original_storage_cars)
+    preloadImgList = await preloadImages(temp_storage_cars)
+    await renderCarousal(temp_storage_cars, false, preloadImgList)
+    await renderCarDetails(0, lot, temp_storage_cars)
   })
 
   // listen to payment button

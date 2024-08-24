@@ -49,12 +49,12 @@ def cars_in_parking_lot(lot_id):
     return myresult
 
 
-def car_by_license(license):
+def car_by_carID(car_ID):
   sql = '''
   SELECT * FROM cars \
-    WHERE plate_number = %s
+    WHERE id = %s
     '''
-  val = (license,)
+  val = (car_ID,)
   try:
     cnxconnection = cnxpool.get_connection()
     mycursor = cnxconnection.cursor()

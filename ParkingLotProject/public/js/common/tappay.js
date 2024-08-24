@@ -1,6 +1,7 @@
+import { postThirdPrime } from "../modules/payment_module.js"
 
 export let tappayDefaultStyle = {
-  fields : {
+    fields : {
         number: {
             // css selector
             element: '#card-number',
@@ -16,7 +17,7 @@ export let tappayDefaultStyle = {
             placeholder: 'CCV'
         }
     },
-  styles: {
+    styles: {
       // style valid state
         '.valid': {
             'color': 'green'
@@ -29,14 +30,14 @@ export let tappayDefaultStyle = {
     
     isMaskCreditCardNumber: true,
     maskCreditCardNumberRange: {
-        beginIndex: 5,
-        endIndex: 12
+        beginIndex: 6,
+        endIndex: 11
     }
 }
 
 export function onUpdate(update) {
     // update.canGetPrime === true
-    // --> you can call TPDirect.card.getPrime()
+    // // --> you can call TPDirect.card.getPrime()
     // console.log(
     //     `
     //     cardType (String): ${update.cardType}
@@ -48,48 +49,66 @@ export function onUpdate(update) {
     //     `
     // )
     let submitButton = document.querySelector('#tappayBtn')
-    
-    if (update.canGetPrime) {
+    let paidCheck = document.getElementById('paidCheck')
+    let unPaidCheck = document.getElementById('unpaidCheck')
+    let paidWarning = document.getElementById('paidWarning')
+    if (paidCheck.checked){
+        paidWarning.hidden = false
+    }else if (update.canGetPrime && unPaidCheck) {
         // Enable submit Button to get prime.
         submitButton.removeAttribute('disabled')
     } else {
         // Disable submit Button to get prime.
         submitButton.setAttribute('disabled', true)
     }
-                                            
+    
+    let creditCardIcon = document.getElementById('creditCardIcon')
     // cardTypes = ['mastercard', 'visa', 'jcb', 'amex', 'unknown']
     if (update.cardType === 'visa') {
-        // Handle card type visa.
+        creditCardIcon.classList.remove('fa-regular','fa-credit-card')
+        creditCardIcon.classList.add('fa-brands', 'fa-cc-visa')
+    } else if (update.cardType === 'mastercard'){
+        creditCardIcon.classList.remove('fa-regular','fa-credit-card')
+        creditCardIcon.classList.add('fa-brands', 'fa-cc-mastercard')
+    } else if (update.cardType === 'jcb'){
+        creditCardIcon.classList.remove('fa-regular','fa-credit-card')
+        creditCardIcon.classList.add('fa-brands', 'fa-cc-jcb')
+    } else if (update.cardType === 'amex'){
+        creditCardIcon.classList.remove('fa-regular','fa-credit-card')
+        creditCardIcon.classList.add('fa-brands', 'fa-cc-amex')
+    } else if (update.cardType === 'unknown'){
+        creditCardIcon.classList = 'pe-1 fa-regular fa-credit-card'
     }
 
-    // number 欄位是錯誤的
-    if (update.status.number === 2) {
-        // setNumberFormGroupToError()
-    } else if (update.status.number === 0) {
-        // setNumberFormGroupToSuccess()
-    } else {
-        // setNumberFormGroupToNormal()
-    }
+    // // number 欄位是錯誤的
+    // if (update.status.number === 2) {
+    //     // setNumberFormGroupToError()
+    // } else if (update.status.number === 0) {
+    //     // setNumberFormGroupToSuccess()
+    // } else {
+    //     // setNumberFormGroupToNormal()
+    // }
     
-    if (update.status.expiry === 2) {
-        // setNumberFormGroupToError()
-    } else if (update.status.expiry === 0) {
-        // setNumberFormGroupToSuccess()
-    } else {
-        // setNumberFormGroupToNormal()
-    }
+    // if (update.status.expiry === 2) {
+    //     // setNumberFormGroupToError()
+    // } else if (update.status.expiry === 0) {
+    //     // setNumberFormGroupToSuccess()
+    // } else {
+    //     // setNumberFormGroupToNormal()
+    // }
     
-    if (update.status.ccv === 2) {
-        // setNumberFormGroupToError()
-    } else if (update.status.ccv === 0) {
-        // setNumberFormGroupToSuccess()
-    } else {
-        // setNumberFormGroupToNormal()
-    }
+    // if (update.status.ccv === 2) {
+    //     // setNumberFormGroupToError()
+    // } else if (update.status.ccv === 0) {
+    //     // setNumberFormGroupToSuccess()
+    // } else {
+    //     // setNumberFormGroupToNormal()
+    // }
 }
 
-export function onSubmit(response) {
-    
+export async function onSubmit(event) {
+    // prevent default
+    event.preventDefault()
     // 取得 TapPay Fields 的 status
     let tappayStatus = TPDirect.card.getTappayFieldsStatus()
 
@@ -106,10 +125,9 @@ export function onSubmit(response) {
             return
         }
         // alert('get prime 成功，prime: ' + result.card.prime)
-        prime = result.card.prime
+        let prime = result.card.prime
         // send prime to your server, to pay with Pay by Prime API .
         // Pay By Prime Docs: https://docs.tappaysdk.com/tutorial/zh/back.html#pay-by-prime-api
-        console.log('Got Prime:', prime)
+        postThirdPrime(prime)
     })
 }
-
