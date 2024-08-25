@@ -51,10 +51,11 @@ export function onUpdate(update) {
     let submitButton = document.querySelector('#tappayBtn')
     let paidCheck = document.getElementById('paidCheck')
     let unPaidCheck = document.getElementById('unpaidCheck')
+    let overTimeCheck = document.getElementById('overTimeCheck')  
     let paidWarning = document.getElementById('paidWarning')
     if (paidCheck.checked){
         paidWarning.hidden = false
-    }else if (update.canGetPrime && unPaidCheck) {
+    }else if (update.canGetPrime && (unPaidCheck.checked || overTimeCheck.checked)) {
         // Enable submit Button to get prime.
         submitButton.removeAttribute('disabled')
     } else {
@@ -106,7 +107,7 @@ export function onUpdate(update) {
     // }
 }
 
-export async function onSubmit(event) {
+export async function onSubmit(event, lotID) {
     // prevent default
     event.preventDefault()
     // 取得 TapPay Fields 的 status
@@ -128,6 +129,7 @@ export async function onSubmit(event) {
         let prime = result.card.prime
         // send prime to your server, to pay with Pay by Prime API .
         // Pay By Prime Docs: https://docs.tappaysdk.com/tutorial/zh/back.html#pay-by-prime-api
-        postThirdPrime(prime)
+        
+        postThirdPrime(prime, lotID)
     })
 }

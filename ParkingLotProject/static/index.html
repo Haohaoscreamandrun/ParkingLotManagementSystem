@@ -94,7 +94,7 @@
       <!-- Parking Lots list -->
       <div class="col col-12 col-md-6 rounded-3 p-2">
         <div class="row g-2">
-          <div class="col p-2">
+          <div class="col pb-2">
             <div class="input-group">
               <span class="input-group-text" id="addon1">Search by address</span>
               <input type="text" placeholder="Address string of parking lot" class="form-control" aria-label="parking lot" aria-describedby="addon1" id="searchInput">
@@ -102,7 +102,7 @@
           </div>
         </div>
         <div class="row g-2">
-          <div class="col p-2">
+          <div class="col">
             <div class="list-group scrollable-list d-flex flex-column align-items-center" id="parkingLotList">
               <div class="spinner-grow text-secondary mt-2" role="status">
                 <span class="visually-hidden">Loading...</span>
@@ -116,54 +116,57 @@
       </div>
       <!-- Parking Lot info Card -->
       <div class="col col-12 col-md-6 rounded-3 p-2">
-        <div class="row g-2">
-            <div id="lotDetailCard" class="card m-2">
-              <div class="card-body">
-                <h5 class="card-title placeholder-glow" id="parkingLotName">
-                  <span class="placeholder col-12"></span>
-                </h5>
-                <h6 class="card-subtitle text-body-secondary mb-3 placeholder-glow" id="parkingLotAddress">
-                  <span class="placeholder col-5"></span>
-                </h6>
-                <div class="container align-content-center">
-                  <div class="row g-1">
-                    <div class="col-4">
-                      <div class="p-1">Parking fee:</div>
-                    </div>
-                    <div class="col-8">
-                      <div class="p-1 placeholder-glow" id="parkingLotFee">
-                        <span class="placeholder col-10"></span>
-                      </div>
-                    </div>
-                    <div class="col-4">
-                      <div class="p-1">Current Vacancy:</div>
-                    </div>
-                    <div class="col-4">
-                      <div class="p-1 placeholder-glow" id="parkingLotSpace">
-                        <span class="placeholder col-8"></span>
-                      </div>
-                    </div>
-                    <div class="col-4">
-                      <div class="p-1 placeholder-glow" id="parkingLotVacancy">
-                        <span class="placeholder col-8"></span>
-                      </div>
-                    </div>
+        
+        <div id="lotDetailCard" class="card shadow">
+          <div class="card-body">
+            <h5 class="card-title placeholder-glow" id="parkingLotName">
+              <span class="placeholder col-12"></span>
+            </h5>
+            <h6 class="card-subtitle text-body-secondary mb-3 placeholder-glow" id="parkingLotAddress">
+              <span class="placeholder col-5"></span>
+            </h6>
+            <div class="container align-content-center">
+              <div class="row g-1">
+                <div class="col-4">
+                  <div class="p-1">Parking fee:</div>
+                </div>
+                <div class="col-8">
+                  <div class="p-1 placeholder-glow" id="parkingLotFee">
+                    <span class="placeholder col-10"></span>
                   </div>
                 </div>
-                </ul>
-              </div>
-              <div class="card-footer d-grid">
-                <button type="button" class="btn btn-success mb-2" id="enterButton" disabled>Enter Parking Lot</button>
-                <button type="button" class="btn btn-info" id="findCarButton" disabled>Find My Car Here</button>
+                <div class="col-4">
+                  <div class="p-1">Current Vacancy:</div>
+                </div>
+                <div class="col-4">
+                  <div class="p-1 placeholder-glow" id="parkingLotSpace">
+                    <span class="placeholder col-8"></span>
+                  </div>
+                </div>
+                <div class="col-4">
+                  <div class="p-1 placeholder-glow" id="parkingLotVacancy">
+                    <span class="placeholder col-8"></span>
+                  </div>
+                </div>
               </div>
             </div>
+            </ul>
+          </div>
+          <div class="card-footer d-grid">
+            <button type="button" class="btn btn-success mb-2" id="enterButton" disabled>Enter Parking Lot</button>
+            <button type="button" class="btn btn-info" id="findCarButton" disabled>Find My Car Here</button>
+          </div>
         </div>
-      </div>
+    </div>
+      
     </div>
     <div class="row g-2">
-      <div class="col p-3">
+      <div class="col col-12 p-2">
         <!--The div element for the map -->
-        <div class="rounded-3" id="map"></div>
+        <div class="rounded-3 shadow" id="map"></div>
+      </div>
+      <div class="col col-12 p-2 pt-5">
+        <img src="../public/images/8277_color.svg" alt="" class="image-fluid">
       </div>
     </div>
    </div>

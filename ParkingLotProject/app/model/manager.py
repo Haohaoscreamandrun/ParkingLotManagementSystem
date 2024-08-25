@@ -134,3 +134,18 @@ async def car_enter(lot_id, license):
     mycursor.close()
     cnxconnection.close()
     print("MySQL connection is closed")
+
+
+async def grant_green_light(car_id):
+  sql = '''UPDATE cars SET green_light = \
+    DATE_ADD(NOW(), INTERVAL 15 MINUTE)\
+        WHERE id = %s'''
+  val = (car_id,)
+  try:
+      cnxconnection = cnxpool.get_connection()
+      mycursor = cnxconnection.cursor()
+      mycursor.execute(sql, val)
+      cnxconnection.commit()
+      print(mycursor.rowcount, "record processed.")
+  except mysql.connector.Error:
+    raise mysql.connector.Error

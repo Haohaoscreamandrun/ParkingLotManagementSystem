@@ -173,7 +173,7 @@ export async function renderCarDetails(index, lotObj, carsArray){
     enterTime.value = formatDateForInput(new Date(currentCar.enter_time))
     
     // Calculate passed time
-    let [hours, minutes, subTotal] = pastTimetoFee(currentCar.enter_time, lotObj[0].parking_fee)
+    let [hours, minutes, subTotal] = pastTimetoFee(currentCar.enter_time, currentCar.green_light, lotObj[0].parking_fee)
     parkingFee.value = subTotal
 
     // render payment button
@@ -182,9 +182,20 @@ export async function renderCarDetails(index, lotObj, carsArray){
   }
 }
 
-export function pastTimetoFee(enterTime, parkingLotRate){
+export function pastTimetoFee(enterTime, greenLight, parkingLotRate){
   // Calculate passed time
-  let passedTime = new Date() - new Date(enterTime)
+  let passedTime
+  if(new Date(enterTime) - new Date(greenLight) === 0){
+    // unpaid
+    passedTime = new Date() - new Date(enterTime)
+  }else if(new Date(enterTime) - new Date(greenLight) < 0 && new Date(greenLight) - new Date() < 0){
+    // overtime
+    passedTime = new Date() - new Date(greenLight)
+  } else if (new Date(enterTime) - new Date(greenLight) < 0 && new Date(greenLight) - new Date() > 0){
+    // paid
+    passedTime = 0
+  }
+  
   let totalSeconds = Math.floor(passedTime / 1000)
   let minutes = Math.floor(totalSeconds / 60)
   let hours = Math.floor(minutes / 60)
@@ -201,5 +212,6 @@ export function pastTimetoFee(enterTime, parkingLotRate){
   }else if(hours >=1 && minutes >= 30){
     subTotal = parkingLotRate * (hours + 1)
   }
+  // console.log(passedTime, hours, minutes, subTotal)
   return [hours, minutes, subTotal]
 }

@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field, field_validator, ValidationError
+from pydantic import BaseModel, Field, field_validator, ValidationError, EmailStr
 from pydantic_extra_types.coordinate import Coordinate
 from typing import List, Optional
 import re
@@ -91,6 +91,12 @@ class PostCarPayment(BaseModel):
     id: int
     sub_total: int
 
+class PostHolderPayment(BaseModel):
+    phone_number: str
+    name: str
+    email: EmailStr
+
 class PostPrimePayment(BaseModel):
     prime: str
     car: PostCarPayment
+    card_holder: PostHolderPayment
