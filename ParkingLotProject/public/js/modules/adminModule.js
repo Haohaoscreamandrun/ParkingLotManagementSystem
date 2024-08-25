@@ -13,10 +13,15 @@ async function adminFlow (){
   // render lot and detail
   renderLotInput()
   // render car list
-  searchCarsByInput()
-  
+  let searchCarsInput = document.querySelector('#searchCars')
+  searchCarsInput.addEventListener('input', (event)=>{
+    searchCarsByInput(event)
+  })
   // render car card
-  renderCarCard()
+  let carsListGroup = document.querySelector('#carsListGroup')
+  carsListGroup.addEventListener('click', event =>{
+    renderCarCard(event)
+  })
 
   let denyCameraBtn = document.getElementById('denyCamera')
   let agreeCameraBtn = document.getElementById('agreeCamera')

@@ -1,5 +1,5 @@
 from fastapi import *
-from fastapi.responses import JSONResponse, FileResponse
+from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from ..config.basemodel import *
 from ..model.s3 import *
@@ -38,52 +38,3 @@ def get_s3_upload_url(license: str):
         status_code=exc.status_code,
         detail=exc.detail
     )
-
-
-@router.post('', responses={
-    200: {'model': Success, 'description': "Get the enter signal or not."},
-    400: {'model': Error, "description": "Connection failed"}
-}, response_model=Success
-, response_class=JSONResponse
-, summary="The API to post new car into assigned parking lot.")
-async def post_enter_RDS(data: PostCarEnter):
-  
-  try:
-    lot_id = data.lotID
-    license = data.license
-    # check vacancy
-    vacancy_result = await vacancy_lookup(lot_id)
-    vacancy = vacancy_result[0][1]-vacancy_result[0][0]
-    lot_id = vacancy_result[0][2]
-    # check double
-    double = await double_license(license)
-    if vacancy > 0 and len(double) == 0:
-      await car_enter(lot_id, license)
-      return JSONResponse(
-        status_code=status.HTTP_200_OK,
-        content={
-          "ok": True
-        }
-      )
-    else:
-      return JSONResponse(
-        status_code=status.HTTP_200_OK,
-        content={
-          "ok": False
-        }
-      )
-  except (HTTPException, StarletteHTTPException) as exc:
-    raise HTTPException(
-        status_code=exc.status_code,
-        detail=exc.detail
-    )
-
-
-@router.delete('', responses={
-    200: {'model': Success, 'description': "Successfully delete car data from RDS and S3."},
-    400: {'model': Error, "description": "Connection failed"}
-}, response_model=Success
-, response_class=JSONResponse
-, summary="The API to delete specific car from parking lot.")
-async def delete_exit_car():
-  pass

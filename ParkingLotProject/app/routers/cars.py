@@ -1,10 +1,7 @@
 from fastapi import *
 from fastapi.responses import JSONResponse
-from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException as StarletteHTTPException
-from datetime import datetime
 import pytz
-from typing import Annotated
 from ..config.basemodel import *
 from ..model.commit import *
 from ..model.execute import *
@@ -113,6 +110,45 @@ async def get_car_by_ID(car_ID: str):
         detail=exc.detail
     )
 
+
+@router.post('/{license}', responses={
+      200: {'model': Success, 'description': "Success on post a new car."},
+      400: {'model': Error, "description": "Connection failed"}
+    }, 
+    response_model=Success, 
+    response_class=JSONResponse, 
+    summary="The API to post new car into assigned parking lot.")
+async def post_enter_RDS(data: PostCarEnter):
+
+  try:
+    lot_id = data.lotID
+    license = data.license
+    # check vacancy
+    vacancy_result = await vacancy_lookup(lot_id)
+    vacancy = vacancy_result[0][1]-vacancy_result[0][0]
+    lot_id = vacancy_result[0][2]
+    # check double
+    double = await double_license(license)
+    if vacancy > 0 and len(double) == 0:
+      await car_enter(lot_id, license)
+      return JSONResponse(
+          status_code=status.HTTP_200_OK,
+          content={
+              "ok": True
+          }
+      )
+    else:
+      return JSONResponse(
+          status_code=status.HTTP_200_OK,
+          content={
+              "ok": False
+          }
+      )
+  except (HTTPException, StarletteHTTPException) as exc:
+    raise HTTPException(
+        status_code=exc.status_code,
+        detail=exc.detail
+    )
 
 @router.put("/{license}", responses={
     200: {'model': Success, 'description': "Successful on modify specific car information"},

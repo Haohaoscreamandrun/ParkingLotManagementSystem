@@ -1,5 +1,6 @@
 import { uri } from "../common/server.js";
 import { renderVacancy, renderCars } from "../view/adminView.js";
+// store the cars information in variable
 
 async function getParkingLots(adminID){
   try{
@@ -39,7 +40,6 @@ async function getParkingLotById(lotID){
   }
 }
 
-// store the cars information in variable
 let tempStorageCars
 
 async function fetchCarsRender(lotID){
@@ -56,10 +56,11 @@ async function fetchCarsRender(lotID){
     
     if (responseObj.ok && response.data === null){
       // no cars in this lot
+      tempStorageCars = []
       // update vacancy
       renderVacancy(null,true)
       // update car list
-      renderCars(['empty'], true)
+      renderCars(tempStorageCars, true)
 
     } else if (responseObj.ok && response.data.length > 0){
 
@@ -68,7 +69,7 @@ async function fetchCarsRender(lotID){
       // update vacancy
       renderVacancy(tempStorageCars)
       // render first ten cars
-      renderCars(response.data)
+      renderCars(tempStorageCars)
 
     } else {
       console.log("enter new Error loop")
@@ -82,22 +83,16 @@ async function fetchCarsRender(lotID){
 
 
 // function of search car
-function searchCarsByInput(){
-  let searchCarsInput = document.querySelector('#searchCars')
-  searchCarsInput.addEventListener('input', (event)=>{
-    let query = event.target.value
-    let queryResult = tempStorageCars.filter(car => {
-      return car.license.toLowerCase().includes(query.toLowerCase())
-    })
-    if (queryResult.length > 10){
-      queryResult = queryResult.slice(0, 10)
-    }
-    let carsListGroup = document.querySelector('#carsListGroup')
-    carsListGroup.innerHTML = ''
-    queryResult.forEach(car => {
-      renderCars(car)
-    })
+function searchCarsByInput(event, carList = tempStorageCars){
+  
+  let query = event.target.value
+  let queryResult = carList.filter(car => {
+    return car.license.toLowerCase().includes(query.toLowerCase())
   })
+  let carsListGroup = document.querySelector('#carsListGroup')
+  carsListGroup.innerHTML = ''
+  renderCars(queryResult)
+  
 }
 
 
@@ -111,4 +106,4 @@ function formatDateForInput(date) {
     return `${year}-${month}-${day}T${hours}:${minutes}`;
 }
 
-export {getParkingLots, getParkingLotById, fetchCarsRender, searchCarsByInput, formatDateForInput}
+export {getParkingLots, getParkingLotById, fetchCarsRender, searchCarsByInput, formatDateForInput, tempStorageCars}

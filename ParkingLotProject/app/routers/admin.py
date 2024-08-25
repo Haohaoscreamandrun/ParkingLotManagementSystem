@@ -1,11 +1,8 @@
 from fastapi import *
 from fastapi.responses import JSONResponse
-from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException as StarletteHTTPException
-from typing import Annotated
 from datetime import datetime, timedelta
 import jwt
-import requests
 from ..config.basemodel import *
 from ..model.commit import *
 from ..model.execute import *
@@ -113,7 +110,7 @@ async def admin_login(admin: AdminCredentials):
           status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
           detail= "JWT encoded problem."
         )
-  except HTTPException as exc:
+  except (HTTPException, StarletteHTTPException) as exc:
     raise HTTPException(
         status_code=exc.status_code,
         detail=exc.detail
@@ -154,7 +151,7 @@ async def admin_check(Authorization: str = Header(None)):
       status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
       detail= "jwt decode error."
     )
-  except HTTPException as exc:
+  except (HTTPException, StarletteHTTPException) as exc:
     print('Something wrong with connection.')
     raise HTTPException(
         status_code=exc.status_code,

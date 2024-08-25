@@ -101,7 +101,7 @@ function handleLicenseUpdate(license){
     } else if(responseS3 && window.location.href.includes('camera')){
       lotID = window.location.href.split('/')[4]
     }
-    return postAPICamera(lotID, license)
+    return postNewCar(lotID, license)
   }).then(responsePost=>{
     if(responsePost){
       console.log('Allows car enter!')
@@ -201,13 +201,13 @@ async function getAPICamera(license){
   }
 }
 
-async function postAPICamera(lotID, license){
+async function postNewCar(lotID, license){
   try{
     let requestBodyObj = {
       'lotID': lotID,
       'license': license
     }
-    let responseObj = await fetch(`${uri}/api/camera`, {
+    let responseObj = await fetch(`${uri}/api/cars/${license}`, {
       method: "POST",
       headers: {
         'Content-Type': 'application/json'
@@ -225,4 +225,4 @@ async function postAPICamera(lotID, license){
   }
 }
 
-export {startCamera, drawCameraMessage, cameraWarning, openEnterBar, handleLicenseUpdate, processRecognition, startRecognition, stopRecognition, getAPICamera, postAPICamera}
+export {startCamera, drawCameraMessage, cameraWarning, openEnterBar, handleLicenseUpdate, processRecognition, startRecognition, stopRecognition, getAPICamera, postNewCar}

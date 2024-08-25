@@ -170,12 +170,15 @@
               <input type="text" placeholder="Number of plate" class="form-control" aria-label="license plate"
                 aria-describedby="addon2" id="searchCars">
             </div>
-            <div class="list-group" id="carsListGroup">
+            <div class="list-group scrollable-list" id="carsListGroup">
               <div class="d-flex justify-content-center">
                 <div class="spinner-grow text-secondary mt-2" role="status">
                   <span class="visually-hidden">Loading...</span>
                 </div>
               </div>
+            </div>
+            <div class="scrollspy-example" data-bs-spy="scroll" data-bs-target="#carsListGroup" data-bs-smooth-scroll="true"
+              tabindex="0">
             </div>
           </div>
         </div>
