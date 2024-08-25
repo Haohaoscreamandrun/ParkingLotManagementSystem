@@ -1,5 +1,5 @@
-import { formValidation, signInValidation, tokenValidation } from "./common/login.js";
-import { cameraWarning } from "./modules/admin_module.js";
+import { formValidation, signInValidation, tokenValidation } from "../common/login.js";
+import { cameraWarning } from "../common/camera.js";
 
 async function cameraFlow(){
   // Login logic

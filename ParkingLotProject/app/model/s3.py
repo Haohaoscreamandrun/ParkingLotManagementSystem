@@ -32,10 +32,22 @@ def create_presigned_url(object_name):
     return response
 
 
-def delete_file():
-  s3_client = boto3.client(
-      's3',
+def delete_file(license):
+  s3_session = boto3.Session(
       aws_access_key_id=os.getenv("ACCESS_KEY"),
       aws_secret_access_key=os.getenv("ACCESS_KEY_PRIVATE"),
       region_name='ap-southeast-2'
   )
+  s3_client = s3_session.client('s3')
+  try:
+    response = s3_client.delete_object(
+      Bucket='wehelp-parkinglot.project',
+      Key=f'{license}.png'
+    )
+  except ClientError as e:
+    logging.error(e)
+    response = None
+    print('Error Message: {}'.format(e.response['Error']['Message']))
+
+  finally:
+    return response

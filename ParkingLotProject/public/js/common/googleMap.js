@@ -45,9 +45,8 @@
 //   // Add marks
 // }
 
-
-import { getLocation } from "../modules/index_module.js";
-import { render_lot_card } from "../modules/index_module.js";
+import { getLocation } from "../scripts/indexScript.js";
+import { renderLotCard } from "../view/indexView.js";
 
 let map;
 // store the placeholder
@@ -108,7 +107,7 @@ async function initMap() {
           anchor: marker,
           map
         })
-        render_lot_card(domEvent, placeholderNode, lotsArray, lot.id)
+        renderLotCard(domEvent, placeholderNode, lotsArray, lot.id)
 
       });
     });

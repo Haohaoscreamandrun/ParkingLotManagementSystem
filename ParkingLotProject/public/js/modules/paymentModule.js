@@ -1,7 +1,8 @@
-import {tokenValidation, formValidation, signInValidation} from "./common/login.js"
-import { tappayDefaultStyle, onUpdate, onSubmit } from "./common/tappay.js"
-import { getCarByID, getParkingLotByID, renderCarDetails } from "./modules/payment_module.js"
-//
+import {tokenValidation, formValidation, signInValidation} from "../common/login.js"
+import { tappayDefaultStyle, onUpdate, onSubmit } from "../common/tappay.js"
+import { getCarByID, getParkingLotByID } from "../scripts/paymentScript.js"
+import { renderCarDetails } from "../view/paymentView.js"
+
 async function paymentFlow(){
   // Login logic
   // login offcanvas validation bootstrap

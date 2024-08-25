@@ -1,6 +1,6 @@
-import { postThirdPrime } from "../modules/payment_module.js"
+import { postThirdPrime } from "../scripts/paymentScript.js"
 
-export let tappayDefaultStyle = {
+let tappayDefaultStyle = {
     fields : {
         number: {
             // css selector
@@ -35,7 +35,7 @@ export let tappayDefaultStyle = {
     }
 }
 
-export function onUpdate(update) {
+function onUpdate(update) {
     // update.canGetPrime === true
     // // --> you can call TPDirect.card.getPrime()
     // console.log(
@@ -107,7 +107,7 @@ export function onUpdate(update) {
     // }
 }
 
-export async function onSubmit(event, lotID) {
+async function onSubmit(event, lotID) {
     // prevent default
     event.preventDefault()
     // 取得 TapPay Fields 的 status
@@ -133,3 +133,5 @@ export async function onSubmit(event, lotID) {
         postThirdPrime(prime, lotID)
     })
 }
+
+export {onUpdate, onSubmit, tappayDefaultStyle}

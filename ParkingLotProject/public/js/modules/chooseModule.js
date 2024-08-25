@@ -1,8 +1,9 @@
-import { uri } from "./common/server.js";
-import { formValidation, signInValidation, tokenValidation } from "./common/login.js";
-import { render_scrollBar_lots, scrollClick, clickSearch,searchCarByLicense, renderCarDetails, renderCarousal, preloadImages } from "./modules/choose_module.js";
-import { get_parking_lots_by_coordinate } from "./modules/index_module.js";
-import { get_parking_lot_by_id } from "./modules/admin_module.js";
+import { uri } from "../common/server.js";
+import { formValidation, signInValidation, tokenValidation } from "../common/login.js";
+import { renderScrollBarLots, renderCarDetails, renderCarousal } from "../view/chooseView.js";
+import { scrollClick, clickSearch, searchCarByLicense, preloadImages } from "../scripts/chooseScript.js";
+import { getParkingLotsByCoordinate } from "../scripts/indexScript.js";
+import { getParkingLotById } from "../scripts/adminScript.js";
 
 async function chooseFlow(){
   // Login logic
@@ -18,11 +19,11 @@ async function chooseFlow(){
   
   // render scrollbar
   let lot_id = parseInt(window.location.href.split("/")[4])
-  let lot = await get_parking_lot_by_id(lot_id)
-  let lots = await get_parking_lots_by_coordinate(undefined, lot[0].latitude, lot[0].longitude)
+  let lot = await getParkingLotById(lot_id)
+  let lots = await getParkingLotsByCoordinate(undefined, lot[0].latitude, lot[0].longitude)
   let scrollBar = document.querySelector('#scrollBarLots')
   scrollBar.innerHTML = ''
-  await render_scrollBar_lots(lots)
+  await renderScrollBarLots(lots)
 
   // scroll bar illustrate
   let scrollUpBtn = document.querySelector('#scrollUpBtn')

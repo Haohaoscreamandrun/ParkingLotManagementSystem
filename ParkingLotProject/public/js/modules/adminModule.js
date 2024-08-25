@@ -1,23 +1,23 @@
-import { tokenValidation } from "./common/login.js";
-import { get_parking_lots, render_chosen_lot, render_lot_input, search_cars_by_input, render_car_card, cameraWarning } from "./modules/admin_module.js";
+import { tokenValidation } from "../common/login.js";
+import { getParkingLots, searchCarsByInput } from "../scripts/adminScript.js";
+import { renderChosenLot, renderLotInput, renderCarCard } from "../view/adminView.js";
+import { cameraWarning } from "../common/camera.js";
 
 async function adminFlow (){
   // token validation
   let adminID = await tokenValidation()
   
-
   // get parking lot list
-  let parkingLotList = await get_parking_lots(adminID)
-  render_chosen_lot(parkingLotList)
+  let parkingLotList = await getParkingLots(adminID)
+  renderChosenLot(parkingLotList)
   // render lot and detail
-  render_lot_input()
+  renderLotInput()
   // render car list
-  search_cars_by_input()
+  searchCarsByInput()
   
   // render car card
-  render_car_card()
+  renderCarCard()
 
-  
   let denyCameraBtn = document.getElementById('denyCamera')
   let agreeCameraBtn = document.getElementById('agreeCamera')
   

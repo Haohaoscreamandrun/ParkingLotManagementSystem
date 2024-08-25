@@ -78,3 +78,11 @@ async def post_enter_RDS(data: PostCarEnter):
     )
 
 
+@router.delete('', responses={
+    200: {'model': Success, 'description': "Successfully delete car data from RDS and S3."},
+    400: {'model': Error, "description": "Connection failed"}
+}, response_model=Success
+, response_class=JSONResponse
+, summary="The API to delete specific car from parking lot.")
+async def delete_exit_car():
+  pass
