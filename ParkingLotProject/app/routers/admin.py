@@ -7,7 +7,8 @@ from datetime import datetime, timedelta
 import jwt
 import requests
 from ..config.basemodel import *
-from ..model.manager import *
+from ..model.commit import *
+from ..model.execute import *
 from dotenv import load_dotenv
 import os
 load_dotenv()

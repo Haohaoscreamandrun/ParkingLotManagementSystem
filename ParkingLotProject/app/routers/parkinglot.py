@@ -7,7 +7,8 @@ from typing import Annotated
 from shapely import wkb
 from shapely.geometry import mapping
 from ..config.basemodel import *
-from ..model.user import *
+from ..model.commit import *
+from ..model.execute import *
 
 router = APIRouter(
     prefix="/api/parkinglot",
