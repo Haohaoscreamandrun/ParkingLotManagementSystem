@@ -5,13 +5,9 @@ from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from mysql.connector import Error as MysqlException
 # router import
-from .routers import api, admin, cars, parkinglot, third, camera
+from .routers import admin, cars, parkinglot, third, camera
 
 tags_meta = [
-  {
-    "name": "api",
-    "description": "All APIs related to the backend management system"
-  },
   {
     "name": "admin",
     "description": "For admin sign-in and get token"
@@ -30,13 +26,13 @@ tags_meta = [
   },
   {
     "name": "camera",
-    "description": "Reply "
+    "description": "For API which controls the enter and exit of car."
   }
 ]
 
 app = FastAPI(
   title="Parking Lot Management System",
-  summary= "This app can help you manage a parking lot as an administrative, or provide e-payment method to your customer.",
+  summary= "This app can help you manage a parking lot as an administrative, or provide e-payment method to your customer. User can look up the parking lot through map and get real time vacancy information.",
   version="0.0.1",
   contact={
     'Name': "Haohaoscreamandrun",
@@ -46,7 +42,6 @@ app = FastAPI(
 )
 # Router include
 
-app.include_router(api.router)
 app.include_router(admin.router)
 app.include_router(parkinglot.router)
 app.include_router(cars.router)

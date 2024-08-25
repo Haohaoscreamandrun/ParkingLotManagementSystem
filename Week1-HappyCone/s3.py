@@ -39,3 +39,5 @@ def upload_file(file, name, content_type):
         status_code=status.HTTP_400_BAD_REQUEST,
         detail="S3 Client error!"
     )
+
+

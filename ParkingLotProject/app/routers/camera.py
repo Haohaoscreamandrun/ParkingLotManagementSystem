@@ -19,7 +19,9 @@ router = APIRouter(
 @router.get('', responses={
     200: {'model': S3UploadURL, 'description': "Get the temperate URL to upload to S3 bucket, or nothing is returned."},
     400: {'model': Error, "description": "Connection failed"}
-}, response_model= S3UploadURL)
+}, response_model= S3UploadURL
+,response_class= JSONResponse
+, summary= "The API that return the s3 upload object.")
 def get_s3_upload_url(license: str):
   try:
     presignedObj = create_presigned_url(license)
@@ -40,7 +42,9 @@ def get_s3_upload_url(license: str):
 @router.post('', responses={
     200: {'model': Success, 'description': "Get the enter signal or not."},
     400: {'model': Error, "description": "Connection failed"}
-}, response_model=Success)
+}, response_model=Success
+, response_class=JSONResponse
+, summary="The API to post new car into assigned parking lot.")
 async def post_enter_RDS(data: PostCarEnter):
   
   try:
@@ -72,3 +76,5 @@ async def post_enter_RDS(data: PostCarEnter):
         status_code=exc.status_code,
         detail=exc.detail
     )
+
+

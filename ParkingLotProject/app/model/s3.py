@@ -30,3 +30,12 @@ def create_presigned_url(object_name):
     
   finally:  
     return response
+
+
+def delete_file():
+  s3_client = boto3.client(
+      's3',
+      aws_access_key_id=os.getenv("ACCESS_KEY"),
+      aws_secret_access_key=os.getenv("ACCESS_KEY_PRIVATE"),
+      region_name='ap-southeast-2'
+  )
