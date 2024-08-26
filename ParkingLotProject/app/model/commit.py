@@ -23,3 +23,10 @@ async def car_exit(lot_id, license):
       AND lot_id = %s'''
   val = (license, lot_id)
   mysql_commit(sql, val)
+
+
+# update car by license
+async def car_update(car_id, update_license):
+  sql = '''UPDATE car SET plate_number = %s WHERE id = %s'''
+  val = (update_license, car_id)
+  mysql_commit(sql, val)
