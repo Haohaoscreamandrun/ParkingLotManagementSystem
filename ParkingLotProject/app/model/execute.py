@@ -18,7 +18,7 @@ async def admin_parking_lot_lookup(admin):
   return mysql_select(sql, val)
 
 # Lookup car by license
-async def double_license(license):
+async def car_by_license(license):
   sql = '''SELECT * FROM cars WHERE plate_number = %s'''
   val = (license,)
   return mysql_select(sql, val)

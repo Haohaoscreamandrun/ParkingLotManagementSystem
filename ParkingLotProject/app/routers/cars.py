@@ -1,7 +1,8 @@
 from fastapi import *
 from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
-import pytz
+import pytz, datetime
+from datetime import datetime
 from ..config.basemodel import *
 from ..model.commit import *
 from ..model.execute import *
@@ -111,9 +112,9 @@ async def get_car_by_ID(car_ID: str):
     )
 
 
-@router.post('/{license}', responses={
+@router.post('', responses={
       200: {'model': Success, 'description': "Success on post a new car."},
-      400: {'model': Error, "description": "Connection failed"}
+      400: {'model': Error, "description": "Failed to post a new car due to no vacancy or doubled license."}
     }, 
     response_model=Success, 
     response_class=JSONResponse, 
@@ -128,7 +129,7 @@ async def post_enter_RDS(data: PostCarEnter):
     vacancy = vacancy_result[0][1]-vacancy_result[0][0]
     lot_id = vacancy_result[0][2]
     # check double
-    double = await double_license(license)
+    double = await car_by_license(license)
     if vacancy > 0 and len(double) == 0:
       await car_enter(lot_id, license)
       return JSONResponse(
@@ -137,11 +138,20 @@ async def post_enter_RDS(data: PostCarEnter):
               "ok": True
           }
       )
-    else:
+    elif vacancy == 0:
       return JSONResponse(
-          status_code=status.HTTP_200_OK,
+          status_code=status.HTTP_400_BAD_REQUEST,
           content={
-              "ok": False
+              "error": True,
+              "message": "There's no vacancy right now!"
+          }
+      )
+    elif len(double) > 0:
+      return JSONResponse(
+          status_code=status.HTTP_400_BAD_REQUEST,
+          content={
+              "error": True,
+              "message": "You license duplicates with a exist car in this or another parking lot."
           }
       )
   except (HTTPException, StarletteHTTPException) as exc:
@@ -168,5 +178,14 @@ async def put_car_by_license():
     response_class=JSONResponse,
     summary="The API to delete specific car information based on license record"
 )
-async def get_car_by_license():
-  pass
+async def delete_car_by_license(license: str, lot_id: int):
+  try:
+    car = await car_by_license(license)[0]
+    car_green_light = convert_timezone(car[3])
+    print(lot_id, datetime.strptime(car_green_light))
+    pass
+  except (HTTPException, StarletteHTTPException) as exc:
+    raise HTTPException(
+        status_code=exc.status_code,
+        detail=exc.detail
+    )
