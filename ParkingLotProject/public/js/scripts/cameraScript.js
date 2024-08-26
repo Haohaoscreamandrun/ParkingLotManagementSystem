@@ -1,5 +1,5 @@
 import { uri } from "../common/server.js";
-import { postS3 } from "./s3.js";
+import { postS3 } from "../common/s3.js";
 import { openEnterBar, drawCameraMessage } from "../view/cameraView.js";
 
 async function getS3UploadURL(license){
@@ -88,7 +88,7 @@ async function handleLicenseUpdate(license){
       let responsePost = await postNewCar(lotID, license)
       if (responsePost === true){
         let responseGet = await getS3UploadURL(license)
-        let postS3 = await postS3(responseGet, license)
+        let postS3Response = await postS3(responseGet, license)
         drawCameraMessage(`Welcome! ${license}`)
         openEnterBar()
       } else if (typeof responsePost === 'string'){
