@@ -96,6 +96,12 @@ async function handleLicenseUpdate(license){
       }
     } else if (exitRadio.checked){
       let responseDelete = await deleteCar(lotID, license)
+      if(responseDelete === true){
+        drawCameraMessage(`Bye! ${license}`)
+        openEnterBar()
+      } else if (typeof responseDelete === 'string'){
+        drawCameraMessage(responseDelete)
+      }
     }
   } catch (error){
     console.log("Error:", error)

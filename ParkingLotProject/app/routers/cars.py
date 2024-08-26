@@ -1,8 +1,8 @@
 from fastapi import *
 from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
-import pytz, datetime
-from datetime import datetime
+import pytz
+from datetime import datetime, timezone,timedelta
 from ..config.basemodel import *
 from ..model.commit import *
 from ..model.execute import *
@@ -181,15 +181,16 @@ async def put_car_by_license():
 )
 async def delete_car_by_license(license: str, lot_id: int):
   try:
-    print(lot_id)
-    car = await car_by_license(license)[0]
+    car = await car_by_license(license)
+    car = car[0]
     car_enter_time = datetime.fromisoformat(convert_timezone(car[2]))
     car_green_light = datetime.fromisoformat(convert_timezone(car[3]))
+    now = datetime.now(timezone(timedelta(hours=+8)))
 
-    if car_green_light > datetime.now():
+    if car_green_light > now:
       # is paid and within 15 mins
-      car_exit(lot_id, license)
-      delete_file(license)
+      await car_exit(lot_id, license)
+      await delete_file(license)
       return JSONResponse(
         status_code=status.HTTP_200_OK,
         content={
@@ -204,7 +205,7 @@ async def delete_car_by_license(license: str, lot_id: int):
               "message": "Not yet paid."
           }
       )
-    elif car_green_light != car_enter_time and car_green_light < datetime.now():
+    elif car_green_light != car_enter_time and car_green_light < now:
       return JSONResponse(
           status_code=status.HTTP_400_BAD_REQUEST,
           content={
