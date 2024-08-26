@@ -15,3 +15,11 @@ async def grant_green_light(car_id):
         WHERE id = %s'''
   val = (car_id,)
   mysql_commit(sql, val)
+
+# delete car by license
+async def car_exit(lot_id, license):
+  sql = '''DELETE FROM cars \
+    WHERE plate_number = %s \
+      AND lot_id = %s'''
+  val = (license, lot_id)
+  mysql_commit(sql, val)
