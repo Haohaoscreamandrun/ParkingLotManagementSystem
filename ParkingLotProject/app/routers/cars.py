@@ -6,6 +6,7 @@ from datetime import datetime
 from ..config.basemodel import *
 from ..model.commit import *
 from ..model.execute import *
+from ..model.s3 import *
 
 
 router = APIRouter(
@@ -173,17 +174,44 @@ async def put_car_by_license():
 
 @router.delete("/{license}", responses={
     200: {'model': Success, 'description': "Successful on delete specific car information"},
-    400: {'model': Error, "description": "Failed to connect relational database"}
+    400: {'model': Error, "description": "Not paid yet or wrong license."}
 },
     response_class=JSONResponse,
     summary="The API to delete specific car information based on license record"
 )
 async def delete_car_by_license(license: str, lot_id: int):
   try:
+    print(lot_id)
     car = await car_by_license(license)[0]
-    car_green_light = convert_timezone(car[3])
-    print(lot_id, datetime.strptime(car_green_light))
-    pass
+    car_enter_time = datetime.fromisoformat(convert_timezone(car[2]))
+    car_green_light = datetime.fromisoformat(convert_timezone(car[3]))
+
+    if car_green_light > datetime.now():
+      # is paid and within 15 mins
+      car_exit(lot_id, license)
+      delete_file(license)
+      return JSONResponse(
+        status_code=status.HTTP_200_OK,
+        content={
+            "ok": True
+        }
+      )
+    elif car_green_light == car_enter_time:
+      return JSONResponse(
+          status_code=status.HTTP_400_BAD_REQUEST,
+          content={
+              "error": True,
+              "message": "Not yet paid."
+          }
+      )
+    elif car_green_light != car_enter_time and car_green_light < datetime.now():
+      return JSONResponse(
+          status_code=status.HTTP_400_BAD_REQUEST,
+          content={
+              "error": True,
+              "message": "Exit overtime."
+          }
+      )
   except (HTTPException, StarletteHTTPException) as exc:
     raise HTTPException(
         status_code=exc.status_code,
