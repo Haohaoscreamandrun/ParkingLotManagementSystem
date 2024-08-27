@@ -1,4 +1,4 @@
-import { getParkingLotById, fetchCarsRender, formatDateForInput, tempStorageCars, updateCarByID } from "../scripts/adminScript.js"
+import { getParkingLotById, fetchCarsRender, formatDateForInput, tempStorageCars, updateCarByID, deleteCarByLicense } from "../scripts/adminScript.js"
 import { pastTimetoFee } from "../scripts/chooseScript.js"
 
 function renderChosenLot(list){
@@ -134,7 +134,12 @@ function renderCarCard(event, carList = tempStorageCars){
     updateButton.id = `updateCarID${target_id}`
     deleteButton.id = `deleteCarLicense${queryResult[0].license}`
     updateButton.addEventListener('click', updateCarByID)
+    deleteButton.addEventListener('click', deleteCarByLicense)
   }
+}
+
+function renderBtnLoading(event){
+  let btnWord 
 }
 
 export {renderChosenLot, renderLotInput, renderParkingLotCard, renderCars, renderVacancy, renderCarCard}

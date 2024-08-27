@@ -177,11 +177,11 @@ async def put_car_by_id(admin: Annotated[dict, Depends(admin_validation_dependen
   target_lot_id = updates.lotID
   try:
 
-    car = await car_by_carID(updates.carID)
+    car = car_by_carID(updates.carID)
     original_license = car[0][1]
 
     if updates.updateLicense != original_license:
-      await car_update(updates.carID, updates.updateLicense)
+      car_update(updates.carID, updates.updateLicense)
       copy_file(updates.updateLicense, original_license)
       delete_file(original_license)
       
@@ -197,7 +197,7 @@ async def put_car_by_id(admin: Annotated[dict, Depends(admin_validation_dependen
       )
     elif target_lot_id in parking_lot_id_list and updates.isPaid:
       # logic if authorized, and if isPaid is true
-      await grant_green_light(updates.carID)
+      grant_green_light(updates.carID)
       return JSONResponse(
         status_code=status.HTTP_200_OK,
         content={
@@ -236,8 +236,8 @@ async def delete_car_by_license(license: str, lot_id: int):
 
     if car_green_light > now:
       # is paid and within 15 mins
-      await car_exit(lot_id, license)
-      await delete_file(license)
+      car_exit(lot_id, license)
+      delete_file(license)
       return JSONResponse(
         status_code=status.HTTP_200_OK,
         content={

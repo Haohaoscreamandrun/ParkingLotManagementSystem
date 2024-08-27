@@ -146,7 +146,12 @@ async function deleteCarByLicense(event){
   event.preventDefault()
   let carLicense = event.target.id.split('License')[1]
   let chosenLotID = parseInt(document.getElementById('chosenLot').value.split('ID: ')[1])
-  
+  let deleteCarResponse = await deleteCar(chosenLotID, carLicense)
+  if (deleteCarResponse === true){
+    window.location.reload()
+  }else{
+    alert(deleteCarResponse)
+  }
 }
 
-export {getParkingLots, getParkingLotById, fetchCarsRender, searchCarsByInput, formatDateForInput, updateCarByID, tempStorageCars}
+export {getParkingLots, getParkingLotById, fetchCarsRender, searchCarsByInput, formatDateForInput, updateCarByID, deleteCarByLicense, tempStorageCars}
