@@ -1,6 +1,6 @@
 import { uri } from "../common/server.js";
 import { renderVacancy, renderCars } from "../view/adminView.js";
-// store the cars information in variable
+import { deleteCar } from "./cameraScript.js";
 
 async function getParkingLots(adminID){
   try{
@@ -106,4 +106,47 @@ function formatDateForInput(date) {
     return `${year}-${month}-${day}T${hours}:${minutes}`;
 }
 
-export {getParkingLots, getParkingLotById, fetchCarsRender, searchCarsByInput, formatDateForInput, tempStorageCars}
+
+async function updateCarByID(event){
+  event.preventDefault()
+  let carID = parseInt(event.target.id.split('CarID')[1])
+  let chosenLotID = parseInt(document.getElementById('chosenLot').value.split('ID: ')[1])
+  let updateLicense = document.getElementById('licenseplate').value
+  let isPaid = document.getElementById('paidCheck').checked
+  let token = localStorage.getItem('token')
+  let requestBody = {
+    'carID': carID,
+    'lotID': chosenLotID,
+    'updateLicense': updateLicense,
+    'isPaid': isPaid
+  }
+  try{
+    let responseObj = await fetch(`${uri}/api/cars`, {
+      method: "PUT",
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(requestBody)
+    })
+    
+    let response = await responseObj.json()
+    if (responseObj.ok){
+      window.location.reload()
+    }else{
+      alert(response.message)
+    }
+  } catch (error) {
+    alert('Error fetch to backend:', error)
+    console.log(error)
+  }
+}
+
+async function deleteCarByLicense(event){
+  event.preventDefault()
+  let carLicense = event.target.id.split('License')[1]
+  let chosenLotID = parseInt(document.getElementById('chosenLot').value.split('ID: ')[1])
+  
+}
+
+export {getParkingLots, getParkingLotById, fetchCarsRender, searchCarsByInput, formatDateForInput, updateCarByID, tempStorageCars}

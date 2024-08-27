@@ -108,4 +108,4 @@ async function handleLicenseUpdate(license){
   }
 }
 
-export {handleLicenseUpdate}
+export {handleLicenseUpdate, deleteCar}

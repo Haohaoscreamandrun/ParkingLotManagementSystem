@@ -3,6 +3,7 @@ from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 import pytz
 from datetime import datetime, timezone,timedelta
+from concurrent.futures import ThreadPoolExecutor
 from ..config.basemodel import *
 from ..model.commit import *
 from ..model.execute import *
@@ -169,8 +170,53 @@ async def post_enter_RDS(data: PostCarEnter):
     response_class=JSONResponse,
     summary="The API to modify specific car information based on parameter"
 )
-async def put_car_by_id(admin: Annotated[dict, Depends(admin_validation_dependency)]):
-  pass
+async def put_car_by_id(admin: Annotated[dict, Depends(admin_validation_dependency)], updates: PutCarInfo):
+  # check admin can update this car info
+  parking_lot_list = await admin_parking_lot_lookup(admin['id'])
+  parking_lot_id_list = list(tuple[0] for tuple in parking_lot_list)
+  target_lot_id = updates.lotID
+  try:
+
+    car = await car_by_carID(updates.carID)
+    original_license = car[0][1]
+
+    if updates.updateLicense != original_license:
+      await car_update(updates.carID, updates.updateLicense)
+      copy_file(updates.updateLicense, original_license)
+      delete_file(original_license)
+      
+    
+    if target_lot_id not in parking_lot_id_list:
+      # logic if not authorized
+      return JSONResponse(
+        status_code=status.HTTP_400_BAD_REQUEST,
+        content={
+            "error": True,
+            "message": "Your account has not authorization to update this car information."
+        }
+      )
+    elif target_lot_id in parking_lot_id_list and updates.isPaid:
+      # logic if authorized, and if isPaid is true
+      await grant_green_light(updates.carID)
+      return JSONResponse(
+        status_code=status.HTTP_200_OK,
+        content={
+            "ok": True
+        }
+      )
+    elif target_lot_id in parking_lot_id_list and not updates.isPaid:
+      # logic if authorized, and if isPaid is not true
+      return JSONResponse(
+        status_code=status.HTTP_200_OK,
+        content={
+            "ok": True
+        }
+      )
+  except (HTTPException, StarletteHTTPException) as exc:
+    raise HTTPException(
+      status_code=exc.status_code,
+      detail=exc.detail
+    )
 
 
 @router.delete("/{license}", responses={

@@ -100,3 +100,9 @@ class PostPrimePayment(BaseModel):
     prime: str
     car: PostCarPayment
     card_holder: PostHolderPayment
+
+class PutCarInfo(BaseModel):
+    carID: int
+    lotID: int
+    updateLicense: str
+    isPaid: bool

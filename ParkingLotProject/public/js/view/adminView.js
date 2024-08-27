@@ -1,4 +1,5 @@
-import { getParkingLotById, fetchCarsRender, formatDateForInput, tempStorageCars } from "../scripts/adminScript.js"
+import { getParkingLotById, fetchCarsRender, formatDateForInput, tempStorageCars, updateCarByID } from "../scripts/adminScript.js"
+import { pastTimetoFee } from "../scripts/chooseScript.js"
 
 function renderChosenLot(list){
   let dropdown = document.querySelector('#lotDropDown')
@@ -104,31 +105,12 @@ function renderCarCard(event, carList = tempStorageCars){
     let parkingFee = document.querySelector('#parkingfee')
     let paidCheck = document.querySelector('#paidCheck')
     let unpaidCheck = document.querySelector('#unpaidCheck')
+    let updateButton = document.querySelector('.btn.btn-warning.mb-3')
+    let deleteButton  =document.querySelector('.btn.btn-danger.mb-3')
     cardImgTop.src = `https://d3ryi88x00jzt7.cloudfront.net/${queryResult[0].license}.png`
     licensePlate.value = queryResult[0].license
     timeStamp.value = formatDateForInput(new Date(queryResult[0].enter_time))
-    // Calculate passed time
-    let passedTime = new Date() - new Date(queryResult[0].enter_time)
-    let totalSeconds = Math.floor(passedTime / 1000)
-    let minutes = Math.floor(totalSeconds / 60)
-    let hours = Math.floor(minutes / 60)
-    minutes = Math.floor(minutes % 60)
-    // Calculate fee subtotal
-    let parkingLotFee = document.querySelector('#parkingLotFee')
-    let parkingLotFeeInt = parseInt(parkingLotFee.innerText.split(" ")[1].split("/")[0])
-    // under one hour => one hour fee
-    // over one hour => less than 30 mins => 1.5 hour fee
-    // over one hour => more than 30 mins => 2 hours fee
-    let subTotal = 0
-    if (hours < 1){
-      subTotal = parkingLotFeeInt
-    }else if(hours >=1 && minutes < 30){
-      subTotal = parkingLotFeeInt * (hours + 0.5)
-    }else if(hours >=1 && minutes >= 30){
-      subTotal = parkingLotFeeInt * (hours + 1)
-    }
-    parkingFee.value = subTotal
-
+    
     // check green light
     let lastGreenTime = new Date(queryResult[0].green_light) - new Date()
     if (lastGreenTime <= 0){
@@ -138,6 +120,20 @@ function renderCarCard(event, carList = tempStorageCars){
       paidCheck.checked = true
       unpaidCheck.checked = false
     }
+    
+    // Calculate fee subtotal
+    let parkingLotFee = document.querySelector('#parkingLotFee')
+    let parkingLotFeeInt = parseInt(parkingLotFee.innerText.split(" ")[1].split("/")[0])
+    
+    let [hours, minutes, subTotal] = pastTimetoFee(new Date(queryResult[0].enter_time), new Date(queryResult[0].green_light), parkingLotFeeInt)
+
+    parkingFee.value = subTotal
+    // render button
+    updateButton.removeAttribute('disabled')
+    deleteButton.removeAttribute('disabled')
+    updateButton.id = `updateCarID${target_id}`
+    deleteButton.id = `deleteCarLicense${queryResult[0].license}`
+    updateButton.addEventListener('click', updateCarByID)
   }
 }
 
