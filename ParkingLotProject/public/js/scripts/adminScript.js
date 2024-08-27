@@ -1,5 +1,5 @@
 import { uri } from "../common/server.js";
-import { renderVacancy, renderCars } from "../view/adminView.js";
+import { renderVacancy, renderCars, renderBtnLoading, renderAlert } from "../view/adminView.js";
 import { deleteCar } from "./cameraScript.js";
 
 async function getParkingLots(adminID){
@@ -109,6 +109,7 @@ function formatDateForInput(date) {
 
 async function updateCarByID(event){
   event.preventDefault()
+  renderBtnLoading(event)
   let carID = parseInt(event.target.id.split('CarID')[1])
   let chosenLotID = parseInt(document.getElementById('chosenLot').value.split('ID: ')[1])
   let updateLicense = document.getElementById('licenseplate').value
@@ -132,7 +133,10 @@ async function updateCarByID(event){
     
     let response = await responseObj.json()
     if (responseObj.ok){
-      window.location.reload()
+      renderBtnLoading(event, true)
+      setTimeout(() => {
+        window.location.reload()
+      }, 2000)
     }else{
       alert(response.message)
     }
@@ -144,11 +148,21 @@ async function updateCarByID(event){
 
 async function deleteCarByLicense(event){
   event.preventDefault()
+  let paidCheck = document.getElementById('paidCheck')
+  if (!paidCheck.checked){
+    renderAlert()
+    return
+  }
+  renderBtnLoading(event)
   let carLicense = event.target.id.split('License')[1]
   let chosenLotID = parseInt(document.getElementById('chosenLot').value.split('ID: ')[1])
   let deleteCarResponse = await deleteCar(chosenLotID, carLicense)
   if (deleteCarResponse === true){
-    window.location.reload()
+    renderBtnLoading(event, true)
+    setTimeout(() => {
+      window.location.reload()
+    }, 2000)
+    
   }else{
     alert(deleteCarResponse)
   }
