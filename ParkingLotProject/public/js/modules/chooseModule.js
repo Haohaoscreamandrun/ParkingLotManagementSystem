@@ -8,14 +8,14 @@ import { getParkingLotById } from "../scripts/adminScript.js";
 async function chooseFlow(){
   // Login logic
   // login offcanvas validation bootstrap
-  await formValidation()
+  formValidation()
   // login form function
   let signInForm = document.querySelector('#signInForm')
   signInForm.addEventListener('submit', async event => { 
-    await signInValidation(event)
+    signInValidation(event)
   })
   // token validation
-  await tokenValidation()
+  let adminID = await tokenValidation()
   
   // render scrollbar
   let lot_id = parseInt(window.location.href.split("/")[4])

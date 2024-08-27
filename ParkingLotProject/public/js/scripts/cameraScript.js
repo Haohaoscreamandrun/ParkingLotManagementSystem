@@ -88,10 +88,10 @@ async function handleLicenseUpdate(license){
     if (enterRadio.checked){
       let responsePost = await postNewCar(lotID, license)
       if (responsePost === true){
+        drawCameraMessage(`Welcome! ${license}`)
+        openEnterBar('enterGate')
         let responseGet = await getS3UploadURL(license)
         let postS3Response = await postS3(responseGet, license)
-        drawCameraMessage(`Welcome! ${license}`)
-        openEnterBar()
       } else if (typeof responsePost === 'string'){
         drawCameraMessage(responsePost)
       }
@@ -99,7 +99,12 @@ async function handleLicenseUpdate(license){
       let responseDelete = await deleteCar(lotID, license)
       if(responseDelete === true){
         drawCameraMessage(`Bye! ${license}`)
-        openEnterBar()
+        if(window.location.href.includes('admin')){
+          openEnterBar('exitGate')
+        }else{
+          openEnterBar('enterGate')
+        }
+        
       } else if (typeof responseDelete === 'string'){
         drawCameraMessage(responseDelete)
       }

@@ -1,5 +1,5 @@
-function openEnterBar(){
-  let enterGate = document.querySelector('#enterGate')
+function openEnterBar(gateID){
+  let enterGate = document.getElementById(gateID)
   let closedSrc = enterGate.src
   let openSrc = '../public/images/gate-open.jpg'
   enterGate.src = openSrc

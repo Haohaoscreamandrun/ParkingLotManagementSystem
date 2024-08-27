@@ -134,7 +134,7 @@ async def post_enter_RDS(data: PostCarEnter):
     # check double
     double = await car_by_license(license)
     if vacancy > 0 and len(double) == 0:
-      await car_enter(lot_id, license)
+      car_enter(lot_id, license)
       return JSONResponse(
           status_code=status.HTTP_200_OK,
           content={

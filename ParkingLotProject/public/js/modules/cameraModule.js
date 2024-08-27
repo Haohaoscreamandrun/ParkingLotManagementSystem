@@ -7,9 +7,12 @@ async function cameraFlow(){
   formValidation()
   // login form function
   let signInForm = document.querySelector('#signInForm')
-  signInForm.addEventListener('submit', event => {signInValidation(event)})
+  signInForm.addEventListener('submit', async event => { 
+    signInValidation(event)
+  })
   // token validation
-  tokenValidation()
+  let adminID = await tokenValidation()
+  
   let denyCameraBtn = document.getElementById('denyCamera')
   let agreeCameraBtn = document.getElementById('agreeCamera')
   

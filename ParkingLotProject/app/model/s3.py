@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 import os
 load_dotenv()
 
-async def create_presigned_url(object_name):
+def create_presigned_url(object_name):
   s3_client = boto3.client(
     's3',
     aws_access_key_id=os.getenv("ACCESS_KEY"),

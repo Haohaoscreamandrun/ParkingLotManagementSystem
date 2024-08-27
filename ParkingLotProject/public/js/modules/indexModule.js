@@ -5,14 +5,14 @@ import { getLocation, searchLotsByAddress } from "../scripts/indexScript.js";
 async function indexFlow(){
   // Login logic
   // login offcanvas validation bootstrap
-  await formValidation()
+  formValidation()
   // login form function
   let signInForm = document.querySelector('#signInForm')
-  signInForm.addEventListener('submit', async event => {
-    await signInValidation(event)
+  signInForm.addEventListener('submit', async event => { 
+    signInValidation(event)
   })
   // token validation
-  await tokenValidation()
+  let adminID = await tokenValidation()
 
   // render parking lots
   let parkingLotList = document.querySelector('#parkingLotList')

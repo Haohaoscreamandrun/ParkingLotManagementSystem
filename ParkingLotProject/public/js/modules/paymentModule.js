@@ -6,12 +6,14 @@ import { renderCarDetails } from "../view/paymentView.js"
 async function paymentFlow(){
   // Login logic
   // login offcanvas validation bootstrap
-  await formValidation()
+  formValidation()
   // login form function
   let signInForm = document.querySelector('#signInForm')
-  signInForm.addEventListener('submit', event => {signInValidation(event)})
+  signInForm.addEventListener('submit', async event => { 
+    signInValidation(event)
+  })
   // token validation
-  await tokenValidation()
+  let adminID = await tokenValidation()
 
   // render car info
   let carID = window.location.href.split('/')[4]

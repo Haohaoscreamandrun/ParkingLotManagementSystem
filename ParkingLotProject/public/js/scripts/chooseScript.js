@@ -93,7 +93,7 @@ function pastTimetoFee(enterTime, greenLight, parkingLotRate){
   // over one hour => less than 30 mins => 1.5 hour fee
   // over one hour => more than 30 mins => 2 hours fee
   let subTotal = 0
-  if(minutes === 0){
+  if(totalSeconds === 0){
     subTotal = 0
   }else if (hours < 1){
     subTotal = parkingLotRate

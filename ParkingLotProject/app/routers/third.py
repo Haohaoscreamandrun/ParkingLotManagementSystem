@@ -53,7 +53,7 @@ async def payment_credit(postPayment: PostPrimePayment):
     response = response_obj.json()
 
     if (response['status'] == 0):
-      await grant_green_light(postPayment.car.id)
+      grant_green_light(postPayment.car.id)
       
       return JSONResponse(
           status_code=status.HTTP_200_OK,

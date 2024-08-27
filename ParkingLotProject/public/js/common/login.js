@@ -2,7 +2,7 @@
 import { uri } from "./server.js"
 
 // Login form front-end validation
-export async function formValidation(){
+export function formValidation(){
   let formsNeedValidate = document.querySelectorAll(".needs-validation")
   Array.from(formsNeedValidate).forEach(form => {
     form.addEventListener('submit', event => {
