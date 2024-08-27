@@ -7,6 +7,7 @@ from ..config.basemodel import *
 from ..model.commit import *
 from ..model.execute import *
 from ..model.s3 import *
+from ..dependencies import *
 
 
 router = APIRouter(
@@ -161,14 +162,14 @@ async def post_enter_RDS(data: PostCarEnter):
         detail=exc.detail
     )
 
-@router.put("/{license}", responses={
+@router.put("", responses={
     200: {'model': Success, 'description': "Successful on modify specific car information"},
     400: {'model': Error, "description": "Failed to connect relational database"}
 },
     response_class=JSONResponse,
     summary="The API to modify specific car information based on parameter"
 )
-async def put_car_by_license():
+async def put_car_by_id(admin: Annotated[dict, Depends(admin_validation_dependency)]):
   pass
 
 
