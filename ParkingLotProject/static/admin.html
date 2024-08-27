@@ -23,7 +23,7 @@
 </head>
 <body>
   <!-- common navbar -->
-  <nav class="navbar text-bg-dark border-bottom border-body" data-bs-theme="dark">
+  <nav class="navbar text-bg-dark border-bottom border-body sticky-top" data-bs-theme="dark">
     <div class="container-fluid d-flex justify-content-between align-items-center">
       <a href="/" class="nav-brand mb-0 h3">
         <img src="../public/images/Graphicloads-Colorful-Long-Shadow-Car.256.png" alt="logo" width="30" height="30">
@@ -125,7 +125,7 @@
               </div>
               <input type="text" class="form-control" id="chosenLot" readonly>
             </div>
-            <div id="lotDetailCard" class="card">
+            <div id="lotDetailCard" class="card shadow">
               <div class="card-body">
                 <h5 class="card-title placeholder-glow" id="parkingLotName">
                   <span class="placeholder col-12"></span>
@@ -170,7 +170,7 @@
               <input type="text" placeholder="Number of plate" class="form-control" aria-label="license plate"
                 aria-describedby="addon2" id="searchCars">
             </div>
-            <div class="list-group scrollable-list" id="carsListGroup">
+            <div class="list-group scrollable-list shadow" id="carsListGroup">
               <div class="d-flex justify-content-center">
                 <div class="spinner-grow text-secondary mt-2" role="status">
                   <span class="visually-hidden">Loading...</span>
@@ -188,7 +188,7 @@
         <!-- Chosen car information -->
         <div class="p-2">
           <h4>Chosen car information</h4>
-          <div class="card">
+          <div class="card shadow">
             <img src="../public/images/car-graphic.jpg" alt="..." class="card-img-top" id="cardImgTop">
             <div class="card-body">
               <div class="card-title">
@@ -242,6 +242,15 @@
         </div>
       </div>
     </div>
+  </div>
+  <!-- footer -->
+  <div class="text-bg-dark mt-3 py-3 text-center w-100 h-10 d-flex justify-content-center align-items-center sticky-bottom">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-c-circle"
+      viewBox="0 0 16 16">
+      <path
+        d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.146 4.992c-1.212 0-1.927.92-1.927 2.502v1.06c0 1.571.703 2.462 1.927 2.462.979 0 1.641-.586 1.729-1.418h1.295v.093c-.1 1.448-1.354 2.467-3.03 2.467-2.091 0-3.269-1.336-3.269-3.603V7.482c0-2.261 1.201-3.638 3.27-3.638 1.681 0 2.935 1.054 3.029 2.572v.088H9.875c-.088-.879-.768-1.512-1.729-1.512" />
+    </svg>
+    <div class="px-2">ALL COPYRIGHT RESERVED</div>
   </div>
 </body>
 </html>
