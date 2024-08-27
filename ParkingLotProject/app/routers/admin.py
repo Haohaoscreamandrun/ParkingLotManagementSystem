@@ -74,11 +74,16 @@ async def admin_login(admin: AdminCredentials):
     # if admin data not exist
     if len(myresult) == 0:
       # Construct response
+      print('wrong credentials')
       status_code = status.HTTP_400_BAD_REQUEST
       context = {
         "error": True,
         "message": "Admin not exist or input wrong credentials."
       }
+      return JSONResponse(
+          status_code=status_code,
+          content=context
+      )
     else:
       # construct token
       try:
