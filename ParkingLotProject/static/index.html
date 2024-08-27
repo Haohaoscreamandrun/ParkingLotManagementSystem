@@ -13,7 +13,7 @@
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous" defer></script>
   <!-- Google Map -->
   <link rel="stylesheet" href="../public/css/google_map.css">
-  <script type="module" src="../public/js/common/googleMap.js" defer></script>
+  <!-- <script type="module" src="../public/js/common/googleMap.js" defer></script> -->
   <!-- index.js & common.css -->
   <script type="module" src="../public/js/modules/indexModule.js" defer></script>
   <link rel="stylesheet" href="../public/css/common.css">
@@ -87,89 +87,107 @@
       </div>
     </div>
   </div>
+  <!-- Modal -->
+  <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="staticBackdropLabel">Location Warning!</h1>
+        </div>
+        <div class="modal-body text-start">
+          Please allow this website to utilize your location data.
+        </div>
+        <div class="modal-footer">
+          <button id="denyCamera" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button id="agreeCamera" type="button" class="btn btn-primary" data-bs-dismiss="modal">Agree</button>
+        </div>
+      </div>
+    </div>
+  </div>
   <!-- Parking Lots Grid -->
-   <div class="container mt-3">
-    <h2>Parking Lots</h2>
-    <div class="row g-2">
-      <!-- Parking Lots list -->
-      <div class="col col-12 col-md-6 rounded-3 p-2">
-        <div class="row g-2">
-          <div class="col pb-2">
-            <div class="input-group">
-              <span class="input-group-text" id="addon1">Search by address</span>
-              <input type="text" placeholder="Address string of parking lot" class="form-control" aria-label="parking lot" aria-describedby="addon1" id="searchInput">
-            </div>
-          </div>
-        </div>
-        <div class="row g-2">
-          <div class="col">
-            <div class="list-group scrollable-list d-flex flex-column align-items-center" id="parkingLotList">
-              <div class="spinner-grow text-secondary mt-2" role="status">
-                <span class="visually-hidden">Loading...</span>
-              </div>
-            </div>
-            <div class="scrollspy-example" data-bs-spy="scroll" data-bs-target="#parkingLotList" data-bs-smooth-scroll="true"
-              tabindex="0">
-            </div>
+  <div class="container mt-3">
+  <h2>Parking Lots</h2>
+  <div class="row g-2">
+    <!-- Parking Lots list -->
+    <div class="col col-12 col-md-6 rounded-3 p-2">
+      <div class="row g-2">
+        <div class="col pb-2">
+          <div class="input-group">
+            <span class="input-group-text" id="addon1">Search by address</span>
+            <input type="text" placeholder="Address string of parking lot" class="form-control" aria-label="parking lot" aria-describedby="addon1" id="searchInput">
           </div>
         </div>
       </div>
-      <!-- Parking Lot info Card -->
-      <div class="col col-12 col-md-6 rounded-3 p-2">
-        
-        <div id="lotDetailCard" class="card shadow">
-          <div class="card-body">
-            <h5 class="card-title placeholder-glow" id="parkingLotName">
-              <span class="placeholder col-12"></span>
-            </h5>
-            <h6 class="card-subtitle text-body-secondary mb-3 placeholder-glow" id="parkingLotAddress">
-              <span class="placeholder col-5"></span>
-            </h6>
-            <div class="container align-content-center">
-              <div class="row g-1">
-                <div class="col-4">
-                  <div class="p-1">Parking fee:</div>
-                </div>
-                <div class="col-8">
-                  <div class="p-1 placeholder-glow" id="parkingLotFee">
-                    <span class="placeholder col-10"></span>
-                  </div>
-                </div>
-                <div class="col-4">
-                  <div class="p-1">Current Vacancy:</div>
-                </div>
-                <div class="col-4">
-                  <div class="p-1 placeholder-glow" id="parkingLotSpace">
-                    <span class="placeholder col-8"></span>
-                  </div>
-                </div>
-                <div class="col-4">
-                  <div class="p-1 placeholder-glow" id="parkingLotVacancy">
-                    <span class="placeholder col-8"></span>
-                  </div>
-                </div>
-              </div>
+      <div class="row g-2">
+        <div class="col">
+          <div class="list-group scrollable-list d-flex flex-column align-items-center" id="parkingLotList">
+            <div class="spinner-grow text-secondary mt-2" role="status">
+              <span class="visually-hidden">Loading...</span>
             </div>
-            </ul>
           </div>
-          <div class="card-footer d-grid">
-            <button type="button" class="btn btn-success mb-2" id="enterButton" disabled>Enter Parking Lot</button>
-            <button type="button" class="btn btn-info" id="findCarButton" disabled>Find My Car Here</button>
+          <div class="scrollspy-example" data-bs-spy="scroll" data-bs-target="#parkingLotList" data-bs-smooth-scroll="true"
+            tabindex="0">
           </div>
         </div>
+      </div>
     </div>
+    <!-- Parking Lot info Card -->
+    <div class="col col-12 col-md-6 rounded-3 p-2">
       
-    </div>
-    <div class="row g-2">
-      <div class="col col-12 p-2">
-        <!--The div element for the map -->
-        <div class="rounded-3 shadow" id="map"></div>
+      <div id="lotDetailCard" class="card shadow">
+        <div class="card-body">
+          <h5 class="card-title placeholder-glow" id="parkingLotName">
+            <span class="placeholder col-12"></span>
+          </h5>
+          <h6 class="card-subtitle text-body-secondary mb-3 placeholder-glow" id="parkingLotAddress">
+            <span class="placeholder col-5"></span>
+          </h6>
+          <div class="container align-content-center">
+            <div class="row g-1">
+              <div class="col-4">
+                <div class="p-1">Parking fee:</div>
+              </div>
+              <div class="col-8">
+                <div class="p-1 placeholder-glow" id="parkingLotFee">
+                  <span class="placeholder col-10"></span>
+                </div>
+              </div>
+              <div class="col-4">
+                <div class="p-1">Current Vacancy:</div>
+              </div>
+              <div class="col-4">
+                <div class="p-1 placeholder-glow" id="parkingLotSpace">
+                  <span class="placeholder col-8"></span>
+                </div>
+              </div>
+              <div class="col-4">
+                <div class="p-1 placeholder-glow" id="parkingLotVacancy">
+                  <span class="placeholder col-8"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+          </ul>
+        </div>
+        <div class="card-footer d-grid">
+          <button type="button" class="btn btn-success mb-2" id="enterButton" disabled>Enter Parking Lot</button>
+          <button type="button" class="btn btn-info" id="findCarButton" disabled>Find My Car Here</button>
+        </div>
       </div>
-      <div class="col col-12 p-2 pt-5">
-        <img src="../public/images/8277_color.svg" alt="" class="image-fluid">
-      </div>
+  </div>
+    
+  </div>
+  <div class="row g-2">
+    <div class="col col-12 p-2">
+      <!--The div element for the map -->
+      <div class="rounded-3 shadow" id="map"></div>
     </div>
-   </div>
+    <div class="col col-12 p-2 pt-5">
+      <img src="../public/images/8277_color.svg" alt="" class="image-fluid">
+    </div>
+  </div>
+  </div>
   <script>
     (g => { var h, a, k, p = "The Google Maps JavaScript API", c = "google", l = "importLibrary", q = "__ib__", m = document, b = window; b = b[c] || (b[c] = {}); var d = b.maps || (b.maps = {}), r = new Set, e = new URLSearchParams, u = () => h || (h = new Promise(async (f, n) => { await (a = m.createElement("script")); e.set("libraries", [...r] + ""); for (k in g) e.set(k.replace(/[A-Z]/g, t => "_" + t[0].toLowerCase()), g[k]); e.set("callback", c + ".maps." + q); a.src = `https://maps.${c}apis.com/maps/api/js?` + e; d[q] = f; a.onerror = () => h = n(Error(p + " could not load.")); a.nonce = m.querySelector("script[nonce]")?.nonce || ""; m.head.append(a) })); d[l] ? console.warn(p + " only loads once. Ignoring:", g) : d[l] = (f, ...n) => r.add(f) && u().then(() => d[l](f, ...n)) })({
         key: "AIzaSyC6PMNXMuek_IGCX4ExGz9f6IpnF_3NVEs",

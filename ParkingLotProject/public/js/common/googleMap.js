@@ -3,69 +3,25 @@
 //  * Copyright 2019 Google LLC. All Rights Reserved.
 //  * SPDX-License-Identifier: Apache-2.0
 //  */
-// let map, infoWindow;
 
-// function initMap() {
-//   map = new google.maps.Map(document.getElementById("map"), {
-//     center: { lat: 25.037, lng: 121.564 },
-//     zoom: 15,
-//   });
-//   infoWindow = new google.maps.InfoWindow();
-
-//   // location button
-//   const locationButton = document.createElement("button");
-//   locationButton.textContent = "切換至目前位址";
-//   locationButton.classList.add("custom-map-control-button");
-//   map.controls[google.maps.ControlPosition.TOP_CENTER].push(locationButton);
-//   locationButton.addEventListener("click", () => {
-//     // Try HTML5 geolocation.
-//     if (navigator.geolocation) {
-//       navigator.geolocation.getCurrentPosition(
-//         (position) => {
-//           const pos = {
-//             lat: position.coords.latitude,
-//             lng: position.coords.longitude,
-//           };
-
-//           infoWindow.setPosition(pos);
-//           infoWindow.setContent("Location found.");
-//           infoWindow.open(map);
-//           map.setCenter(pos);
-//         },
-//         () => {
-//           handleLocationError(true, infoWindow, map.getCenter());
-//         },
-//       );
-//     } else {
-//       // Browser doesn't support Geolocation
-//       handleLocationError(false, infoWindow, map.getCenter());
-//     }
-//   });
-
-//   // Add marks
-// }
-
-import { getLocation } from "../scripts/indexScript.js";
 import { renderLotCard } from "../view/indexView.js";
 
 let map;
 // store the placeholder
 const placeholderNode = document.querySelector('#lotDetailCard').cloneNode(true)
 
-// get current location
-let geoPosition = await new Promise((resolve, reject) => {
-  navigator.geolocation.getCurrentPosition(resolve, reject)
-})
-let position = {
-  lat: geoPosition.coords.latitude,
-  lng: geoPosition.coords.longitude
-}
-
 const { Map, InfoWindow } = await google.maps.importLibrary("maps");
 const { AdvancedMarkerElement, PinElement } = await google.maps.importLibrary("marker");
 // init map function
-async function initMap() {
-  
+export async function initMap(parkingLots) {
+  // get current location
+  let geoPosition = await new Promise((resolve, reject) => {
+    navigator.geolocation.getCurrentPosition(resolve, reject)
+  })
+  let position = {
+    lat: geoPosition.coords.latitude,
+    lng: geoPosition.coords.longitude
+  }
   // center map
   map = new Map(document.getElementById("map"), {
     center: position,
@@ -74,7 +30,6 @@ async function initMap() {
   });
   
   // create marks
-  let parkingLots = await getLocation()
   function addMarkers(lotsArray){
     lotsArray.forEach((lot, index) => {
       // Create a pin element.
@@ -115,4 +70,4 @@ async function initMap() {
   addMarkers(parkingLots)
 }
 
-initMap();
+// initMap();
