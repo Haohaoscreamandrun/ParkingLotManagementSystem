@@ -25,8 +25,21 @@
 
 ### Parking Lot Admin System
 
+User with admin privilege can:
+
+1. Check all parking lots which belongs to admin themselves.
+2. Check all the cars information in below list which parks in the parking lot:
+   - Cars photo
+   - Recognized license plate number
+   - Car's enter timestamp
+   - Subtotal parking fee
+   - Payment status
+3. Update the recognized plate number and payment status manually.
+4. Delete car information from database if the parking fee is paid.
+
 ### User Friendly: Empty Lots Searching Function
 
-### EZgo Service Synchronization
+1. 15 nearest parking lots within 3km from user will be shown on map for user to choose from.
+2. Website will return realtime vacancy of parking lot when you click on them (either on list or map).
 
 ## Utilized Package
