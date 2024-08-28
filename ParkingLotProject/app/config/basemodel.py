@@ -106,3 +106,7 @@ class PutCarInfo(BaseModel):
     lotID: int
     updateLicense: str
     isPaid: bool
+
+class DeleteCarInfo(BaseModel):
+    car_license: str = Field(..., alias="carLicense")
+    lot_id: int = Field(..., alias="lotId")

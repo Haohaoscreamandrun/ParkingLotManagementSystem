@@ -23,7 +23,7 @@ async function getParkingLots(adminID){
 
 async function getParkingLotById(lotID){
   try{
-    let responseObj = await fetch(`${uri}/api/parkinglot/${lotID}`, {
+    let responseObj = await fetch(`${uri}/api/parkinglot?lotID=${lotID}`, {
       method: "GET",
       headers: {
         'Content-Type': 'application/json'
@@ -45,7 +45,7 @@ let tempStorageCars
 async function fetchCarsRender(lotID){
   // fetch
   try{
-    let responseObj = await fetch(`${uri}/api/cars?lot_id=${lotID}`, {
+    let responseObj = await fetch(`${uri}/api/cars/${lotID}`, {
       method: "GET",
       headers: {
         'Content-Type': 'application/json'

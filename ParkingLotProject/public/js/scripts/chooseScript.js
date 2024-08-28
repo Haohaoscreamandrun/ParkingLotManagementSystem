@@ -22,9 +22,9 @@ function scrollClick(direction){
 async function clickSearch(event){
   if (event.target.classList[0] === 'scrollBarLotsList'){
 
-    let lot_id = event.target.id
+    let lotID = event.target.id
     try{
-      let responseObj = await fetch(`${uri}/api/cars?lot_id=${lot_id}`, {
+      let responseObj = await fetch(`${uri}/api/cars/${lotID}`, {
         method: "GET",
         headers: {
           'Content-Type': 'application/json'

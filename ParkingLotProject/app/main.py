@@ -26,7 +26,7 @@ tags_meta = [
   },
   {
     "name": "camera",
-    "description": "For API which controls the enter and exit of car."
+    "description": "Reply the upload URL object to AWS S3 service."
   }
 ]
 

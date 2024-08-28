@@ -50,11 +50,16 @@ async function postNewCar(lotID, license){
 async function deleteCar(lotID, license){
   
   try{
-    let responseObj = await fetch(`${uri}/api/cars/${license}?lot_id=${lotID}`, {
+    let requestBody = {
+      'carLicense': license,
+      'lotID': parseInt(lotID)
+    }
+    let responseObj = await fetch(`${uri}/api/cars`, {
       method: "DELETE",
       headers: {
         'Content-Type': 'application/json'
-      }
+      },
+      body: JSON.stringify(requestBody)
     })
     let response = await responseObj.json()
     console.log(response)

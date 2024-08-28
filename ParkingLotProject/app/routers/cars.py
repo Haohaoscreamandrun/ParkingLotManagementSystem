@@ -1,7 +1,6 @@
 from fastapi import *
 from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
-import pytz
 from datetime import datetime, timezone,timedelta
 from concurrent.futures import ThreadPoolExecutor
 from ..config.basemodel import *
@@ -20,29 +19,20 @@ router = APIRouter(
     }
 )
 
-# Convert to local timezone
-def convert_timezone(UTC):
-  if UTC.tzinfo is None:
-    UTC = pytz.utc.localize(UTC)
-  local_tz = pytz.timezone('Asia/Taipei')
-  dt_local = UTC.astimezone(local_tz)
-  formatted_dt_local = dt_local.isoformat()
-  return formatted_dt_local
 
-@router.get("", responses={
-    200: {'model': ReturnCarsObj, 'description': "Successful on retrieve cars information"},
-    400: {'model': Error, "description": "Failed to connect relational database"}
+@router.get("/{lotID}", responses={
+    200: {'model': ReturnCarsObj, 'description': "Successful on retrieve all cars information from specific parking lot, return none if there's no car in that parking lot."}
   },
     response_class=JSONResponse,
     response_model=ReturnCarsObj,
     summary="The API to reply cars information list in specific parking lot"
 )
-async def get_cars_info(lot_id: int):
+async def get_cars_info(lot_id: str = Path(alias='lotID')):
   try:
-    myresult = cars_in_parking_lot(lot_id)
-    if len(myresult) > 0:
+    my_result = cars_in_parking_lot(lot_id)
+    if len(my_result) > 0:
       response_content_list = []
-      for result in myresult:
+      for result in my_result:
         response_content = {
           'car_id' : result[0],
           'license': result[1],
@@ -72,20 +62,19 @@ async def get_cars_info(lot_id: int):
     )
 
 
-@router.get("/{car_ID}", responses={
-    200: {'model': ReturnCarsObj, 'description': "Successful on retrieve specific car information"},
-    400: {'model': Error, "description": "Failed to connect relational database"}
+@router.get("", responses={
+    200: {'model': ReturnCarsObj, 'description': "Successful on retrieve specific car information, return none if there's no car by that id."}
   },
     response_class=JSONResponse,
     response_model=ReturnCarsObj,
-    summary="The API to reply specific car information based on license record"
+    summary="The API to reply specific car information based on car id"
 )
-async def get_car_by_ID(car_ID: str):
+async def get_car_by_ID(car_id: int = Query(None, alias='carID')):
   try:
-    myresult = car_by_carID(car_ID)
-    if len(myresult) > 0:
+    my_result = car_by_carID(car_id)
+    if len(my_result) > 0:
       response_content_list = []
-      for result in myresult:
+      for result in my_result:
         response_content = {
             'car_id': result[0],
             'license': result[1],
@@ -115,7 +104,7 @@ async def get_car_by_ID(car_ID: str):
     )
 
 
-@router.post('', responses={
+@router.post("", responses={
       200: {'model': Success, 'description': "Success on post a new car."},
       400: {'model': Error, "description": "Failed to post a new car due to no vacancy or doubled license."}
     }, 
@@ -165,10 +154,10 @@ async def post_enter_RDS(data: PostCarEnter):
 
 @router.put("", responses={
     200: {'model': Success, 'description': "Successful on modify specific car information"},
-    400: {'model': Error, "description": "Failed to connect relational database"}
+    400: {'model': Error, "description": "Unauthorized personal/admin to update car information"}
 },
     response_class=JSONResponse,
-    summary="The API to modify specific car information based on parameter"
+    summary="The API to modify specific car information based on posted information."
 )
 async def put_car_by_id(admin: Annotated[dict, Depends(admin_validation_dependency)], updates: PutCarInfo):
   # check admin can update this car info
@@ -219,14 +208,16 @@ async def put_car_by_id(admin: Annotated[dict, Depends(admin_validation_dependen
     )
 
 
-@router.delete("/{license}", responses={
+@router.delete("", responses={
     200: {'model': Success, 'description': "Successful on delete specific car information"},
     400: {'model': Error, "description": "Not paid yet or wrong license."}
 },
     response_class=JSONResponse,
     summary="The API to delete specific car information based on license record"
 )
-async def delete_car_by_license(license: str, lot_id: int):
+async def delete_car_by_license(data: DeleteCarInfo):
+  license = data.car_license
+  lot_id = data.lot_id
   try:
     car = await car_by_license(license)
     car = car[0]

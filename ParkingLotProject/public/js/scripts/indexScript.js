@@ -67,7 +67,7 @@ async function getParkingLotsByCoordinate(position=undefined, latitude=undefined
 
 async function getCarsByLot(lotID) {
   try{
-    let responseObj = await fetch(`${uri}/api/cars?lot_id=${lotID}`, {
+    let responseObj = await fetch(`${uri}/api/cars/${lotID}`, {
       method: "GET",
       headers: {
         'Content-Type': 'application/json'

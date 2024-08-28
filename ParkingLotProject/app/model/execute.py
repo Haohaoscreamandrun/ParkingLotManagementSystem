@@ -72,7 +72,7 @@ def parkinglot_by_id(id):
   return mysql_select(sql, val)
 
 # look up lots by coordinate
-def parkinglot_by_localtion(lat, lng, number, radius=0):
+def parking_lot_by_location(lat, lng, number, radius=0):
   
   sql = '''
   SELECT id,\

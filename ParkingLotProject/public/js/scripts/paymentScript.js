@@ -3,7 +3,7 @@ import { renderProcessBtn } from "../view/paymentView.js";
 
 async function getCarByID(carID){
   try{
-    let responseObj = await fetch(`${uri}/api/cars/${carID}`, 
+    let responseObj = await fetch(`${uri}/api/cars?carID=${carID}`, 
       {
         method: "GET",
         headers: {
@@ -33,7 +33,7 @@ async function getCarByID(carID){
 
 async function getParkingLotByID(lotID){
   try{
-    let responseObj = await fetch(`${uri}/api/parkinglot/${lotID}`, 
+    let responseObj = await fetch(`${uri}/api/parkinglot?lotID=${lotID}`, 
       {
         method: "GET",
         headers: {
