@@ -96,10 +96,13 @@ async def payment_third(method: str, postPayment: PostThirdPayment):
 
 @router.post('/linePay/notify', summary="The API to grant green light after get the payment success information from tap pay.")
 async def get_tappay_response(request: Request):
-    # Get the raw request body
-    raw_data = await request.body()
-    if raw_data['msg'] == 'Success' and raw_data['status'] == 0:
-      grant_green_light(raw_data['order_number'])
+    try:
+      # Get the raw request body
+      raw_data = await request.body()
+      if raw_data.msg == 'Success' and raw_data.status == 0:
+        grant_green_light(raw_data['order_number'])
+    except (HTTPException, StarletteHTTPException) as exc:
+      print(exc)
 
 # Success request
 # {"msg": "Success",
