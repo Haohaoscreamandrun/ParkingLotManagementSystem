@@ -1,4 +1,4 @@
-import requests
+import requests, json
 from fastapi import APIRouter, HTTPException, status, Request
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
@@ -99,10 +99,16 @@ async def get_tappay_response(request: Request):
     try:
       # Get the raw request body
       raw_data = await request.body()
-      if raw_data.msg == 'Success' and raw_data.status == 0:
-        grant_green_light(raw_data['order_number'])
+      # Decode bytes to a string (assuming it's UTF-8 encoded text)
+      decoded_data = raw_data.decode('utf-8')
+      # Process the decoded data (if it’s JSON, you’ll need to parse it)
+      data = json.loads(decoded_data)
+      if data.get('msg') == 'Success' and data.get('status') == 0:
+        grant_green_light(data.get('order_number'))
     except (HTTPException, StarletteHTTPException) as exc:
       print(exc)
+    except json.JSONDecodeError:
+      print("Invalid JSON format")
 
 # Success request
 # {"msg": "Success",
