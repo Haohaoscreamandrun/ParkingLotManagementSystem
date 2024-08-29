@@ -94,5 +94,5 @@ async def payment_third(method: str, postPayment: PostThirdPayment):
 
 
 @router.post('/linePay/notify')
-async def get_tappay_response(data: object):
+async def get_tappay_response(data: str):
   print(data)
