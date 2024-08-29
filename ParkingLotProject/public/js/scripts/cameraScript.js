@@ -87,7 +87,7 @@ async function handleLicenseUpdate(license){
       lotID = document.getElementById('chosenLot').value.split(": ")[1]
     // at camera
     } else if(window.location.href.includes('camera')){
-      lotID = window.location.href.split('/')[4]
+      lotID = parseInt(window.location.href.split('/')[4].match(/\d+/g)[0])
     }
 
     if (enterRadio.checked){
