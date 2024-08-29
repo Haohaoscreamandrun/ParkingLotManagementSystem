@@ -43,6 +43,81 @@ User with admin privilege can:
 1. 15 nearest parking lots within 3km from user will be shown on map for user to choose from.
 2. Website will return realtime vacancy of parking lot when you click on them (either on list or map).
 
+## Backend Structure
+
+![backend strucuture](https://parkinglot.haohaoscreamandrun.online/public/images/backend-structure.png)
+
+## Database structure EER and index
+
+![db structure](https://parkinglot.haohaoscreamandrun.online/public/images/databaseEER.png)
+
+### Spatial Index for Geometry data type
+
+Spatial index is used to speed up the query:
+
+1. Create spatial index on POINT type data and insert data
+
+   ```python
+   sql = '''CREATE TABLE parking_lot( \
+   id BIGINT AUTO_INCREMENT PRIMARY KEY, \
+      name VARCHAR(50) NOT NULL, \
+      coordinate POINT NOT NULL SRID 4326, \
+         address VARCHAR(225), \
+         total_space INT NOT NULL, \
+            parking_fee INT NOT NULL, \
+               admin_id BIGINT NOT NULL, \
+               FOREIGN KEY (admin_id) REFERENCES admin(id),\
+                  SPATIAL INDEX(coordinate))
+                  '''
+   sql = '''
+   INSERT INTO parking_lot\
+   (name, coordinate, address, total_space, parking_fee, admin_id)\
+      VALUES (%s, ST_GeomFromText('POINT(%s %s)', 4326), %s, %s, %s, %s)
+      '''
+   ```
+
+2. Calculate bounding box with radius
+
+   ```python
+   degrees_lat = radius / 111320
+
+   degrees_lng = radius / (111320 * math.cos(math.radians(lat)))
+   min_lat = lat - degrees_lat
+   max_lat = lat + degrees_lat
+   min_lng = lng - degrees_lng
+   max_lng = lng + degrees_lng
+   bounding_box = f'''
+   POLYGON((\
+      {min_lat} {min_lng},\
+      {max_lat} {min_lng},\
+      {max_lat} {max_lng},\
+      {min_lat} {max_lng},\
+      {min_lat} {min_lng}\
+      ))
+    '''
+   ```
+
+3. Use MBRfunction to utilize spatial index
+
+   ```python
+   sql = '''
+   SELECT id,\
+      name,\
+      ST_Longitude(coordinate) AS longitude,\
+         ST_Latitude(coordinate) AS latitude,\
+         address,\
+            total_space,\
+               parking_fee,\
+               admin_id,\
+                  ST_Distance_Sphere(coordinate, ST_GeomFromText('POINT(%s %s)', 4326)) AS distance\
+                     FROM parking_lot \
+                     WHERE MBRContains(ST_GeomFromText(%s, 4326), coordinate)\
+                        AND ST_Distance_Sphere(coordinate, ST_GeomFromText('POINT(%s %s)', 4326)) < %s \
+                           ORDER BY distance LIMIT %s;
+                           '''
+   val = (lat, lng, bounding_box, lat, lng, radius, number)
+   ```
+
 ## Utilized Package
 
 | Package                  | Version    |
