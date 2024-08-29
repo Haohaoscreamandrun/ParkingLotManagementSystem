@@ -1,5 +1,5 @@
 import { uri } from "../common/server.js";
-import { renderVacancy, renderCars, renderBtnLoading, renderAlert } from "../view/adminView.js";
+import { renderLotInput, renderVacancy, renderCars, renderBtnLoading, renderAlert, renderChosenLot } from "../view/adminView.js";
 import { deleteCar } from "./cameraScript.js";
 
 async function getParkingLots(adminID){
@@ -80,7 +80,19 @@ async function fetchCarsRender(lotID){
     console.log(error)
   }
 }
-
+// function of search lot
+function searchLotByInput(event, originalList){
+  let query = event.target.value.trim()
+  let queryResult = originalList.filter((lot) => {
+    return lot.lot_name.toLowerCase().includes(query.toLowerCase())
+  })
+  renderChosenLot(queryResult)
+  let lotDropDownBtn = document.getElementById('lotDropDownBtn')
+  let dropDown = new bootstrap.Dropdown(lotDropDownBtn)
+  dropDown.show()
+  // toggle drop down will move focus
+  event.target.focus()
+}
 
 // function of search car
 function searchCarsByInput(event, carList = tempStorageCars){
@@ -168,4 +180,4 @@ async function deleteCarByLicense(event){
   }
 }
 
-export {getParkingLots, getParkingLotById, fetchCarsRender, searchCarsByInput, formatDateForInput, updateCarByID, deleteCarByLicense, tempStorageCars}
+export {getParkingLots, searchLotByInput, getParkingLotById, fetchCarsRender, searchCarsByInput, formatDateForInput, updateCarByID, deleteCarByLicense, tempStorageCars}

@@ -19,7 +19,7 @@ router = APIRouter(
   },
     response_class=JSONResponse,
     response_model=RetrunParkingLotObj,
-    summary="The API to reply nearest parking lot list based on altitude and latitude parameter or parking lots within 3km from user."
+    summary="The API to reply nearest parking lot list based on longitude and latitude parameter or parking lots within 3km from user."
 )
 async def get_parking_lots(
   latitude: float = Query(None, 

@@ -80,4 +80,13 @@ function renderProcessBtn(success=false, waiting=false, msg="Some thing went Sou
   }
 }
 
-export {renderCarDetails, renderProcessBtn}
+function fixHiding(action){
+  let thirdPayPane = document.getElementById('thirdPayPane')
+  if (action === 'show'){
+    thirdPayPane.classList.remove('d-none')
+  } else if (action === 'hide'){
+    thirdPayPane.classList.add('d-none')
+  }
+}
+
+export {renderCarDetails, renderProcessBtn, fixHiding}

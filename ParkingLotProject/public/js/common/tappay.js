@@ -134,4 +134,17 @@ async function onSubmit(event, lotID) {
     })
 }
 
-export {onUpdate, onSubmit, tappayDefaultStyle}
+async function getLinePayPrime(){
+    return new Promise((resolve, reject) => {
+        TPDirect.linePay.getPrime(function(primeObj){
+            if (primeObj && primeObj.msg === 'Success') {
+                resolve(primeObj);
+            } else {
+                reject(new Error('Failed to get prime object'));
+            }
+        })
+    })
+    
+}
+
+export {onUpdate, onSubmit, tappayDefaultStyle, getLinePayPrime}

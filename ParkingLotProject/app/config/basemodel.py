@@ -96,10 +96,16 @@ class PostHolderPayment(BaseModel):
     name: str
     email: EmailStr
 
-class PostPrimePayment(BaseModel):
+class PostResultURL(BaseModel):
+    frontend_redirect_url: str
+    backend_notify_url: str
+    go_back_url: str
+
+class PostThirdPayment(BaseModel):
     prime: str
     car: PostCarPayment
-    card_holder: PostHolderPayment
+    cardholder: PostHolderPayment | None
+    result_url: PostResultURL | None
 
 class PutCarInfo(BaseModel):
     carID: int

@@ -3,6 +3,7 @@ import { pastTimetoFee } from "../scripts/chooseScript.js"
 
 function renderChosenLot(list){
   let dropdown = document.querySelector('#lotDropDown')
+  dropdown.innerHTML = ''
   list.forEach((lot) => {
     let listEle = document.createElement('li')
     let button =document.createElement('button')
@@ -19,24 +20,46 @@ async function renderLotInput(){
   let dropdown = document.querySelector('#lotDropDown')
   let firstChild = dropdown.children[0].children[0]
   // default as first one
-  input.value = `${firstChild.innerText}, ID: ${firstChild.id}`
+  input.placeholder = `${firstChild.innerText}, ID: ${firstChild.id}`
   let lots = await getParkingLotById(firstChild.id)
-  renderParkingLotCard(lots[0])
+  renderParkingLotCard(lots[0], 'firstLoading')
   fetchCarsRender(firstChild.id)
   // change upon selection
   dropdown.addEventListener('click', async function(event) {
     if (event.target.classList.contains('dropdown-item')){
+      // loading screen
+      renderParkingLotCard([], 'loading')
+      let carsList = document.getElementById('carsListGroup')
+      carsList.innerHTML = `
+      <div class="d-flex justify-content-center">
+        <div class="spinner-grow text-secondary mt-2" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+      `
+
       let lot_name = event.target.innerText
       let lot_id = event.target.id
-      input.value = `${lot_name}, ID: ${lot_id}`
+      input.value = ''
+      input.placeholder = `${lot_name}, ID: ${lot_id}`
       let lots = await getParkingLotById(lot_id)
-      renderParkingLotCard(lots[0])
+      
       fetchCarsRender(lot_id)
+      renderParkingLotCard(lots[0])
     }
   })
 }
 
-function renderParkingLotCard(lot){
+let loadingCard
+
+function renderParkingLotCard(lot, status='normal'){
+  if (status === 'firstLoading'){
+    loadingCard = document.getElementById('lotDetailCard').innerHTML
+  } else if (status === 'loading'){
+    document.getElementById('lotDetailCard').innerHTML = loadingCard
+    return
+  }
+
   let parkingLotName = document.querySelector('#parkingLotName')
   let parkingLotAddress = document.querySelector('#parkingLotAddress')
   let parkingLotFee = document.querySelector('#parkingLotFee')
