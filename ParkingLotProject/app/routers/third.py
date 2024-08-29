@@ -1,5 +1,5 @@
 import requests
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, status, Request
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException as StarletteHTTPException
@@ -94,5 +94,10 @@ async def payment_third(method: str, postPayment: PostThirdPayment):
 
 
 @router.post('/linePay/notify')
-async def get_tappay_response(data: str):
-  print(data)
+async def get_tappay_response(request: Request):
+   # Get the raw request body
+    raw_data = await request.body()
+
+    # You can process raw_data as needed
+    # Assuming the content is text. For other types, processing will vary.
+    print(raw_data.decode('utf-8'))
