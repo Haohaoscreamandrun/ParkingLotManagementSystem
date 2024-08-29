@@ -29,16 +29,28 @@
     </div>
   </nav>
   <div class="d-flex flex-column justify-content-center align-items-center text-center mt-5">
-    <h1>Payment Succeed!</h1>
-    <h4>Redirect to exit camera in 3 secs...</h4>
+    <h1 class="paymentStatus">Payment Succeed!</h1>
+    <h4 class="redirectMsg">Redirect to exit camera in 3 secs...</h4>
   </div>
 </body>
 <script>
+  let paymentStatus = document.querySelector('.paymentStatus')
+  let redirectMsg = document.querySelector('.redirectMsg')
+  let statusCode = parseInt(window.location.href.split('status=')[1].match(/\d+/g)[0])
+  if (statusCode !== 0){
+    paymentStatus.innerText = 'Payment Failed!'
+    redirectMsg.innerText = 'Redirect to home page in 3 secs...'
+    setTimeout(() => {
+      let urlArray = window.location.href.split('/')
+      window.location.href = urlArray.slice(0,3).join('/')
+    }, 3000)
+  } else {
+    setTimeout(()=>{
+      let urlArray = window.location.href.split('/')
+      urlArray[3] = 'camera'
+      window.location.href = urlArray.join('/')
+    }, 3000)
+  }
   
-  setTimeout(()=>{
-    let urlArray = window.location.href.split('/')
-    urlArray[3] = 'camera'
-    window.location.href = urlArray.join('/')
-  }, 3000)
 </script>
 </html>
