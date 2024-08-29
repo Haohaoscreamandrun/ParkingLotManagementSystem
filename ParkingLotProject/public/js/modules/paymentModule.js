@@ -46,8 +46,17 @@ async function paymentFlow(){
   })
 
   //tapPay LinePay
+  let buttonImage = document.getElementById('linePayImg')
   let linePayBtn = document.getElementById('linePay')
+  let highLight = ['border', 'border-5', 'border-primary-subtle']
+  buttonImage.addEventListener('mouseenter', () => {
+    linePayBtn.classList.add(...highLight)
+  })
+  buttonImage.addEventListener('mouseleave', () => {
+    linePayBtn.classList.remove(...highLight)
+  })
   linePayBtn.addEventListener('click', async ()=>{
+    linePayBtn.classList.add('p-3',...highLight)
     let primeObj = await getLinePayPrime()
     await postThirdPrime(primeObj.prime, lotID, 'linePay')
   })

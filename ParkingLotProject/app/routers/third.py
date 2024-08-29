@@ -35,6 +35,7 @@ async def payment_third(method: str, postPayment: PostThirdPayment):
     'partner_key': partner_key,
     'merchant_id': merchant_id,
     'details': f'Payment for carID:{postPayment.car.id}',
+    'order_number': postPayment.car.id,
     'amount': postPayment.car.sub_total,
     'cardholder': {
       "phone_number": postPayment.cardholder.phone_number,
@@ -93,11 +94,36 @@ async def payment_third(method: str, postPayment: PostThirdPayment):
     )
 
 
-@router.post('/linePay/notify')
+@router.post('/linePay/notify', summary="The API to grant green light after get the payment success information from tap pay.")
 async def get_tappay_response(request: Request):
-   # Get the raw request body
+    # Get the raw request body
     raw_data = await request.body()
+    if raw_data['msg'] == 'Success' and raw_data['status'] == 0:
+      grant_green_light(raw_data['order_number'])
 
-    # You can process raw_data as needed
-    # Assuming the content is text. For other types, processing will vary.
-    print(raw_data.decode('utf-8'))
+# Success request
+# {"msg": "Success",
+#  "bank_result_code":"0000",
+#  "bank_result_msg":"Success.","transaction_time_millis":1724937798969,"rec_trade_id":"LN20240829ooCtMy","bank_transaction_id":"TP20240829ooCtMy",
+#  "amount":30,
+#  "pay_info":{
+#    "credit_card":30,
+#    "method":"CREDIT_CARD",
+#    "balance":0,
+#    "masked_credit_card_number":"************9818",
+#    "discount":0,
+#    "point":0,
+#    "bank_account":0
+#    },
+#    "order_number":"",
+#    "acquirer":"TW_LINE_PAY",
+#    "status":0}
+
+# Failed request
+# {"msg": "LINE Pay order is canceled",
+#  "bank_result_code":"",
+#  "bank_result_msg":"",
+#  "transaction_time_millis":1724936869878,"rec_trade_id":"LN20240829jeh9f1","bank_transaction_id":"TP20240829jeh9f1",
+#  "amount":3160,"order_number":"",
+#  "acquirer":"TW_LINE_PAY",
+#  "status":924}
