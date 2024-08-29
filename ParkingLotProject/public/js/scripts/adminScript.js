@@ -123,7 +123,7 @@ async function updateCarByID(event){
   event.preventDefault()
   renderBtnLoading(event)
   let carID = parseInt(event.target.id.split('CarID')[1])
-  let chosenLotID = parseInt(document.getElementById('chosenLot').value.split('ID: ')[1])
+  let chosenLotID = parseInt(document.getElementById('chosenLot').placeholder.split('ID: ')[1])
   let updateLicense = document.getElementById('licenseplate').value
   let isPaid = document.getElementById('paidCheck').checked
   let token = localStorage.getItem('token')
@@ -167,7 +167,8 @@ async function deleteCarByLicense(event){
   }
   renderBtnLoading(event)
   let carLicense = event.target.id.split('License')[1]
-  let chosenLotID = parseInt(document.getElementById('chosenLot').value.split('ID: ')[1])
+  let chosenLotID = parseInt(document.getElementById('chosenLot').placeholder.split('ID: ')[1])
+  
   let deleteCarResponse = await deleteCar(chosenLotID, carLicense)
   if (deleteCarResponse === true){
     renderBtnLoading(event, true)

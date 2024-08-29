@@ -115,4 +115,4 @@ class PutCarInfo(BaseModel):
 
 class DeleteCarInfo(BaseModel):
     car_license: str = Field(..., alias="carLicense")
-    lot_id: int = Field(..., alias="lotId")
+    lot_id: int = Field(..., alias="lotID")

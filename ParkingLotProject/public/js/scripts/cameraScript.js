@@ -62,7 +62,7 @@ async function deleteCar(lotID, license){
       body: JSON.stringify(requestBody)
     })
     let response = await responseObj.json()
-    console.log(response)
+    
     if (responseObj.ok){
       return response.ok
     } else if (response.error){
