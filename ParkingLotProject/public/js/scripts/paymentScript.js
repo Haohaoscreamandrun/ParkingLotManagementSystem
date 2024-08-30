@@ -76,18 +76,21 @@ async function postThirdPrime(prime, lotID, method='credit'){
       'id': parseInt(carID),
       'sub_total': parseInt(subTotal)
     },
+    'merchant_id': undefined,
     'cardholder': undefined,
     'result_url': undefined
   }
   if (method === 'credit'){
     // render btn
     renderProcessBtn(false, true)
+    requestBody.merchant_id = 'J842671395_TAISHIN'
     requestBody.cardholder = {
       'phone_number': phoneNumber,
       'name': userName,
       'email': email
     }
-  } else if(method === 'linePay'){
+  } else if(method === 'linePay' || method === 'jkoPay'){
+    requestBody.merchant_id = `J842671395_${method.toUpperCase()}`
     requestBody.cardholder = {
       'phone_number': '0912345678',
       'name': 'Jimmy',
@@ -95,7 +98,7 @@ async function postThirdPrime(prime, lotID, method='credit'){
     }
     requestBody.result_url = {
       'frontend_redirect_url': `${uri}/thankyou/${lotID}`,
-      'backend_notify_url': `${uri}/api/third/linePay/notify`,
+      'backend_notify_url': `${uri}/api/third/thirdPay/notify`,
       'go_back_url': uri
     }
   }
@@ -117,7 +120,7 @@ async function postThirdPrime(prime, lotID, method='credit'){
     }, 3000)
   } else if (responseObj.ok && response.error && method === 'credit'){
     renderProcessBtn(false, false, response.message)
-  } else if (responseObj.ok && response.ok && method === 'linePay'){
+  } else if (responseObj.ok && response.ok && (method === 'linePay' || method === 'jkoPay')){
     //redirect to line pay url
     window.location.href = response.payment_url
   }

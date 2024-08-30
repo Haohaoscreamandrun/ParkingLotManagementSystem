@@ -89,4 +89,21 @@ function fixHiding(action){
   }
 }
 
-export {renderCarDetails, renderProcessBtn, fixHiding}
+function renderThirdPayBtn(){
+  let buttonImages = document.querySelectorAll('.buttonImage')
+  let highLight = ['border', 'border-5', 'border-primary-subtle']
+
+  buttonImages.forEach((buttonImage)=>{
+    buttonImage.addEventListener('mouseenter', (event) => {
+      event.target.parentNode.classList.add(...highLight)
+    })
+    buttonImage.addEventListener('click', (event) => {
+      event.target.parentNode.classList.add('p-3',...highLight)
+    })
+    buttonImage.addEventListener('mouseleave', (event) => {
+      event.target.parentNode.classList.remove(...highLight)
+    })
+  })
+}
+
+export {renderCarDetails, renderProcessBtn, fixHiding, renderThirdPayBtn}

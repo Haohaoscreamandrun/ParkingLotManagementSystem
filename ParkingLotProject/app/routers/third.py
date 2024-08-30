@@ -29,7 +29,7 @@ async def payment_third(method: str, postPayment: PostThirdPayment):
   # make request to Tappay
   tappay_url = 'https://sandbox.tappaysdk.com/tpc/payment/pay-by-prime'
   partner_key = 'partner_MWolLkvQ1R4JQGVp6W2N7yNl15PEYfNBSRUlV14n5TxAbr6oxz33YmSK'
-  merchant_id = 'J842671395_TAISHIN'
+  merchant_id = postPayment.merchant_id
   request_object = {
     'prime': postPayment.prime,
     'partner_key': partner_key,
@@ -43,8 +43,7 @@ async def payment_third(method: str, postPayment: PostThirdPayment):
       "email": postPayment.cardholder.email
     }
   }
-  if method == 'linePay':
-    request_object['merchant_id'] = 'J842671395_LINEPAY'
+  if method == 'linePay' or method == 'jkoPay':
     request_object['result_url'] = {
         'frontend_redirect_url': postPayment.result_url.frontend_redirect_url,
         'backend_notify_url': postPayment.result_url.backend_notify_url,
@@ -62,7 +61,7 @@ async def payment_third(method: str, postPayment: PostThirdPayment):
     )
     response = response_obj.json()
 
-    if (response['status'] == 0 and method == 'credit'):
+    if (response['status'] is 0 and method is 'credit'):
       grant_green_light(postPayment.car.id)
       
       return JSONResponse(
@@ -71,7 +70,7 @@ async def payment_third(method: str, postPayment: PostThirdPayment):
               'ok': True
           }
       )
-    elif (response['status'] == 0 and method == 'linePay'):
+    elif (response['status'] is 0 and method is not 'credit'):
       return JSONResponse(
           status_code=status.HTTP_200_OK,
           content={
@@ -94,7 +93,7 @@ async def payment_third(method: str, postPayment: PostThirdPayment):
     )
 
 
-@router.post('/linePay/notify', summary="The API to grant green light after get the payment success information from tap pay.")
+@router.post('/thirdPay/notify', summary="The API to grant green light after get the payment success information from tap pay.")
 async def get_tappay_response(request: Request):
     try:
       # Get the raw request body

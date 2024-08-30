@@ -147,4 +147,16 @@ async function getLinePayPrime(){
     
 }
 
-export {onUpdate, onSubmit, tappayDefaultStyle, getLinePayPrime}
+async function getJKOPayPrime(){
+    return new Promise((resolve, reject) => {
+        TPDirect.jkoPay.getPrime(function(primeObj){
+            if(primeObj && primeObj.msg === 'Success'){
+                resolve(primeObj)
+            } else {
+                reject(new Error('Failed to get prime object'));
+            }
+        })
+    })
+}
+
+export {onUpdate, onSubmit, tappayDefaultStyle, getLinePayPrime, getJKOPayPrime}

@@ -1,7 +1,7 @@
 import {tokenValidation, formValidation, signInValidation} from "../common/login.js"
-import { tappayDefaultStyle, onUpdate, onSubmit, getLinePayPrime } from "../common/tappay.js"
+import { tappayDefaultStyle, onUpdate, onSubmit, getLinePayPrime, getJKOPayPrime } from "../common/tappay.js"
 import { getCarByID, getParkingLotByID, postThirdPrime } from "../scripts/paymentScript.js"
-import { renderCarDetails, fixHiding } from "../view/paymentView.js"
+import { renderCarDetails, fixHiding, renderThirdPayBtn } from "../view/paymentView.js"
 
 async function paymentFlow(){
   // Login logic
@@ -45,20 +45,19 @@ async function paymentFlow(){
     onSubmit(event, lotID)
   })
 
-  //tapPay LinePay
-  let buttonImage = document.getElementById('linePayImg')
+  //tapPay LinePay & jkoPay
+  renderThirdPayBtn()
+  
   let linePayBtn = document.getElementById('linePay')
-  let highLight = ['border', 'border-5', 'border-primary-subtle']
-  buttonImage.addEventListener('mouseenter', () => {
-    linePayBtn.classList.add(...highLight)
-  })
-  buttonImage.addEventListener('mouseleave', () => {
-    linePayBtn.classList.remove(...highLight)
-  })
   linePayBtn.addEventListener('click', async ()=>{
-    linePayBtn.classList.add('p-3',...highLight)
     let primeObj = await getLinePayPrime()
     await postThirdPrime(primeObj.prime, lotID, 'linePay')
+  })
+
+  let jkoPayBtn = document.getElementById('jkoPay')
+  jkoPayBtn.addEventListener('click', async ()=>{
+    let primeObj = await getJKOPayPrime()
+    await postThirdPrime(primeObj.prime, lotID, 'jkoPay')
   })
 }
 paymentFlow()
