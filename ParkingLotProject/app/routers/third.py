@@ -33,7 +33,6 @@ async def payment_third(method: str, postPayment: PostThirdPayment):
   request_object = {
     'prime': postPayment.prime,
     'partner_key': partner_key,
-    'merchant_id': merchant_id,
     'details': f'Payment for carID:{postPayment.car.id}',
     'order_number': postPayment.car.id,
     'amount': postPayment.car.sub_total,
@@ -43,14 +42,17 @@ async def payment_third(method: str, postPayment: PostThirdPayment):
       "email": postPayment.cardholder.email
     }
   }
+  if method == 'credit':
+    request_object['merchant_id'] = merchant_id
   if method == 'linePay':
+    request_object['merchant_id'] = merchant_id
     request_object['result_url'] = {
         'frontend_redirect_url': postPayment.result_url.frontend_redirect_url,
         'backend_notify_url': postPayment.result_url.backend_notify_url,
         'go_back_url': postPayment.result_url.go_back_url
     }
   elif method == 'jkoPay':
-    request_object['merchant_group_id'] = merchant_id,
+    request_object['merchant_group_id'] = merchant_id
     request_object['result_url'] = {
         'frontend_redirect_url': postPayment.result_url.frontend_redirect_url,
         'backend_notify_url': postPayment.result_url.backend_notify_url,
