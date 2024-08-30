@@ -43,7 +43,14 @@ async def payment_third(method: str, postPayment: PostThirdPayment):
       "email": postPayment.cardholder.email
     }
   }
-  if method == 'linePay' or method == 'jkoPay':
+  if method == 'linePay':
+    request_object['result_url'] = {
+        'frontend_redirect_url': postPayment.result_url.frontend_redirect_url,
+        'backend_notify_url': postPayment.result_url.backend_notify_url,
+        'go_back_url': postPayment.result_url.go_back_url
+    }
+  elif method == 'jkoPay':
+    request_object['merchant_group_id'] = merchant_id,
     request_object['result_url'] = {
         'frontend_redirect_url': postPayment.result_url.frontend_redirect_url,
         'backend_notify_url': postPayment.result_url.backend_notify_url,
@@ -61,7 +68,7 @@ async def payment_third(method: str, postPayment: PostThirdPayment):
     )
     response = response_obj.json()
 
-    if (response['status'] is 0 and method is 'credit'):
+    if (response['status'] == 0 and method == 'credit'):
       grant_green_light(postPayment.car.id)
       
       return JSONResponse(
@@ -70,7 +77,7 @@ async def payment_third(method: str, postPayment: PostThirdPayment):
               'ok': True
           }
       )
-    elif (response['status'] is 0 and method is not 'credit'):
+    elif (response['status'] == 0 and method != 'credit'):
       return JSONResponse(
           status_code=status.HTTP_200_OK,
           content={
