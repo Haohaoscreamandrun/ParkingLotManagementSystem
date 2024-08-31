@@ -29,6 +29,19 @@ export async function initMap(parkingLots) {
     mapId: "PARKING_LOT"
   });
   
+  // create icon map pin
+  let icon = document.createElement('img')
+  icon.src = './public/images/person-location-svgrepo-com.svg'
+  icon.style.width = '32px'
+  icon.style.height = '32px'
+  
+  let locationMarker = new AdvancedMarkerElement({
+    map,
+    position: position,
+    content: icon,
+    title: "User location"
+  })
+
   // create marks
   function addMarkers(lotsArray){
     lotsArray.forEach((lot, index) => {

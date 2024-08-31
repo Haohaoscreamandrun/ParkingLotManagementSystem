@@ -93,9 +93,13 @@ with open('ParkingLotProject/database/taipei_city_parking_lot.json', encoding= '
 with open('ParkingLotProject/database/new_taipei_city_parking_lot.json', encoding='utf-8') as file:
 	new_taipei_parking_lots = json.load(file)
 
-## taipei data
+# taoyuan data
 with open('ParkingLotProject/database/taoyuan_city_parking_lot.json', encoding='utf-8') as file:
 	taoyuan_parking_lots = json.load(file)
+
+# hsinchu data
+with open('ParkingLotProject/database/hsinchu_city_parking_lot.json', encoding='utf-8') as file:
+	hsinchu_parking_lots = json.load(file)
 
 ## init
 sql = 'SELECT * FROM parking_lot'
@@ -124,16 +128,13 @@ else:
 				return number
 		return None
 	
-	sql = '''
-	INSERT INTO parking_lot\
-		(name, coordinate, address, total_space, parking_fee, admin_id)\
-			VALUES (%s, ST_GeomFromText('POINT(%s %s)', 4326), %s, %s, %s, %s)
-			'''
-
-	
 	def commit_db(name, latitude, longitude, address,
                total_space, parking_fee, index):
-		
+		sql = '''
+		INSERT INTO parking_lot\
+			(name, coordinate, address, total_space, parking_fee, admin_id)\
+				VALUES (%s, ST_GeomFromText('POINT(%s %s)', 4326), %s, %s, %s, %s)
+				'''
 		# Construct filter val that should not be empty
 		not_null = (name, latitude, longitude, total_space, parking_fee)
 		# the logic to skip any empty value
@@ -148,10 +149,10 @@ else:
 		# try insert
 		try:
 			if not skip_this:
-				import random
-				admin_id = random.randint(1, 10)
+				# import random
+				# admin_id = random.randint(1, 10)
 				val = (name, latitude, longitude, address,
-											total_space, parking_fee, admin_id)
+											total_space, parking_fee, 2)
 				mycursor.execute(sql, val)
 				print("Looping... ", index, "th parking lot is inserted.")
 		except mysql.connector.errors.ProgrammingError as e:
@@ -196,6 +197,17 @@ else:
                    total_space, parking_fee, index)
 	mydb.commit()
 
+# loop Hsinchu city data
+	for index, data in enumerate(hsinchu_parking_lots):
+		name = data["停車場名稱"]
+		longitude = float(data['經度'])
+		latitude = float(data['緯度'])
+		address = data['地址']
+		total_space = int(data['汽車總車數'])
+		parking_fee = extract_first_integer(data['假日收費方式'])
+		commit_db(name, latitude, longitude, address,
+                    total_space, parking_fee, index)
+	mydb.commit()
 
 # Create table cars
 
@@ -214,7 +226,7 @@ try:
 	print("Table 'cars' created successfully.")
 except mysql.connector.errors.ProgrammingError as e:
 	if e.errno == 1050:
-		print("Table 'admin' already exists.")
+		print("Table 'cars' already exists.")
 	else:
 		print("An error occurred when create table in MySQL.", e)
 
