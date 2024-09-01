@@ -1,0 +1,134 @@
+
+.nav-brand {
+  text-decoration: none;
+  /* Remove underline */
+  color: inherit;
+  /* Inherit color from parent element */
+}
+
+.nav-brand img {
+  vertical-align: middle;
+  /* Align image with text */
+}
+
+#startBtn:hover
+{
+  cursor: pointer;
+}
+
+#scrollUpBtn {
+  background-image: url("../images/left-arrow.png");
+}
+
+#scrollDownBtn {
+  background-image: url("../images/right-arrow.png");
+}
+
+#scrollUpBtn,
+#scrollDownBtn {
+  width: 32px;
+  height: 32px;
+
+  border-radius: 50%;
+  /* border: #666666 2px solid; */
+  background-size: 32px 32px;
+  background-repeat: no-repeat;
+  background-position: center center;
+  opacity: 50%;
+  transition: opacity 0.3s ease;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#scrollBarLots {
+  flex: 1;
+  /* flex container */
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: center;
+  align-content: center;
+
+  padding: 13px 10px 13px 10px;
+
+  overflow-x: scroll;
+  /* 出現滾動條 */
+  white-space: nowrap;
+}
+
+#scrollBarLots::-webkit-scrollbar{
+  display: none;
+}
+
+.scrollBarLotsList {
+  padding: 0 15px;
+  /* flex item */
+
+  /* font */
+  font-size: 16px;
+  font-weight: 500;
+  color: #666666;
+
+  text-align: center;
+
+  transition: background-color 0.3s ease, color 0.3s ease, border-radius 0.3s ease;
+}
+
+.scrollBarLotsList:hover,
+.scrollBarLotsList:focus {
+  background-color: #666666;
+  color: #FFFFFF;
+  border-radius: 30px;
+}
+
+#scrollUpBtn:hover,
+#scrollDownBtn:hover {
+  opacity: 100%;
+}
+
+#scrollUpBtn:hover,
+#scrollDownBtn:hover,
+.scrollBarLotsList{
+  cursor: pointer;
+}
+
+/* Set a specific height for carousel items */
+.carousel-inner {
+  height: 350px;
+  /* Adjust the height as needed */
+  background-color: grey;
+  /* Background color for when images do not cover the area */
+  display: flex;
+  align-items: center;
+  /* Center items vertically */
+}
+
+/* Ensure images cover the carousel area and maintain aspect ratio */
+.carousel-item img {
+  height: 100%;
+  object-fit: cover;
+  /* This makes sure the image covers the area while maintaining aspect ratio */
+  /* width: 100%; */
+  /* Ensure images stretch to cover the container width */
+  display: block;
+  /* Remove any bottom space caused by inline-block default */
+}
+
+.scrollable-list
+{
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.buttonImage-container:hover
+{
+  cursor: pointer;
+}
+
+#linePay
+{
+  transition: all 0.3s ease-in-out;
+}
