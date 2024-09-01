@@ -89,7 +89,7 @@ async function postThirdPrime(prime, lotID, method='credit'){
       'name': userName,
       'email': email
     }
-  } else if(method === 'linePay' || method === 'jkoPay'){
+  } else if(method === 'linePay' || method === 'easy_wallet'){
     requestBody.merchant_id = `J842671395_${method.toUpperCase()}`
     requestBody.cardholder = {
       'phone_number': '0912345678',
@@ -102,7 +102,7 @@ async function postThirdPrime(prime, lotID, method='credit'){
       'go_back_url': uri
     }
   }
-
+  
   let responseObj = await fetch(`${uri}/api/third/${method}`,
     {
       method: 'POST',
@@ -113,6 +113,7 @@ async function postThirdPrime(prime, lotID, method='credit'){
     }
   )
   let response = await responseObj.json()
+  
   if(responseObj.ok && response.ok && method === 'credit'){
     renderProcessBtn(true)
     setTimeout(() => {
@@ -120,7 +121,7 @@ async function postThirdPrime(prime, lotID, method='credit'){
     }, 3000)
   } else if (responseObj.ok && response.error && method === 'credit'){
     renderProcessBtn(false, false, response.message)
-  } else if (responseObj.ok && response.ok && (method === 'linePay' || method === 'jkoPay')){
+  } else if (responseObj.ok && response.ok && (method === 'linePay' || method === 'easy_wallet')){
     //redirect to line pay url
     window.location.href = response.payment_url
   }

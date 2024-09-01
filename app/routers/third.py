@@ -44,15 +44,8 @@ async def payment_third(method: str, postPayment: PostThirdPayment):
   }
   if method == 'credit':
     request_object['merchant_id'] = merchant_id
-  if method == 'linePay':
+  elif method == 'linePay' or method == 'easy_wallet':
     request_object['merchant_id'] = merchant_id
-    request_object['result_url'] = {
-        'frontend_redirect_url': postPayment.result_url.frontend_redirect_url,
-        'backend_notify_url': postPayment.result_url.backend_notify_url,
-        'go_back_url': postPayment.result_url.go_back_url
-    }
-  elif method == 'jkoPay':
-    request_object['merchant_group_id'] = merchant_id
     request_object['result_url'] = {
         'frontend_redirect_url': postPayment.result_url.frontend_redirect_url,
         'backend_notify_url': postPayment.result_url.backend_notify_url,
@@ -69,7 +62,7 @@ async def payment_third(method: str, postPayment: PostThirdPayment):
       json=request_object
     )
     response = response_obj.json()
-
+    
     if (response['status'] == 0 and method == 'credit'):
       grant_green_light(postPayment.car.id)
       
