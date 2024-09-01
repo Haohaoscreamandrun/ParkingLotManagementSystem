@@ -1,5 +1,5 @@
 import {tokenValidation, formValidation, signInValidation} from "../common/login.js"
-import { tappayDefaultStyle, onUpdate, onSubmit, getLinePayPrime, getJKOPayPrime } from "../common/tappay.js"
+import { tappayDefaultStyle, onUpdate, onSubmit, getLinePayPrime, getJkoPayPrime, getEasyWalletPrime } from "../common/tappay.js"
 import { getCarByID, getParkingLotByID, postThirdPrime } from "../scripts/paymentScript.js"
 import { renderCarDetails, fixHiding, renderThirdPayBtn } from "../view/paymentView.js"
 
@@ -55,9 +55,15 @@ async function paymentFlow(){
   })
 
   let jkoPayBtn = document.getElementById('jkoPay')
-  jkoPayBtn.addEventListener('click', async ()=>{
-    let primeObj = await getJKOPayPrime()
-    await postThirdPrime(primeObj.prime, lotID, 'jkoPay')
+    jkoPayBtn.addEventListener('click', async ()=>{
+      let primeObj = await getJkoPayPrime()
+      await postThirdPrime(primeObj.prime, lotID, 'jkoPay')
+    })
+
+  let easyWalletBtn = document.getElementById('easyWallet')
+  easyWalletBtn.addEventListener('click', async ()=>{
+    let primeObj = await getEasyWalletPrime()
+    await postThirdPrime(primeObj.prime, lotID, 'easy_wallet')
   })
 }
 paymentFlow()

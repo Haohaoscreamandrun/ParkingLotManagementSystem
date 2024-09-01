@@ -99,7 +99,6 @@ class PostHolderPayment(BaseModel):
 class PostResultURL(BaseModel):
     frontend_redirect_url: str
     backend_notify_url: str
-    go_back_url: str
 
 class PostThirdPayment(BaseModel):
     prime: str
