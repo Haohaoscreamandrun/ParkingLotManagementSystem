@@ -89,7 +89,7 @@ async function postThirdPrime(prime, lotID, method='credit'){
       'name': userName,
       'email': email
     }
-  } else if(method === 'linePay' || method === 'easy_wallet'){
+  } else if(method !== 'credit'){
     requestBody.merchant_id = `J842671395_${method.toUpperCase()}`
     requestBody.cardholder = {
       'phone_number': '0912345678',
@@ -98,8 +98,7 @@ async function postThirdPrime(prime, lotID, method='credit'){
     }
     requestBody.result_url = {
       'frontend_redirect_url': `${uri}/thankyou/${lotID}`,
-      'backend_notify_url': `${uri}/api/third/thirdPay/notify`,
-      'go_back_url': uri
+      'backend_notify_url': `${uri}/api/third/thirdPay/notify`
     }
   }
   
@@ -121,9 +120,9 @@ async function postThirdPrime(prime, lotID, method='credit'){
     }, 3000)
   } else if (responseObj.ok && response.error && method === 'credit'){
     renderProcessBtn(false, false, response.message)
-  } else if (responseObj.ok && response.ok && (method === 'linePay' || method === 'easy_wallet')){
+  } else if (responseObj.ok && response.ok && method !== 'credit'){
     //redirect to line pay url
-    window.location.href = response.payment_url
+    TPDirect.redirect(response.payment_url)
   }
 }
 

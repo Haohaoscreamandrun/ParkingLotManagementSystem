@@ -147,6 +147,19 @@ async function getLinePayPrime(){
     
 }
 
+async function getJkoPayPrime(){
+    return new Promise((resolve, reject) => {
+        TPDirect.jkoPay.getPrime(function(primeObj){
+            if (primeObj && primeObj.msg === 'Success') {
+                resolve(primeObj);
+            } else {
+                reject(new Error('Failed to get prime object'));
+            }
+        })
+    })
+    
+}
+
 async function getEasyWalletPrime(){
     return new Promise((resolve, reject) => {
         TPDirect.easyWallet.getPrime(function(error, result){
@@ -161,4 +174,4 @@ async function getEasyWalletPrime(){
     })
 }
 
-export {onUpdate, onSubmit, tappayDefaultStyle, getLinePayPrime, getEasyWalletPrime}
+export {onUpdate, onSubmit, tappayDefaultStyle, getLinePayPrime, getJkoPayPrime, getEasyWalletPrime}

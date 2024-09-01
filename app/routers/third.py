@@ -33,9 +33,9 @@ async def payment_third(method: str, postPayment: PostThirdPayment):
   request_object = {
     'prime': postPayment.prime,
     'partner_key': partner_key,
-    'details': f'Payment for carID:{postPayment.car.id}',
+    'details': f'Payment_for_carID:{postPayment.car.id}',
     'order_number': postPayment.car.id,
-    'amount': postPayment.car.sub_total,
+    'amount': int(postPayment.car.sub_total),
     'cardholder': {
       "phone_number": postPayment.cardholder.phone_number,
       "name": postPayment.cardholder.name,
@@ -44,12 +44,11 @@ async def payment_third(method: str, postPayment: PostThirdPayment):
   }
   if method == 'credit':
     request_object['merchant_id'] = merchant_id
-  elif method == 'linePay' or method == 'easy_wallet':
+  elif method != 'credit':
     request_object['merchant_id'] = merchant_id
     request_object['result_url'] = {
         'frontend_redirect_url': postPayment.result_url.frontend_redirect_url,
-        'backend_notify_url': postPayment.result_url.backend_notify_url,
-        'go_back_url': postPayment.result_url.go_back_url
+        'backend_notify_url': postPayment.result_url.backend_notify_url
     }
 
   try:
