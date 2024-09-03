@@ -14,6 +14,7 @@ router = APIRouter(
     }
 )
 
+
 @router.get("", responses={
     200: {'model': RetrunParkingLotObj, 'description': "Successful on retrieve parking lots information based on distance or specific parking lot information, or else return noting if condition is not met."}
   },

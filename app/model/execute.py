@@ -1,5 +1,7 @@
 import math
 from ..config.mysql_pool import mysql_select
+from ..config.redis import lookup_redis_return, setup_redis
+
 
 # lookup admin by account and password
 async def admin_lookup(account, password):
@@ -13,63 +15,96 @@ async def admin_lookup(account, password):
 
 # Lookup lot by admin id
 async def admin_parking_lot_lookup(admin):
-  sql = '''SELECT id, name FROM parking_lot WHERE admin_id = %s'''
-  val = (admin,)
-  return mysql_select(sql, val)
+  redis_key = f'parkinglot_name:admin_id{admin}'
+  my_result = lookup_redis_return(redis_key)
+  
+  if my_result == None:
+    sql = '''SELECT id, name FROM parking_lot WHERE admin_id = %s'''
+    val = (admin,)
+    my_result = mysql_select(sql, val)
+    # set redis cache for 10 mins
+    setup_redis(redis_key, my_result)
+  
+  return my_result
 
 # Lookup car by license
 async def car_by_license(license):
-  sql = '''SELECT * FROM cars WHERE plate_number = %s'''
-  val = (license,)
-  return mysql_select(sql, val)
+  redis_key = f'cars_all:plate_number{license}'
+  my_result = lookup_redis_return(redis_key)
+  if my_result == None:
+    sql = '''SELECT * FROM cars WHERE plate_number = %s'''
+    val = (license,)
+    my_result = mysql_select(sql, val)
+    setup_redis(redis_key, my_result)
+  return my_result
 
 # Lookup cars total in lot by lot id
 async def vacancy_lookup(lot_id):
-  sql = '''
-  SELECT COUNT(cars.id) AS total_cars,\
-    parking_lot.total_space AS total_space,\
-      parking_lot.id AS lot_id\
-        FROM parking_lot\
-          LEFT JOIN cars ON cars.lot_id = parking_lot.id\
-            WHERE parking_lot.id = %s\
-              GROUP BY parking_lot.total_space, parking_lot.id\
-              '''
-  val = (lot_id,)
-  return mysql_select(sql, val)
+  redis_key = f'cars_sum:lot_id:{lot_id}'
+  my_result = lookup_redis_return(redis_key)
+  if my_result == None:
+    sql = '''
+    SELECT COUNT(cars.id) AS total_cars,\
+      parking_lot.total_space AS total_space,\
+        parking_lot.id AS lot_id\
+          FROM parking_lot\
+            LEFT JOIN cars ON cars.lot_id = parking_lot.id\
+              WHERE parking_lot.id = %s\
+                GROUP BY parking_lot.total_space, parking_lot.id\
+                '''
+    val = (lot_id,)
+    my_result = mysql_select(sql, val)
+    setup_redis(redis_key, my_result)
+  return my_result
 
 # Lookup all cars in lot by lot id
 def cars_in_parking_lot(lot_id):
-  sql = '''
-  SELECT * FROM cars \
-    WHERE lot_id = %s
-    '''
-  val = (lot_id,)
-  return mysql_select(sql, val)
+  redis_key = f'cars_all:lot_id{lot_id}'
+  my_result = lookup_redis_return(redis_key)
+  if my_result == None:
+    sql = '''
+    SELECT * FROM cars \
+      WHERE lot_id = %s
+      '''
+    val = (lot_id,)
+    my_result = mysql_select(sql, val)
+    setup_redis(redis_key, my_result)
+  return my_result
 
 # look up car by car id
 def car_by_carID(car_ID):
-  sql = '''
-  SELECT * FROM cars \
-    WHERE id = %s
-    '''
-  val = (car_ID,)
-  return mysql_select(sql, val)
+  redis_key = f'cars_all:car_id{car_ID}'
+  my_result = lookup_redis_return(redis_key)
+  if my_result == None:
+    sql = '''
+    SELECT * FROM cars \
+      WHERE id = %s
+      '''
+    val = (car_ID,)
+    my_result = mysql_select(sql, val)
+    setup_redis(redis_key, my_result)
+  return my_result
 
 # look up lot by lot id
 def parkinglot_by_id(id):
-  sql = '''
-  SELECT id,\
-    name,\
-    ST_Longitude(coordinate) AS longitude,\
-      ST_Latitude(coordinate) AS latitude,\
-        address,\
-          total_space,\
-            parking_fee,\
-              admin_id FROM parking_lot\
-                WHERE id = %s
-                '''
-  val = (id,)
-  return mysql_select(sql, val)
+  redis_key = f'parkinglot_all:lot_id{id}'
+  my_result = lookup_redis_return(redis_key)
+  if my_result == None:
+    sql = '''
+    SELECT id,\
+      name,\
+      ST_Longitude(coordinate) AS longitude,\
+        ST_Latitude(coordinate) AS latitude,\
+          address,\
+            total_space,\
+              parking_fee,\
+                admin_id FROM parking_lot\
+                  WHERE id = %s
+                  '''
+    val = (id,)
+    my_result = mysql_select(sql, val)
+    setup_redis(redis_key, my_result)
+  return my_result
 
 # look up lots by coordinate
 def parking_lot_by_location(lat, lng, number, radius=0):
