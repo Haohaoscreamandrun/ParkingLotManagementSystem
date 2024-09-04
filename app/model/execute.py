@@ -108,8 +108,42 @@ def parkinglot_by_id(id):
 
 # look up lots by coordinate
 def parking_lot_by_location(lat, lng, number, radius=0):
-  
-  sql = '''
+  if radius != 0:
+    sql = '''
+    SELECT id,\
+      name,\
+      ST_Longitude(coordinate) AS longitude,\
+        ST_Latitude(coordinate) AS latitude,\
+          address,\
+            total_space,\
+              parking_fee,\
+                admin_id,\
+                  ST_Distance_Sphere(coordinate, ST_GeomFromText('POINT(%s %s)', 4326)) AS distance\
+                    FROM parking_lot \
+                      WHERE MBRContains(ST_GeomFromText(%s, 4326), coordinate)\
+                        AND ST_Distance_Sphere(coordinate, ST_GeomFromText('POINT(%s %s)', 4326)) < %s \
+                          ORDER BY distance LIMIT %s;
+                          '''
+
+    degrees_lat = radius / 111320
+    degrees_lng = radius / (111320 * math.cos(math.radians(lat)))
+    min_lat = lat - degrees_lat
+    max_lat = lat + degrees_lat
+    min_lng = lng - degrees_lng
+    max_lng = lng + degrees_lng
+    bounding_box = f'''
+    POLYGON((\
+      {min_lat} {min_lng},\
+      {max_lat} {min_lng},\
+      {max_lat} {max_lng},\
+      {min_lat} {max_lng},\
+      {min_lat} {min_lng}\
+      ))
+      '''
+    val = (lat, lng, bounding_box, lat, lng, radius, number)
+
+  if radius == 0:
+    sql = '''
   SELECT id,\
     name,\
     ST_Longitude(coordinate) AS longitude,\
@@ -120,25 +154,8 @@ def parking_lot_by_location(lat, lng, number, radius=0):
               admin_id,\
                 ST_Distance_Sphere(coordinate, ST_GeomFromText('POINT(%s %s)', 4326)) AS distance\
                   FROM parking_lot \
-                    WHERE MBRContains(ST_GeomFromText(%s, 4326), coordinate)\
-                      AND ST_Distance_Sphere(coordinate, ST_GeomFromText('POINT(%s %s)', 4326)) < %s \
-                        ORDER BY distance LIMIT %s;
-                        '''
-  degrees_lat = radius / 111320
-  degrees_lng = radius / (111320 * math.cos(math.radians(lat)))
-  min_lat = lat - degrees_lat
-  max_lat = lat + degrees_lat
-  min_lng = lng - degrees_lng
-  max_lng = lng + degrees_lng
-  bounding_box = f'''
-  POLYGON((\
-    {min_lat} {min_lng},\
-    {max_lat} {min_lng},\
-    {max_lat} {max_lng},\
-    {min_lat} {max_lng},\
-    {min_lat} {min_lng}\
-    ))
-    '''
-  val = (lat, lng, bounding_box, lat, lng, radius, number)
+                    ORDER BY distance LIMIT %s;
+                    '''
+    val = (lat, lng, number)
 
   return mysql_select(sql, val)
