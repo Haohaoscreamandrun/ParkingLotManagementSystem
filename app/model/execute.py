@@ -30,7 +30,7 @@ async def admin_parking_lot_lookup(admin):
 # Lookup car by license
 async def car_by_license(license):
   redis_key = f'cars_all:plate_number{license}'
-  my_result = lookup_redis_return(redis_key)
+  my_result = lookup_redis_return(redis_key, True)
   if my_result == None:
     sql = '''SELECT * FROM cars WHERE plate_number = %s'''
     val = (license,)
@@ -60,7 +60,7 @@ async def vacancy_lookup(lot_id):
 # Lookup all cars in lot by lot id
 def cars_in_parking_lot(lot_id):
   redis_key = f'cars_all:lot_id{lot_id}'
-  my_result = lookup_redis_return(redis_key)
+  my_result = lookup_redis_return(redis_key, True)
   if my_result == None:
     sql = '''
     SELECT * FROM cars \
@@ -74,7 +74,7 @@ def cars_in_parking_lot(lot_id):
 # look up car by car id
 def car_by_carID(car_ID):
   redis_key = f'cars_all:car_id{car_ID}'
-  my_result = lookup_redis_return(redis_key)
+  my_result = lookup_redis_return(redis_key, True)
   if my_result == None:
     sql = '''
     SELECT * FROM cars \

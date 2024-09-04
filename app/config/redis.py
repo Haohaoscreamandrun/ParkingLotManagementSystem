@@ -22,13 +22,13 @@ def get_redis_cloud():
         detail=f"Redis connection error: {e}"
       )
 
-def lookup_redis_return(key):
+def lookup_redis_return(key, parse_time=False):
   r = get_redis_cloud()
   store_data = r.get(key)
   if store_data:
     print('Cache hit')
     my_result = json.loads(store_data)
-    if isinstance(my_result, list):
+    if parse_time:
       my_result = json_parser_datetime(my_result)
     return my_result
   else:
