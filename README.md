@@ -16,6 +16,8 @@
 8. System integrates with user-selected platform for payment processing:
    - Credit card
    - Line Pay
+   - Jko Pay
+   - Easy Wallet
 9. Payment successful, system grants "exit allowed" status to vehicle for 15 minutes.
    - If vehicle information isn't removed after 15 minutes, system restarts entry time calculation.
 10. Vehicle exits, client system reads license plate number, front-end verifies the number, calls system API with license plate number.
@@ -43,9 +45,24 @@ User with admin privilege can:
 1. 15 nearest parking lots within 3km from user will be shown on map for user to choose from.
 2. Website will return realtime vacancy of parking lot when you click on them (either on list or map).
 
-## Backend Structure
+## Application Structure
 
 ![backend strucuture](https://parkinglot.haohaoscreamandrun.online/public/images/backend-structure.png)
+
+- Domain
+   1. GoDaddy domain name, hosted and routed by AWS Route53.
+- Back-end
+   1. Server built with Python FastAPI
+   2. AWS RDS MySQL database
+   3. Cache with Redis
+   4. Deploy with Docker images on AWS EC2 machine
+   5. Reverse proxy with Nginx
+   6. Connection distribute by AWS Load Balancer
+   7. Store images on AWS S3 bucket and cache at edge location by AWS CloudFront
+- Front-end
+   1. Built with Bootstrap toolkit
+   2. Google maps API for map
+   3. OpenCV.js & Tesseract.js for car license plate recognition
 
 ## Database structure EER and index
 
@@ -56,67 +73,16 @@ User with admin privilege can:
 Spatial index is used to speed up the query:
 
 1. Create spatial index on POINT type data and insert data
-
-   ```python
-   sql = '''CREATE TABLE parking_lot( \
-   id BIGINT AUTO_INCREMENT PRIMARY KEY, \
-      name VARCHAR(50) NOT NULL, \
-      coordinate POINT NOT NULL SRID 4326, \
-         address VARCHAR(225), \
-         total_space INT NOT NULL, \
-            parking_fee INT NOT NULL, \
-               admin_id BIGINT NOT NULL, \
-               FOREIGN KEY (admin_id) REFERENCES admin(id),\
-                  SPATIAL INDEX(coordinate))
-                  '''
-   sql = '''
-   INSERT INTO parking_lot\
-   (name, coordinate, address, total_space, parking_fee, admin_id)\
-      VALUES (%s, ST_GeomFromText('POINT(%s %s)', 4326), %s, %s, %s, %s)
-      '''
-   ```
-
 2. Calculate bounding box with radius
-
-   ```python
-   degrees_lat = radius / 111320
-
-   degrees_lng = radius / (111320 * math.cos(math.radians(lat)))
-   min_lat = lat - degrees_lat
-   max_lat = lat + degrees_lat
-   min_lng = lng - degrees_lng
-   max_lng = lng + degrees_lng
-   bounding_box = f'''
-   POLYGON((\
-      {min_lat} {min_lng},\
-      {max_lat} {min_lng},\
-      {max_lat} {max_lng},\
-      {min_lat} {max_lng},\
-      {min_lat} {min_lng}\
-      ))
-    '''
-   ```
-
 3. Use MBRfunction to utilize spatial index
 
-   ```python
-   sql = '''
-   SELECT id,\
-      name,\
-      ST_Longitude(coordinate) AS longitude,\
-         ST_Latitude(coordinate) AS latitude,\
-         address,\
-            total_space,\
-               parking_fee,\
-               admin_id,\
-                  ST_Distance_Sphere(coordinate, ST_GeomFromText('POINT(%s %s)', 4326)) AS distance\
-                     FROM parking_lot \
-                     WHERE MBRContains(ST_GeomFromText(%s, 4326), coordinate)\
-                        AND ST_Distance_Sphere(coordinate, ST_GeomFromText('POINT(%s %s)', 4326)) < %s \
-                           ORDER BY distance LIMIT %s;
-                           '''
-   val = (lat, lng, bounding_box, lat, lng, radius, number)
-   ```
+Comparison of query with or without spatial index:
+
+| Compare | No index | Spatial Index |
+|||(Bounding box method)|
+|:--|:--|:--|
+| Cost of CPU | 316 Unit | 45.3 Unit |
+| Time | 16.4 milliseconds | 2.66 milliseconds |
 
 ## Utilized Package
 
@@ -148,3 +114,4 @@ Spatial index is used to speed up the query:
 | typer                    | 0.12.3     |
 | typing_extensions        | 4.11.0     |
 | uvicorn                  | 0.29.0     |
+| redis                    | 5.0.8      |
