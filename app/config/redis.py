@@ -15,7 +15,7 @@ def get_redis_cloud():
     #     port=13212,
     #     password=REDIS_KEY,
     #     decode_responses=True)
-    r = redis.Redis(host='127.0.0.1', port=6379, db=0, decode_responses=True)
+    r = redis.Redis(host='redis', port=6379, db=0, decode_responses=True)
     return r
   except redis.ConnectionError as e:
     raise HTTPException(
