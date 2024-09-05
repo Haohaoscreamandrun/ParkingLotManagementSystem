@@ -6,7 +6,10 @@ async function getLocation() {
   if (navigator.geolocation) {
     try{  
       let position = await new Promise((resolve, reject) => {
-      navigator.geolocation.getCurrentPosition(resolve, reject);
+      navigator.geolocation.getCurrentPosition(resolve, reject, {
+        maximumAge: 300000, // return cache in 5 mins
+        enableHighAccuracy: true
+      });
        })
       let parkingLots = await getParkingLotsByCoordinate(position)
       return parkingLots
