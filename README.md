@@ -1,8 +1,12 @@
 # Parking Lot Management & Online Payment System
 
+[Link to the project homepage](https://parkinglot.haohaoscreamandrun.online/)
+
 ## Main Services
 
 ### Parking Lot Managing Main Process
+
+![MVP](/public/images/Minimum_viable_product_process.png)
 
 1. Vehicle enters, client system reads the license plate number and captures vehicle photo. Front-end verifies the license plate number, then calls system API with license plate number and photo URL.
 2. System API receives the license plate number:
@@ -47,7 +51,7 @@ User with admin privilege can:
 
 ## Application Structure
 
-![backend strucuture](https://parkinglot.haohaoscreamandrun.online/public/images/backend-structure.png)
+![backend structure](/public/images/backend-structure.png)
 
 - Domain
    1. GoDaddy domain name, hosted and routed by AWS Route53.
@@ -64,17 +68,30 @@ User with admin privilege can:
    2. Google maps API for map
    3. OpenCV.js & Tesseract.js for car license plate recognition
 
+### High-light: Solution to reduce backend server load
+
+- Pure frontend repeatedly optical character recognition
+   1. Process photos with OpenCV.js to reduce noises
+   2. Recognize license number with robust OCR engine Tesseract.js
+- Upload captured photo from frontend
+   1. Request S3 upload URL from backend
+   2. Post enter car photo from frontend, delete exit car photo directly from backend
+
+### RESTful back-end APIs
+
+[Link to Swagger document](https://parkinglot.haohaoscreamandrun.online/docs#/)
+
 ## Database structure EER and index
 
-![db structure](https://parkinglot.haohaoscreamandrun.online/public/images/databaseEER.png)
+![db structure](/public/images/databaseEER.png)
 
-### Spatial Index for Geometry data type
+### High-light: Spatial Index for Geometry data type
 
 Spatial index is used to speed up the query:
 
-1. Create spatial index on POINT type data and insert data
-2. Calculate bounding box with radius
-3. Use MBRfunction to utilize spatial index
+1. Create spatial index on POINT type data and insert data with SRID(Spatial Reference System Identifier) 4326
+2. Calculate bounding box with radius: Calculate the circumscribing rectangle of a circle with a given radius
+3. Use MBR(minimum bounding rectangles) function to utilize spatial index: Exclude the points that do not locate in this rectangle before actually calculate distance
 
 Comparison of query with or without spatial index:
 
