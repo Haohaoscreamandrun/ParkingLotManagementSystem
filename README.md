@@ -42,7 +42,7 @@ User with admin privilege can:
 
 ### User Friendly: Empty Lots Searching Function
 
-1. 15 nearest parking lots within 3km from user will be shown on map for user to choose from.
+1. Parking lots within 3km from user will be shown on map for user to choose from. 15 nearest lots will be returned if there are no parking lots within 3km.
 2. Website will return realtime vacancy of parking lot when you click on them (either on list or map).
 
 ## Application Structure
@@ -78,11 +78,10 @@ Spatial index is used to speed up the query:
 
 Comparison of query with or without spatial index:
 
-| Compare | No index | Spatial Index |
-|||(Bounding box method)|
+| Compare | No index | Spatial Index (Bounding box method) |
 |:--|:--|:--|
-| Cost of CPU | 316 Unit | 45.3 Unit |
-| Time | 16.4 milliseconds | 2.66 milliseconds |
+| **Cost of CPU** | 316 Unit | 45.3 Unit |
+| **Time** | 16.4 milliseconds | 2.66 milliseconds |
 
 ## Utilized Package
 
