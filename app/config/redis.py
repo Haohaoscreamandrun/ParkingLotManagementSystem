@@ -27,7 +27,7 @@ def lookup_redis_return(key, parse_time=False):
   r = get_redis_cloud()
   store_data = r.get(key)
   if store_data:
-    print('Cache hit')
+    print('Cache hit', key)
     my_result = json.loads(store_data)
     if parse_time:
       my_result = json_parser_datetime(my_result)
@@ -38,9 +38,9 @@ def lookup_redis_return(key, parse_time=False):
 
 def setup_redis(key, obj):
   r = get_redis_cloud()
-  print('Cache miss')
+  print('Cache miss', key)
   my_result_json = json.dumps(obj, default=datetime_parser_json, ensure_ascii=False)
-  r.set(key, my_result_json, ex=600)
+  r.set(key, my_result_json, ex=300) # 5mins cache
 
 
 def datetime_parser_json(obj):
@@ -64,3 +64,8 @@ def json_parser_datetime(item):
           # For other types (int, float, etc.), just add them as-is
           result.append(element)
   return result
+
+# def delete_redis(key):
+#   r = get_redis_cloud()
+#   print('cache delete', key)
+#   r.delete(key)

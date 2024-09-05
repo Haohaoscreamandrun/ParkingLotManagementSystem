@@ -159,17 +159,25 @@ export async function tokenValidation(){
         <div class="px-3">
           Hello, ${response.data.account}!
         </div>
+        <button class="navbar-nav btn text-center" type="button" id="adminPageBtn">
+        Admin page
+        </button>
         <button class="navbar-nav btn text-center" type="button" id="adminLogoutBtn">
         Log out
         </button>
       </div>
     `
     let logoutBtn = document.querySelector('#adminLogoutBtn')
-    logoutBtn.addEventListener('click', event => {
+    logoutBtn.addEventListener('click', () => {
       // delete token
       localStorage.removeItem('token');
       // redirect to index page
       location.href = uri
+    })
+    let adminPageBtn = document.getElementById('adminPageBtn')
+    adminPageBtn.addEventListener('click', ()=>{
+      // redirect to admin page
+      location.href = `${uri}/admin`
     })
 
     return response.data.id

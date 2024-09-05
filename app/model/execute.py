@@ -13,7 +13,7 @@ async def admin_lookup(account, password):
   val = (account, password)
   return mysql_select(sql, val)
 
-# Lookup lot by admin id
+# Lookup lot by admin id ## with cache
 async def admin_parking_lot_lookup(admin):
   redis_key = f'parkinglot_name:admin_id{admin}'
   my_result = lookup_redis_return(redis_key)
@@ -29,63 +29,47 @@ async def admin_parking_lot_lookup(admin):
 
 # Lookup car by license
 async def car_by_license(license):
-  redis_key = f'cars_all:plate_number{license}'
-  my_result = lookup_redis_return(redis_key, True)
-  if my_result == None:
-    sql = '''SELECT * FROM cars WHERE plate_number = %s'''
-    val = (license,)
-    my_result = mysql_select(sql, val)
-    setup_redis(redis_key, my_result)
+  sql = '''SELECT * FROM cars WHERE plate_number = %s'''
+  val = (license,)
+  my_result = mysql_select(sql, val)
   return my_result
 
 # Lookup cars total in lot by lot id
 async def vacancy_lookup(lot_id):
-  redis_key = f'cars_sum:lot_id:{lot_id}'
-  my_result = lookup_redis_return(redis_key)
-  if my_result == None:
-    sql = '''
-    SELECT COUNT(cars.id) AS total_cars,\
-      parking_lot.total_space AS total_space,\
-        parking_lot.id AS lot_id\
-          FROM parking_lot\
-            LEFT JOIN cars ON cars.lot_id = parking_lot.id\
-              WHERE parking_lot.id = %s\
-                GROUP BY parking_lot.total_space, parking_lot.id\
-                '''
-    val = (lot_id,)
-    my_result = mysql_select(sql, val)
-    setup_redis(redis_key, my_result)
+  sql = '''
+  SELECT COUNT(cars.id) AS total_cars,\
+    parking_lot.total_space AS total_space,\
+      parking_lot.id AS lot_id\
+        FROM parking_lot\
+          LEFT JOIN cars ON cars.lot_id = parking_lot.id\
+            WHERE parking_lot.id = %s\
+              GROUP BY parking_lot.total_space, parking_lot.id\
+              '''
+  val = (lot_id,)
+  my_result = mysql_select(sql, val)
   return my_result
 
 # Lookup all cars in lot by lot id
 def cars_in_parking_lot(lot_id):
-  redis_key = f'cars_all:lot_id{lot_id}'
-  my_result = lookup_redis_return(redis_key, True)
-  if my_result == None:
-    sql = '''
-    SELECT * FROM cars \
-      WHERE lot_id = %s
-      '''
-    val = (lot_id,)
-    my_result = mysql_select(sql, val)
-    setup_redis(redis_key, my_result)
+  sql = '''
+  SELECT * FROM cars \
+    WHERE lot_id = %s
+    '''
+  val = (lot_id,)
+  my_result = mysql_select(sql, val)
   return my_result
 
 # look up car by car id
 def car_by_carID(car_ID):
-  redis_key = f'cars_all:car_id{car_ID}'
-  my_result = lookup_redis_return(redis_key, True)
-  if my_result == None:
-    sql = '''
-    SELECT * FROM cars \
-      WHERE id = %s
-      '''
-    val = (car_ID,)
-    my_result = mysql_select(sql, val)
-    setup_redis(redis_key, my_result)
+  sql = '''
+  SELECT * FROM cars \
+    WHERE id = %s
+    '''
+  val = (car_ID,)
+  my_result = mysql_select(sql, val)
   return my_result
 
-# look up lot by lot id
+# look up lot by lot id ## with cache
 def parkinglot_by_id(id):
   redis_key = f'parkinglot_all:lot_id{id}'
   my_result = lookup_redis_return(redis_key)
@@ -106,9 +90,11 @@ def parkinglot_by_id(id):
     setup_redis(redis_key, my_result)
   return my_result
 
-# look up lots by coordinate
+# look up lots by coordinate ## with cache
 def parking_lot_by_location(lat, lng, number, radius=0):
-  if radius != 0:
+  redis_key = f'parkinglots:{lat,lng}'
+  my_result = lookup_redis_return(redis_key)
+  if my_result == None and radius != 0:
     sql = '''
     SELECT id,\
       name,\
@@ -141,8 +127,10 @@ def parking_lot_by_location(lat, lng, number, radius=0):
       ))
       '''
     val = (lat, lng, bounding_box, lat, lng, radius, number)
+    my_result = mysql_select(sql, val)
+    setup_redis(redis_key, my_result)
 
-  if radius == 0:
+  elif my_result == None and radius == 0:
     sql = '''
   SELECT id,\
     name,\
@@ -157,5 +145,7 @@ def parking_lot_by_location(lat, lng, number, radius=0):
                     ORDER BY distance LIMIT %s;
                     '''
     val = (lat, lng, number)
+    my_result = mysql_select(sql, val)
+    setup_redis(redis_key, my_result)
 
-  return mysql_select(sql, val)
+  return my_result
