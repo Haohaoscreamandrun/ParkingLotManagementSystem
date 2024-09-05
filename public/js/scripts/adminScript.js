@@ -121,6 +121,10 @@ function formatDateForInput(date) {
 
 async function updateCarByID(event){
   event.preventDefault()
+  // disabled delete btn
+  let deleteButton  =document.querySelector('.btn.btn-danger.mb-3')
+  deleteButton.setAttribute('disabled', 'true')
+
   renderBtnLoading(event)
   let carID = parseInt(event.target.id.split('CarID')[1])
   let chosenLotID = parseInt(document.getElementById('chosenLot').placeholder.split('ID: ')[1])
@@ -148,7 +152,7 @@ async function updateCarByID(event){
       renderBtnLoading(event, true)
       setTimeout(() => {
         window.location.reload()
-      }, 2000)
+      }, 1000)
     }else{
       alert(response.message)
     }
@@ -160,6 +164,10 @@ async function updateCarByID(event){
 
 async function deleteCarByLicense(event){
   event.preventDefault()
+  // disabled update button
+  let updateButton = document.querySelector('.btn.btn-warning.mb-3')
+  updateButton.attributes('disabled', 'true')
+
   let paidCheck = document.getElementById('paidCheck')
   if (!paidCheck.checked){
     renderAlert()
@@ -174,7 +182,7 @@ async function deleteCarByLicense(event){
     renderBtnLoading(event, true)
     setTimeout(() => {
       window.location.reload()
-    }, 2000)
+    }, 1000)
     
   }else{
     alert(deleteCarResponse)

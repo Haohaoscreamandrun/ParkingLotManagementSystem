@@ -20,7 +20,7 @@ def create_license_plate_image(plate_number):
 
   ## Load font
   # try:
-  font = ImageFont.truetype('ParkingLotProject/database/Uknumberplate-A4Vx.ttf', 40)
+  font = ImageFont.truetype('database/raw/Uknumberplate-A4Vx.ttf', 40)
   # except IOError:
     # font = ImageFont.load_default()
 
@@ -79,7 +79,7 @@ def get_urlObj(license_plate):
 def post_api_camera(lot_id, license_plate):
     try:
         # Define the URL and request body
-        url = "https://parkinglot.haohaoscreamandrun.online/api/camera"
+        url = "https://parkinglot.haohaoscreamandrun.online/api/cars"
         # url = "http://127.0.0.1:8000/api/camera"
         request_body = {
             'lotID': lot_id,
@@ -113,8 +113,8 @@ def flow():
   
   upload_file_to_s3(urlObj['data']['url'],
                     urlObj['data']['fields'], image_file_obj, f'{new_license_plate}.png')
-  lot_id = random.randint(1,3088)
+  lot_id = random.randint(3094,3163)
   post_api_camera(lot_id, new_license_plate)
 
-for i in range(10000):
+for i in range(1000):
     flow()
