@@ -220,6 +220,15 @@ async def delete_car_by_license(data: DeleteCarInfo):
   lot_id = data.lot_id
   try:
     car = await car_by_license(license)
+    # handle if no car by that license
+    if len(car) == 0:
+      return JSONResponse(
+          status_code=status.HTTP_400_BAD_REQUEST,
+          content={
+              "error": True,
+              "message": "No record matched, please contact admin."
+          }
+      )
     car = car[0]
     car_enter_time = datetime.fromisoformat(convert_timezone(car[2]))
     car_green_light = datetime.fromisoformat(convert_timezone(car[3]))
