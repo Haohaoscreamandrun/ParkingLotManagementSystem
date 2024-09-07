@@ -1,10 +1,30 @@
 # Parking Lot Management & Online Payment System
 
 [Link to the project homepage](https://parkinglot.haohaoscreamandrun.online/)
+[中文版README連結](./README_CH.md)
 
-## Main Services
+## Catalogue
 
-### Parking Lot Managing Main Process
+<!-- TOC -->
+
+- [Parking Lot Management & Online Payment System](#parking-lot-management--online-payment-system)
+  - [Catalogue](#catalogue)
+    - [Main Services](#main-services)
+      - [Parking Lot Managing Main Process](#parking-lot-managing-main-process)
+      - [Parking Lot Admin System](#parking-lot-admin-system)
+      - [User Friendly: Empty Lots Searching Function](#user-friendly-empty-lots-searching-function)
+    - [Application Structure](#application-structure)
+      - [High-light: Solution to reduce backend server load](#high-light-solution-to-reduce-backend-server-load)
+      - [RESTful back-end APIs](#restful-back-end-apis)
+    - [Database structure EER and index](#database-structure-eer-and-index)
+      - [High-light: Spatial Index for Geometry data type](#high-light-spatial-index-for-geometry-data-type)
+  - [Utilized Package](#utilized-package)
+
+<!-- /TOC -->
+
+### Main Services
+
+#### Parking Lot Managing Main Process
 
 ![MVP](/public/images/Minimum_viable_product_process.png)
 
@@ -30,7 +50,7 @@
     - Backend verifies vehicle in system without "exit allowed" status, returns message to pay via cloud system.
     - Backend does not find vehicle record in system, returns message of no entry record for the vehicle.
 
-### Parking Lot Admin System
+#### Parking Lot Admin System
 
 User with admin privilege can:
 
@@ -44,12 +64,12 @@ User with admin privilege can:
 3. Update the recognized plate number and payment status manually.
 4. Delete car information from database if the parking fee is paid.
 
-### User Friendly: Empty Lots Searching Function
+#### User Friendly: Empty Lots Searching Function
 
 1. Parking lots within 3km from user will be shown on map for user to choose from. 15 nearest lots will be returned if there are no parking lots within 3km.
 2. Website will return realtime vacancy of parking lot when you click on them (either on list or map).
 
-## Application Structure
+### Application Structure
 
 ![backend structure](/public/images/backend-structure.png)
 
@@ -68,7 +88,7 @@ User with admin privilege can:
    2. Google maps API for map
    3. OpenCV.js & Tesseract.js for car license plate recognition
 
-### High-light: Solution to reduce backend server load
+#### High-light: Solution to reduce backend server load
 
 - Pure frontend repeatedly optical character recognition
    1. Process photos with OpenCV.js to reduce noises
@@ -77,15 +97,15 @@ User with admin privilege can:
    1. Request S3 upload URL from backend
    2. Post enter car photo from frontend, delete exit car photo directly from backend
 
-### RESTful back-end APIs
+#### RESTful back-end APIs
 
 [Link to Swagger document](https://parkinglot.haohaoscreamandrun.online/docs#/)
 
-## Database structure EER and index
+### Database structure EER and index
 
 ![db structure](/public/images/databaseEER.png)
 
-### High-light: Spatial Index for Geometry data type
+#### High-light: Spatial Index for Geometry data type
 
 Spatial index is used to speed up the query:
 
