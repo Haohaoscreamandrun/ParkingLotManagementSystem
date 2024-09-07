@@ -1,7 +1,7 @@
 # Parking Lot Management & Online Payment System
 
-[Link to the project homepage](https://parkinglot.haohaoscreamandrun.online/)
-[English README](./README.md)
+1. [Link to the project homepage](https://parkinglot.haohaoscreamandrun.online/)
+2. [English README](./README.md)
 
 ## 目錄
 
