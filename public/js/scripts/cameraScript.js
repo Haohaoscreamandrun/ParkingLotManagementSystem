@@ -84,7 +84,7 @@ async function handleLicenseUpdate(license){
     let lotID
     // at admin
     if (window.location.href.includes('admin')){
-      lotID = document.getElementById('chosenLot').value.split(": ")[1]
+      lotID = document.getElementById('chosenLot').placeholder.split(": ")[1]
     // at camera
     } else if(window.location.href.includes('camera')){
       lotID = parseInt(window.location.href.split('/')[4].match(/\d+/g)[0])

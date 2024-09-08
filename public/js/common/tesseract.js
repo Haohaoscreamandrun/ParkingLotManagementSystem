@@ -25,20 +25,20 @@ async function basicBinary(){
   let gray = new cv.Mat()
   cv.cvtColor(gaussian, gray, cv.COLOR_RGBA2GRAY)
   
-  // Apply edge detection
-  let edges = new cv.Mat();
-  cv.Canny(gray, edges, 50, 200); //Canny edge detection, 50-200 threshold of gradient magnitude, >200 definitely part of edge, <50 only include if connected to strong edge pixel. 
-  
   // Apply thresholding
   let threshold = new cv.Mat();
   cv.threshold(gray, threshold, 127, 255, cv.THRESH_BINARY);
   
   // Morphological operations (閉合運算:可以將圖形內陷的銳角給鈍化)
-  let kernel  = cv.getStructuringElement(cv.MORPH_RECT, new cv.Size(2, 2));//Creates a rectangular structuring element of size 5x5 pixels. This defines the shape and size of the region used for the operation.
+  let kernel  = cv.getStructuringElement(cv.MORPH_RECT, new cv.Size(5, 5));//Creates a rectangular structuring element of size 5x5 pixels. This defines the shape and size of the region used for the operation.
   cv.morphologyEx(threshold, threshold, cv.MORPH_CLOSE, kernel)// smooths the contours of the binary image by closing small gaps and holes.
 
+  // Apply edge detection
+  let edges = new cv.Mat();
+  cv.Canny(threshold, edges, 50, 200); //Canny edge detection, 50-200 threshold of gradient magnitude, >200 definitely part of edge, <50 only include if connected to strong edge pixel.
+
   // Display
-  cv.imshow('videoCanvas', threshold)
+  cv.imshow('videoCanvas', edges)
   cv.imshow('captureCanvas', gaussian)
 
   // Delete cv
