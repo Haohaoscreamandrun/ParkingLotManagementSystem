@@ -45,7 +45,7 @@ async function basicBinary(){
   mat.delete()
   gaussian.delete()
   gray.delete()
-  edges.delete()
+  // edges.delete()
   threshold.delete()
 }
 
