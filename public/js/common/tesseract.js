@@ -4,7 +4,7 @@ let canvas = document.getElementById('videoCanvas')
 
 async function captureFrame(){
     // Capture frames from Video
-    let context = canvas.getContext('2d')
+    let context = canvas.getContext('2d', {willReadFrequently: true})
     canvas.width = video.videoWidth
     canvas.height = video.videoHeight
     context.drawImage(video, 0, 0, canvas.width, canvas.height)
@@ -60,14 +60,14 @@ export async function recognizeLicensePlate(){
         {
           // logger: m => console.log(m),
           // errorHandler: err => console.error(err)
+          load_system_dawg: false,
+          load_freq_dawg: false
         }
       );
       worker = await worker
       await worker.setParameters({
           tessedit_pageseg_mode: 7,
-          tessedit_char_whitelist: 'ABCDEFGHJKLMNPQRSTUVWXYZ012356789',
-          load_system_dawg: false,
-          load_freq_dawg: false
+          tessedit_char_whitelist: 'ABCDEFGHJKLMNPQRSTUVWXYZ012356789'
         });
       // get result
       let {data: {text: text, confidence: confidence}} = await worker.recognize(canvas)

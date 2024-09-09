@@ -10,12 +10,12 @@ REDIS_KEY = os.getenv('REDIS')
 # Connect to redis on port 6379
 def get_redis_cloud():
   try:
-    r = redis.Redis(
-        host='redis-13212.c15.us-east-1-2.ec2.redns.redis-cloud.com',
-        port=13212,
-        password=REDIS_KEY,
-        decode_responses=True)
-    # r = redis.Redis(host='redis', port=6379, db=0, decode_responses=True)
+    # r = redis.Redis(
+    #     host='redis-13212.c15.us-east-1-2.ec2.redns.redis-cloud.com',
+    #     port=13212,
+    #     password=REDIS_KEY,
+    #     decode_responses=True)
+    r = redis.Redis(host='redis', port=6379, db=0, decode_responses=True)
     return r
   except redis.ConnectionError as e:
     raise HTTPException(
