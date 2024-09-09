@@ -113,8 +113,8 @@ def flow():
   
   upload_file_to_s3(urlObj['data']['url'],
                     urlObj['data']['fields'], image_file_obj, f'{new_license_plate}.png')
-  lot_id = random.randint(3094,3163)
+  lot_id = random.randint(1, 3093)
   post_api_camera(lot_id, new_license_plate)
 
-for i in range(1000):
+for i in range(100000):
     flow()

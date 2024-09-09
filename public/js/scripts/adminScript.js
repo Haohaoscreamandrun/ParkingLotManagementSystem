@@ -164,10 +164,7 @@ async function updateCarByID(event){
 
 async function deleteCarByLicense(event){
   event.preventDefault()
-  // disabled update button
-  let updateButton = document.querySelector('.btn.btn-warning.mb-3')
-  updateButton.setAttribute('disabled', 'true')
-
+  
   let paidCheck = document.getElementById('paidCheck')
   if (!paidCheck.checked){
     renderAlert()
