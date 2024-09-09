@@ -65,7 +65,9 @@ export async function recognizeLicensePlate(){
       worker = await worker
       await worker.setParameters({
           tessedit_pageseg_mode: 7,
-          tessedit_char_whitelist: 'ABCDEFGHJKLMNPQRSTUVWXYZ012356789'
+          tessedit_char_whitelist: 'ABCDEFGHJKLMNPQRSTUVWXYZ012356789',
+          load_system_dawg: false,
+          load_freq_dawg: false
         });
       // get result
       let {data: {text: text, confidence: confidence}} = await worker.recognize(canvas)
