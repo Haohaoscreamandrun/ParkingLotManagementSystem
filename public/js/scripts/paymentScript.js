@@ -76,9 +76,9 @@ async function postThirdPrime(prime, lotID, method='credit'){
       'id': parseInt(carID),
       'sub_total': parseInt(subTotal)
     },
-    'merchant_id': undefined,
-    'cardholder': undefined,
-    'result_url': undefined
+    'merchant_id': null,
+    'cardholder': null,
+    'result_url': null
   }
   if (method === 'credit'){
     // render btn
@@ -101,7 +101,7 @@ async function postThirdPrime(prime, lotID, method='credit'){
       'backend_notify_url': `${uri}/api/third/thirdPay/notify`
     }
   }
-  
+  console.log(requestBody)
   let responseObj = await fetch(`${uri}/api/third/${method}`,
     {
       method: 'POST',
