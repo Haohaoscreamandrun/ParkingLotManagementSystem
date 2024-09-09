@@ -4,7 +4,7 @@ let canvas = document.getElementById('videoCanvas')
 
 async function captureFrame(){
     // Capture frames from Video
-    let context = canvas.getContext('2d')
+    let context = canvas.getContext('2d', {willReadFrequently: true})
     canvas.width = video.videoWidth
     canvas.height = video.videoHeight
     context.drawImage(video, 0, 0, canvas.width, canvas.height)
@@ -34,18 +34,18 @@ async function basicBinary(){
   cv.morphologyEx(threshold, threshold, cv.MORPH_CLOSE, kernel)// smooths the contours of the binary image by closing small gaps and holes.
 
   // Apply edge detection
-  let edges = new cv.Mat();
-  cv.Canny(threshold, edges, 50, 200); //Canny edge detection, 50-200 threshold of gradient magnitude, >200 definitely part of edge, <50 only include if connected to strong edge pixel.
+  // let edges = new cv.Mat();
+  // cv.Canny(threshold, edges, 50, 200); //Canny edge detection, 50-200 threshold of gradient magnitude, >200 definitely part of edge, <50 only include if connected to strong edge pixel.
 
   // Display
-  cv.imshow('videoCanvas', edges)
+  cv.imshow('videoCanvas', threshold)
   cv.imshow('captureCanvas', gaussian)
 
   // Delete cv
   mat.delete()
   gaussian.delete()
   gray.delete()
-  edges.delete()
+  // edges.delete()
   threshold.delete()
 }
 
@@ -60,6 +60,8 @@ export async function recognizeLicensePlate(){
         {
           // logger: m => console.log(m),
           // errorHandler: err => console.error(err)
+          load_system_dawg: false,
+          load_freq_dawg: false
         }
       );
       worker = await worker

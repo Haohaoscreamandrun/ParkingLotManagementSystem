@@ -104,7 +104,7 @@ class PostThirdPayment(BaseModel):
     prime: str
     car: PostCarPayment
     merchant_id: str
-    cardholder: PostHolderPayment | None
+    cardholder: PostHolderPayment
     result_url: PostResultURL | None
 
 class PutCarInfo(BaseModel):
