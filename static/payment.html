@@ -1,280 +1,546 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Payment</title>
-  <!-- tappay script -->
-  <script src="https://js.tappaysdk.com/sdk/tpdirect/v5.18.0" defer></script>
-  <!-- link to icon -->
-  <link rel="shortcut icon" href="../public/images/Graphicloads-Colorful-Long-Shadow-Car.256.png" type="image/png">
-  <!-- bootstrap -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"
-    defer></script>
-  <!-- index.js & common.css -->
-  <script type="module" src="../public/js/modules/paymentModule.js" defer></script>
-  <link rel="stylesheet" href="../public/css/common.css">
-  <!-- font awesome -->
-  <script src="https://kit.fontawesome.com/698455ed47.js" crossorigin="anonymous"></script>
-</head>
-<body>
-  <!-- common navbar -->
-  <nav class="navbar text-bg-dark border-bottom border-body sticky-top" data-bs-theme="dark">
-    <div class="container-fluid d-flex justify-content-between align-items-center">
-      <a href="/" class="nav-brand mb-0 h3">
-        <img src="../public/images/Graphicloads-Colorful-Long-Shadow-Car.256.png" alt="logo" width="30" height="30">
-        Parking Lot Managing System
-      </a>
-      <button class="navbar-nav btn text-center" type="button" id="adminLoginCanvasBtn" data-bs-toggle="offcanvas"
-        data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">
-        Admin Login
-      </button>
-    </div>
-  </nav>
-  <!-- offcanvas -->
-  <div class="offcanvas offcanvas-end" data-bs-theme="dark" data-bs-scroll="true" tabindex="-1"
-    id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
-    <div class="offcanvas-header">
-      <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">Admin Login</h5>
-      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
-    <div class="offcanvas-body">
-      <!-- login form -->
-      <form class="needs-validation" id="signInForm" novalidate>
-        <div class="form-floating mb-3">
-          <input type="text" class="form-control" id="adminAccount" autocomplete="username" placeholder="Account"
-            required>
-          <label for="adminAccount">Account</label>
-          <div class="valid-feedback">
-            Looks good!
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Payment</title>
+    <!-- tappay script -->
+    <script src="https://js.tappaysdk.com/sdk/tpdirect/v5.18.0" defer></script>
+    <!-- link to icon -->
+    <link
+      rel="shortcut icon"
+      href="../public/images/Graphicloads-Colorful-Long-Shadow-Car.256.png"
+      type="image/png"
+    />
+    <!-- bootstrap -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+      defer
+    ></script>
+    <!-- index.js & common.css -->
+    <script
+      type="module"
+      src="../public/js/modules/paymentModule.js"
+      defer
+    ></script>
+    <link rel="stylesheet" href="../public/css/common.css" />
+    <!-- font awesome -->
+    <script
+      src="https://kit.fontawesome.com/698455ed47.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <!-- common navbar -->
+    <nav
+      class="navbar text-bg-dark border-bottom border-body sticky-top"
+      data-bs-theme="dark"
+    >
+      <div
+        class="container-fluid d-flex justify-content-between align-items-center"
+      >
+        <a href="/" class="nav-brand mb-0 h3">
+          <img
+            src="../public/images/Graphicloads-Colorful-Long-Shadow-Car.256.png"
+            alt="logo"
+            width="30"
+            height="30"
+          />
+          Parking Lot Management System
+        </a>
+        <button
+          class="navbar-nav btn text-center"
+          type="button"
+          id="adminLoginCanvasBtn"
+          data-bs-toggle="offcanvas"
+          data-bs-target="#offcanvasWithBothOptions"
+          aria-controls="offcanvasWithBothOptions"
+        >
+          Admin Login
+        </button>
+      </div>
+    </nav>
+    <!-- offcanvas -->
+    <div
+      class="offcanvas offcanvas-end"
+      data-bs-theme="dark"
+      data-bs-scroll="true"
+      tabindex="-1"
+      id="offcanvasWithBothOptions"
+      aria-labelledby="offcanvasWithBothOptionsLabel"
+    >
+      <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">
+          Admin Login
+        </h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="offcanvas"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="offcanvas-body">
+        <!-- login form -->
+        <form class="needs-validation" id="signInForm" novalidate>
+          <div class="form-floating mb-3">
+            <input
+              type="text"
+              class="form-control"
+              id="adminAccount"
+              autocomplete="username"
+              placeholder="Account"
+              required
+            />
+            <label for="adminAccount">Account</label>
+            <div class="valid-feedback">Looks good!</div>
+            <div class="invalid-feedback">Please provide a valid account.</div>
           </div>
-          <div class="invalid-feedback">
-            Please provide a valid account.
+          <div class="form-floating mb-3">
+            <input
+              type="password"
+              class="form-control"
+              id="adminPassword"
+              autocomplete="current-password"
+              placeholder="password"
+              required
+            />
+            <label for="adminPassword">Password</label>
+            <div class="valid-feedback">Looks good!</div>
+            <div class="invalid-feedback">
+              At least 1 A-Z, 1 a-z and 1 digit of number.
+            </div>
           </div>
-        </div>
-        <div class="form-floating mb-3">
-          <input type="password" class="form-control" id="adminPassword" autocomplete="current-password"
-            placeholder="password" required>
-          <label for="adminPassword">Password</label>
-          <div class="valid-feedback">
-            Looks good!
+          <div class="d-flex justify-content-between align-items-end">
+            <button
+              type="submit"
+              class="btn btn-lg btn-outline-light mb-1"
+              id="loginButton"
+            >
+              Login
+            </button>
+            <a class="btn btn-dark">Forget password?</a>
           </div>
-          <div class="invalid-feedback">
-            At least 1 A-Z, 1 a-z and 1 digit of number.
+        </form>
+      </div>
+      <div class="card m-4">
+        <div class="card-body">
+          <h5 class="card-title">Demo Account</h5>
+          <div class="card-text text-info pb-2">
+            Account for demo/test <br />
+            Do not use for commercial purpose!
           </div>
-        </div>
-        <div class="d-flex justify-content-between align-items-end">
-          <button type="submit" class="btn btn-lg btn-outline-light mb-1" id="loginButton">Login</button>
-          <a class="btn btn-dark">Forget password?</a>
-        </div>
-      </form>
-    </div>
-    <div class="card m-4">
-      <div class="card-body">
-        <h5 class="card-title">Demo Account</h5>
-        <div class="card-text text-info pb-2">
-          Account for demo/test <br>
-          Do not use for commercial purpose!
-        </div>
-        <div class="form-floating mb-3">
-          <input type="text" class="form-control" id="demoAccount" autocomplete="username" placeholder="Account"
-            value="admin0001" disabled>
-          <label for="demoAccount">Account</label>
-        </div>
-        <div class="form-floating mb-3">
-          <input type="text" class="form-control" id="demoPassword" autocomplete="current-password" placeholder="password"
-            value="Admin0001" disabled>
-          <label for="demoPassword">Password</label>
+          <div class="form-floating mb-3">
+            <input
+              type="text"
+              class="form-control"
+              id="demoAccount"
+              autocomplete="username"
+              placeholder="Account"
+              value="admin0001"
+              disabled
+            />
+            <label for="demoAccount">Account</label>
+          </div>
+          <div class="form-floating mb-3">
+            <input
+              type="text"
+              class="form-control"
+              id="demoPassword"
+              autocomplete="current-password"
+              placeholder="password"
+              value="Admin0001"
+              disabled
+            />
+            <label for="demoPassword">Password</label>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <!-- payment method choose -->
-  <div class="container">
-    <div class="row">
-      <div class="col col-12">
-        <h4 class="my-3">Please confirm your payment target:</h4>
-        <!-- car detail card -->
-        <div class="card shadow">
-          <div class="row g-0">
-            <!-- car image -->
-            <div class="col-12 col-md-4 d-flex flex-column justify-content-center">
-              <img src="../public/images/car-graphic.jpg" alt="" class="img-fluid rounded-start" id="carImage">
+    <!-- payment method choose -->
+    <div class="container">
+      <div class="row">
+        <div class="col col-12">
+          <h4 class="my-3">Please confirm your payment target:</h4>
+          <!-- car detail card -->
+          <div class="card shadow">
+            <div class="row g-0">
+              <!-- car image -->
+              <div
+                class="col-12 col-md-4 d-flex flex-column justify-content-center"
+              >
+                <img
+                  src="../public/images/car-graphic.jpg"
+                  alt=""
+                  class="img-fluid rounded-start"
+                  id="carImage"
+                />
+              </div>
+              <!-- car details -->
+              <div class="col-12 col-md-8">
+                <div class="card-body">
+                  <h5 class="card-title mb-3">Confirmed Car Detail</h5>
+                  <form action="">
+                    <div class="row g-1 align-items-center placeholder-glow">
+                      <div class="col-5">
+                        <label for="licensePlate" class="col-form-label"
+                          >Recognized plate:</label
+                        >
+                      </div>
+                      <div class="col-7">
+                        <input
+                          type="text"
+                          class="form-control placeholder"
+                          name="licensePlate"
+                          id="licensePlate"
+                          readonly
+                        />
+                      </div>
+                      <div class="col-5">
+                        <label for="timeStamp" class="col-form-label"
+                          >Enter time stamp:</label
+                        >
+                      </div>
+                      <div class="col-7">
+                        <input
+                          type="datetime-local"
+                          class="form-control placeholder"
+                          name="timeStamp"
+                          id="timeStamp"
+                          readonly
+                        />
+                      </div>
+                      <div class="col-5">
+                        <label for="totalTime" class="col-form-label"
+                          >Total Parking time:</label
+                        >
+                      </div>
+                      <div class="col-7">
+                        <input
+                          type="text"
+                          class="form-control placeholder"
+                          name="totalTime"
+                          id="totalTime"
+                          readonly
+                        />
+                      </div>
+                      <div class="col-5">
+                        <label for="parkingLot" class="col-form-label"
+                          >Parked at:</label
+                        >
+                      </div>
+                      <div class="col-7">
+                        <input
+                          type="text"
+                          class="form-control placeholder"
+                          name="parkingLot"
+                          id="parkingLot"
+                          readonly
+                        />
+                      </div>
+                      <div class="col-5">
+                        <label for="parkingRate" class="col-form-label"
+                          >Parking rate:</label
+                        >
+                      </div>
+                      <div class="col-7">
+                        <div class="input-group">
+                          <input
+                            type="text"
+                            class="form-control placeholder"
+                            id="parkingRate"
+                            readonly
+                          />
+                          <span class="input-group-text">$NTD/hr</span>
+                        </div>
+                      </div>
+                      <div class="col-5">
+                        <label for="parkingFee" class="col-form-label"
+                          >Parking fee subtotal:</label
+                        >
+                      </div>
+                      <div class="col-7">
+                        <div class="input-group">
+                          <input
+                            type="text"
+                            class="form-control placeholder"
+                            name="parkingFee"
+                            id="parkingFee"
+                            readonly
+                          />
+                          <span
+                            class="input-group-text"
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="top"
+                            data-bs-html="true"
+                            data-bs-title="<p class='fw-lighter'>More than half an hour will be counted as an hour.</p>"
+                            >$NTD</span
+                          >
+                        </div>
+                      </div>
+                      <div class="col-5">
+                        <label for="paymentstatus" class="col-form-label"
+                          >Payment status:</label
+                        >
+                      </div>
+                      <div class="form-check col-2">
+                        <input
+                          type="radio"
+                          class="form-check-input"
+                          name="paymentCheck"
+                          id="paidCheck"
+                          disabled
+                        />
+                        <label for="paidCheck" class="form-check-label"
+                          >Paid</label
+                        >
+                      </div>
+                      <div class="form-check col-2">
+                        <input
+                          type="radio"
+                          class="form-check-input"
+                          name="paymentCheck"
+                          id="unpaidCheck"
+                          checked
+                          disabled
+                        />
+                        <label for="unpaidCheck" class="form-check-label"
+                          >No</label
+                        >
+                      </div>
+                      <div class="form-check col-2">
+                        <input
+                          type="radio"
+                          class="form-check-input"
+                          name="paymentCheck"
+                          id="overTimeCheck"
+                          disabled
+                        />
+                        <label for="overTimeCheck" class="form-check-label"
+                          >Overtime</label
+                        >
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+              <div class="col-1"></div>
+              <div
+                id="paidWarning"
+                class="col-10 alert alert-warning d-flex align-items-center visually-hidden"
+                role="alert"
+              >
+                <i class="fa-solid fa-circle-exclamation pe-3"></i>
+                <div class="">
+                  You've already paid, please leave the parking lot within 15
+                  mins.
+                </div>
+              </div>
             </div>
-            <!-- car details -->
-            <div class="col-12 col-md-8">
-              <div class="card-body">
-                <h5 class="card-title mb-3">Confirmed Car Detail</h5>
-                <form action="">
-                  <div class="row g-1 align-items-center placeholder-glow">
-                    <div class="col-5">
-                      <label for="licensePlate" class="col-form-label">Recognized plate:</label>
+          </div>
+        </div>
+        <div class="col col-12">
+          <h4 class="my-3">Choose your payment method</h4>
+          <div class="card text-start mb-3 shadow">
+            <div class="card-header">
+              <ul class="nav nav-tabs card-header-tabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                  <button
+                    class="nav-link"
+                    id="creditTab"
+                    data-bs-toggle="tab"
+                    data-bs-target="#creditPane"
+                    type="button"
+                    role="tab"
+                    aria-controls="creditPane"
+                    aria-selected="false"
+                  >
+                    Credit card
+                  </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button
+                    class="nav-link active"
+                    id="thirdPayTab"
+                    data-bs-toggle="tab"
+                    data-bs-target="#thirdPayPane"
+                    type="button"
+                    role="tab"
+                    aria-controls="thirdPayPane"
+                    aria-selected="true"
+                  >
+                    Third party Pay
+                  </button>
+                </li>
+              </ul>
+            </div>
+            <div class="tab-content">
+              <div
+                class="row card-body tab-pane fade"
+                id="creditPane"
+                role="tabpanel"
+                aria-labelledby="creditTab"
+                tabindex="0"
+              >
+                <!-- TapPay credit card form -->
+                <form class="col col-12 row" id="tapPayCreditCardForm">
+                  <div class="col col-6 text-start">
+                    <h5 class="card-title">Pay by credit card</h5>
+                  </div>
+                  <div class="col col-6 text-end">
+                    <img
+                      src="https://www.tappaysdk.com/_nuxt/img/tappay_logo.6f41c84.svg"
+                      alt=""
+                      class="image-fluid"
+                      data-bs-toggle="tooltip"
+                      data-bs-placement="top"
+                      data-bs-html="true"
+                      data-bs-title="<p class='fw-lighter'>TapPay manages credit card payment information without storing any credit card details on this site.</p>"
+                    />
+                  </div>
+                  <div class="col col-12 mt-3">
+                    <div class="form-floating mb-3">
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="userName"
+                        placeholder="User Name"
+                      />
+                      <label for="userName">User name</label>
                     </div>
-                    <div class="col-7">
-                      <input type="text" class="form-control placeholder" name="licensePlate" id="licensePlate" readonly>
+                  </div>
+                  <div class="col col-12">
+                    <div class="form-floating mb-3">
+                      <input
+                        type="tel"
+                        class="form-control"
+                        id="phoneNumber"
+                        placeholder="Phone number"
+                      />
+                      <label for="phoneNumber">Phone number</label>
                     </div>
-                    <div class="col-5">
-                      <label for="timeStamp" class="col-form-label">Enter time stamp:</label>
+                  </div>
+                  <div class="col col-12">
+                    <div class="form-floating mb-3">
+                      <input
+                        type="email"
+                        class="form-control"
+                        id="email"
+                        placeholder="Email"
+                      />
+                      <label for="email">Email</label>
                     </div>
-                    <div class="col-7">
-                      <input type="datetime-local" class="form-control placeholder" name="timeStamp" id="timeStamp" readonly>
-                    </div>
-                    <div class="col-5">
-                      <label for="totalTime" class="col-form-label">Total Parking time:</label>
-                    </div>
-                    <div class="col-7">
-                      <input type="text" class="form-control placeholder" name="totalTime" id="totalTime" readonly>
-                    </div>
-                    <div class="col-5">
-                      <label for="parkingLot" class="col-form-label">Parked at:</label>
-                    </div>
-                    <div class="col-7">
-                      <input type="text" class="form-control placeholder" name="parkingLot" id="parkingLot" readonly>
-                    </div>
-                    <div class="col-5">
-                      <label for="parkingRate" class="col-form-label">Parking rate:</label>
-                    </div>
-                    <div class="col-7">
-                      <div class="input-group">
-                        <input type="text" class="form-control placeholder" id="parkingRate" readonly>
-                        <span class="input-group-text">$NTD/hr</span>
+                  </div>
+                  <hr />
+                  <div class="col col-12">
+                    <div class="form-floating mb-3">
+                      <div
+                        class="form-control d-flex flex-row align-items-end"
+                        id="card-number"
+                      >
+                        <i
+                          class="pe-1 fa-regular fa-credit-card"
+                          id="creditCardIcon"
+                        ></i>
                       </div>
+                      <label for="card-number">Card number</label>
                     </div>
-                    <div class="col-5">
-                      <label for="parkingFee" class="col-form-label">Parking fee subtotal:</label>
+                  </div>
+                  <div class="col col-12">
+                    <div class="form-floating mb-3">
+                      <div class="form-control" id="card-expiration-date"></div>
+                      <label for="card-expiration-date">Expiration Date</label>
                     </div>
-                    <div class="col-7">
-                      <div class="input-group">
-                        <input type="text" class="form-control placeholder" name="parkingFee" id="parkingFee" readonly>
-                        <span class="input-group-text" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html='true' data-bs-title="<p class='fw-lighter'>More than half an hour will be counted as an hour.</p>">$NTD</span>
-                      </div>
+                  </div>
+                  <div class="col col-12">
+                    <div class="form-floating mb-3">
+                      <div class="form-control" id="card-ccv"></div>
+                      <label for="card-ccv">CCV</label>
                     </div>
-                    <div class="col-5">
-                      <label for="paymentstatus" class="col-form-label">Payment status:</label>
-                    </div>
-                    <div class="form-check col-2">
-                      <input type="radio" class="form-check-input" name="paymentCheck" id="paidCheck" disabled>
-                      <label for="paidCheck" class="form-check-label">Paid</label>
-                    </div>
-                    <div class="form-check col-2">
-                      <input type="radio" class="form-check-input" name="paymentCheck" id="unpaidCheck" checked disabled>
-                      <label for="unpaidCheck" class="form-check-label">No</label>
-                    </div>
-                    <div class="form-check col-2">
-                      <input type="radio" class="form-check-input" name="paymentCheck" id="overTimeCheck" disabled>
-                      <label for="overTimeCheck" class="form-check-label">Overtime</label>
-                    </div>
+                  </div>
+                  <div class="d-grid">
+                    <button
+                      type="submit"
+                      class="btn btn-info"
+                      id="tappayBtn"
+                      disabled
+                    >
+                      Proceed with this payment
+                    </button>
                   </div>
                 </form>
               </div>
-            </div>
-            <div class="col-1"></div>
-            <div id="paidWarning" class="col-10 alert alert-warning d-flex align-items-center visually-hidden" role="alert">
-              <i class="fa-solid fa-circle-exclamation pe-3"></i>
-              <div class="">
-                You've already paid, please leave the parking lot within 15 mins.
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col col-12">
-        <h4 class="my-3">Choose your payment method</h4>
-        <div class="card text-start mb-3 shadow">
-          <div class="card-header">
-            <ul class="nav nav-tabs card-header-tabs" role="tablist">
-              <li class="nav-item" role="presentation">
-                <button class="nav-link" id="creditTab" data-bs-toggle="tab" data-bs-target="#creditPane" type="button" role="tab" aria-controls="creditPane" aria-selected="false">Credit card</button>
-              </li>
-              <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="thirdPayTab" data-bs-toggle="tab" data-bs-target="#thirdPayPane" type="button" role="tab" aria-controls="thirdPayPane" aria-selected="true">Third party Pay</button>
-              </li>
-            </ul>
-          </div>
-          <div class="tab-content">
-            <div class="row card-body tab-pane fade" id="creditPane" role="tabpanel" aria-labelledby="creditTab" tabindex="0">
-              <!-- TapPay credit card form -->
-              <form class="col col-12 row" id="tapPayCreditCardForm">
-                <div class="col col-6 text-start">
-                  <h5 class="card-title">Pay by credit card</h5>
+              <div
+                class="card-body d-flex flex-wrap justify-content-center align-items-center tab-pane fade show active"
+                id="thirdPayPane"
+                role="tabpanel"
+                aria-labelledby="thirdPayTab"
+                tabindex="0"
+              >
+                <div
+                  class="rounded-3 shadow buttonImage-container h-50 w-50 p-3 m-2"
+                  id="linePay"
+                >
+                  <img
+                    src="../public/images/LINE_Pay_logo.svg"
+                    alt=""
+                    class="image-fluid h-100 w-100 rounded-3 buttonImage"
+                    id="linePayImg"
+                  />
                 </div>
-                <div class="col col-6 text-end">
-                  <img src="https://www.tappaysdk.com/_nuxt/img/tappay_logo.6f41c84.svg" alt="" class="image-fluid"
-                    data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html='true'
-                    data-bs-title="<p class='fw-lighter'>TapPay manages credit card payment information without storing any credit card details on this site.</p>">
+                <div
+                  class="rounded-3 shadow buttonImage-container h-50 w-50 p-3 m-2"
+                  id="jkoPay"
+                >
+                  <img
+                    src="../public/images//jko_pay.png"
+                    alt=""
+                    class="image-fluid h-100 w-100 rounded-3 buttonImage"
+                    id="jkoPayImg"
+                  />
                 </div>
-                <div class="col col-12 mt-3">
-                  <div class="form-floating mb-3">
-                    <input type="text" class="form-control" id="userName" placeholder="User Name">
-                    <label for="userName">User name</label>
-                  </div>
+                <div
+                  class="rounded-3 shadow buttonImage-container h-50 w-50 p-3 m-2"
+                  id="easyWallet"
+                >
+                  <img
+                    src="../public/images/easy_wallet.png"
+                    alt=""
+                    class="image-fluid h-100 w-100 rounded-3 buttonImage"
+                    id="easyWalletImg"
+                  />
                 </div>
-                <div class="col col-12">
-                  <div class="form-floating mb-3">
-                    <input type="tel" class="form-control" id="phoneNumber" placeholder="Phone number">
-                    <label for="phoneNumber">Phone number</label>
-                  </div>
-                </div>
-                <div class="col col-12">
-                  <div class="form-floating mb-3">
-                    <input type="email" class="form-control" id="email" placeholder="Email">
-                    <label for="email">Email</label>
-                  </div>
-                </div>
-                <hr>
-                <div class="col col-12">
-                  <div class="form-floating mb-3">
-                    <div class="form-control d-flex flex-row align-items-end" id="card-number">
-                      <i class="pe-1 fa-regular fa-credit-card" id="creditCardIcon"></i>
-                    </div>
-                    <label for="card-number">Card number</label>
-                  </div>
-                </div>
-                <div class="col col-12">
-                  <div class="form-floating mb-3">
-                    <div class="form-control" id="card-expiration-date"></div>
-                    <label for="card-expiration-date">Expiration Date</label>
-                  </div>
-                </div>
-                <div class="col col-12">
-                  <div class="form-floating mb-3">
-                    <div class="form-control" id="card-ccv"></div>
-                    <label for="card-ccv">CCV</label>
-                  </div>
-                </div>
-                <div class=" d-grid">
-                  <button type="submit" class="btn btn-info" id="tappayBtn" disabled>Proceed with this payment</button>
-                </div>
-              </form>
-            </div>
-            <div class="card-body d-flex flex-wrap justify-content-center align-items-center tab-pane fade show active" id="thirdPayPane" role="tabpanel" aria-labelledby="thirdPayTab" tabindex="0">
-              <div class="rounded-3 shadow buttonImage-container h-50 w-50 p-3 m-2" id="linePay">
-                <img src="../public/images/LINE_Pay_logo.svg" alt="" class="image-fluid h-100 w-100 rounded-3 buttonImage" id="linePayImg">
-              </div>
-              <div class="rounded-3 shadow buttonImage-container h-50 w-50 p-3 m-2" id="jkoPay">
-                <img src="../public/images//jko_pay.png" alt="" class="image-fluid h-100 w-100 rounded-3 buttonImage"
-                  id="jkoPayImg">
-              </div>
-              <div class="rounded-3 shadow buttonImage-container h-50 w-50 p-3 m-2" id="easyWallet">
-                <img src="../public/images/easy_wallet.png" alt="" class="image-fluid h-100 w-100 rounded-3 buttonImage" id="easyWalletImg">
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  <!-- footer -->
-  <div class="text-bg-dark mt-3 py-3 text-center w-100 h-10 d-flex justify-content-center align-items-center sticky-bottom">
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-c-circle"
-      viewBox="0 0 16 16">
-      <path
-        d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.146 4.992c-1.212 0-1.927.92-1.927 2.502v1.06c0 1.571.703 2.462 1.927 2.462.979 0 1.641-.586 1.729-1.418h1.295v.093c-.1 1.448-1.354 2.467-3.03 2.467-2.091 0-3.269-1.336-3.269-3.603V7.482c0-2.261 1.201-3.638 3.27-3.638 1.681 0 2.935 1.054 3.029 2.572v.088H9.875c-.088-.879-.768-1.512-1.729-1.512" />
-    </svg>
-    <div class="px-2">ALL COPYRIGHT RESERVED</div>
-  </div>
-</body>
+    <!-- footer -->
+    <div
+      class="text-bg-dark mt-3 py-3 text-center w-100 h-10 d-flex justify-content-center align-items-center sticky-bottom"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        fill="currentColor"
+        class="bi bi-c-circle"
+        viewBox="0 0 16 16"
+      >
+        <path
+          d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.146 4.992c-1.212 0-1.927.92-1.927 2.502v1.06c0 1.571.703 2.462 1.927 2.462.979 0 1.641-.586 1.729-1.418h1.295v.093c-.1 1.448-1.354 2.467-3.03 2.467-2.091 0-3.269-1.336-3.269-3.603V7.482c0-2.261 1.201-3.638 3.27-3.638 1.681 0 2.935 1.054 3.029 2.572v.088H9.875c-.088-.879-.768-1.512-1.729-1.512"
+        />
+      </svg>
+      <div class="px-2">ALL COPYRIGHT RESERVED</div>
+    </div>
+  </body>
 </html>

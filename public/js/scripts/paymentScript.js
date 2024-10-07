@@ -1,129 +1,124 @@
 import { uri } from "../common/server.js";
 import { renderProcessBtn } from "../view/paymentView.js";
 
-async function getCarByID(carID){
-  try{
-    let responseObj = await fetch(`${uri}/api/cars?carID=${carID}`, 
-      {
-        method: "GET",
-        headers: {
-          'Content-Type': 'application/json'
-        }
-    })
-    
-    let response = await responseObj.json()
-    
-    if (responseObj.ok && response.data === null){
+async function getCarByID(carID) {
+  try {
+    let responseObj = await fetch(`${uri}/api/cars?carID=${carID}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    let response = await responseObj.json();
+
+    if (responseObj.ok && response.data === null) {
       // find not car by this ID
-      return null
-    } else if (responseObj.ok && response.data.length > 0){
+      return null;
+    } else if (responseObj.ok && response.data.length > 0) {
       // find a car by this ID
-      return response.data
+      return response.data;
     } else {
       // other error
-      console.log("enter new Error loop")
-      throw new Error(response.message)
+      console.log("enter new Error loop");
+      throw new Error(response.message);
     }
   } catch (error) {
     // catch other error
-    alert('Error fetch to backend:', error)
-    console.log(error)
+    alert("Error fetch to backend:", error);
+    console.log(error);
   }
 }
 
-async function getParkingLotByID(lotID){
-  try{
-    let responseObj = await fetch(`${uri}/api/parkinglot?lotID=${lotID}`, 
-      {
-        method: "GET",
-        headers: {
-          'Content-Type': 'application/json'
-        }
-    })
-    
-    let response = await responseObj.json()
-    if (responseObj.ok && response.data === null){
+async function getParkingLotByID(lotID) {
+  try {
+    let responseObj = await fetch(`${uri}/api/parkinglot?lotID=${lotID}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    let response = await responseObj.json();
+    if (responseObj.ok && response.data === null) {
       // find not lot by this ID
-      return null
-    } else if (responseObj.ok && response.data.length > 0){
+      return null;
+    } else if (responseObj.ok && response.data.length > 0) {
       // find a lot by this ID
-      return response.data
+      return response.data;
     } else {
       // other error
-      console.log("enter new Error loop")
-      throw new Error(response.message)
+      console.log("enter new Error loop");
+      throw new Error(response.message);
     }
   } catch (error) {
     // catch other error
-    alert('Error fetch to backend:', error)
-    console.log(error)
+    alert("Error fetch to backend:", error);
+    console.log(error);
   }
 }
 
-async function postThirdPrime(prime, lotID, method='credit'){
+async function postThirdPrime(prime, lotID, method = "credit") {
   // get post data
-  let carID = window.location.href.split('/')[4]
-  let subTotal = document.getElementById('parkingFee').value
-  let userName = document.getElementById('userName').value
-  let phoneNumber = document.getElementById('phoneNumber').value
-  let email = document.getElementById('email').value
+  let carID = window.location.href.split("/")[4];
+  let subTotal = document.getElementById("parkingFee").value;
+  let userName = document.getElementById("userName").value;
+  let phoneNumber = document.getElementById("phoneNumber").value;
+  let email = document.getElementById("email").value;
 
-  
   // construct request body
   let requestBody = {
-    'prime': prime,
-    'car': {
-      'id': parseInt(carID),
-      'sub_total': parseInt(subTotal)
+    prime: prime,
+    car: {
+      id: parseInt(carID),
+      sub_total: parseInt(subTotal),
     },
-    'merchant_id': null,
-    'cardholder': null,
-    'result_url': null
-  }
-  if (method === 'credit'){
+    merchant_id: null,
+    cardholder: null,
+    result_url: null,
+  };
+  if (method === "credit") {
     // render btn
-    renderProcessBtn(false, true)
-    requestBody.merchant_id = 'J842671395_TAISHIN'
+    renderProcessBtn(false, true);
+    requestBody.merchant_id = "J842671395_TAISHIN";
     requestBody.cardholder = {
-      'phone_number': phoneNumber,
-      'name': userName,
-      'email': email
-    }
-  } else if(method !== 'credit'){
-    requestBody.merchant_id = `J842671395_${method.toUpperCase()}`
+      phone_number: phoneNumber,
+      name: userName,
+      email: email,
+    };
+  } else if (method !== "credit") {
+    requestBody.merchant_id = `J842671395_${method.toUpperCase()}`;
     requestBody.cardholder = {
-      'phone_number': '0912345678',
-      'name': 'Jimmy',
-      'email': 'abcd@gmial.com'
-    }
+      phone_number: "0912345678",
+      name: "Jimmy",
+      email: "abcd@gmial.com",
+    };
     requestBody.result_url = {
-      'frontend_redirect_url': `${uri}/thankyou/${lotID}`,
-      'backend_notify_url': `${uri}/api/third/thirdPay/notify`
-    }
+      frontend_redirect_url: `${uri}/thankyou/${lotID}`,
+      backend_notify_url: `${uri}/api/third/thirdPay/notify`,
+    };
   }
-  console.log(requestBody)
-  let responseObj = await fetch(`${uri}/api/third/${method}`,
-    {
-      method: 'POST',
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(requestBody)
-    }
-  )
-  let response = await responseObj.json()
-  
-  if(responseObj.ok && response.ok && method === 'credit'){
-    renderProcessBtn(true)
+  console.log(requestBody);
+  let responseObj = await fetch(`${uri}/api/third/${method}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(requestBody),
+  });
+  let response = await responseObj.json();
+
+  if (responseObj.ok && response.ok && method === "credit") {
+    renderProcessBtn(true);
     setTimeout(() => {
-      window.location.href = `${uri}/camera/${lotID}`
-    }, 3000)
-  } else if (responseObj.ok && response.error && method === 'credit'){
-    renderProcessBtn(false, false, response.message)
-  } else if (responseObj.ok && response.ok && method !== 'credit'){
+      window.location.href = `${uri}/camera/${lotID}`;
+    }, 3000);
+  } else if (responseObj.ok && response.error && method === "credit") {
+    renderProcessBtn(false, false, response.message);
+  } else if (responseObj.ok && response.ok && method !== "credit") {
     //redirect to line pay url
-    TPDirect.redirect(response.payment_url)
+    TPDirect.redirect(response.payment_url);
   }
 }
 
-export {getCarByID, getParkingLotByID, postThirdPrime}
+export { getCarByID, getParkingLotByID, postThirdPrime };
