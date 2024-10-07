@@ -1,7 +1,7 @@
 # Parking Lot Management & Online Payment System
 
 1. [Link to the project homepage](https://parkinglot.haohaoscreamandrun.online/)
-2. [中文版README連結](./README_CH.md)
+2. [中文版 README 連結](./README_CH.md)
 
 ## Catalogue
 
@@ -74,28 +74,28 @@ User with admin privilege can:
 ![backend structure](/public/images/backend-structure.png)
 
 - Domain
-   1. GoDaddy domain name, hosted and routed by AWS Route53.
+  1. GoDaddy domain name, hosted and routed by AWS Route53.
 - Back-end
-   1. Server built with Python FastAPI
-   2. AWS RDS MySQL database
-   3. Cache with Redis
-   4. Deploy with Docker images on AWS EC2 machine
-   5. Reverse proxy with Nginx
-   6. Connection distribute by AWS Load Balancer
-   7. Store images on AWS S3 bucket and cache at edge location by AWS CloudFront
+  1. Server built with Python FastAPI
+  2. AWS RDS MySQL database
+  3. Cache with Redis
+  4. Deploy with Docker images on AWS EC2 machine
+  5. Reverse proxy with Nginx
+  6. Connection distribute by AWS Load Balancer
+  7. Store images on AWS S3 bucket and cache at edge location by AWS CloudFront
 - Front-end
-   1. Built with Bootstrap toolkit
-   2. Google maps API for map
-   3. OpenCV.js & Tesseract.js for car license plate recognition
+  1. Built with Bootstrap toolkit
+  2. Google maps API for map
+  3. OpenCV.js & Tesseract.js for car license plate recognition
 
 #### High-light: Solution to reduce backend server load
 
 - Pure frontend repeatedly optical character recognition
-   1. Process photos with OpenCV.js to reduce noises
-   2. Recognize license number with robust OCR engine Tesseract.js
+  1. Process photos with OpenCV.js to reduce noises
+  2. Recognize license number with robust OCR engine Tesseract.js
 - Upload captured photo from frontend
-   1. Request S3 upload URL from backend
-   2. Post enter car photo from frontend, delete exit car photo directly from backend
+  1. Request S3 upload URL from backend
+  2. Post enter car photo from frontend, delete exit car photo directly from backend
 
 #### RESTful back-end APIs
 
@@ -115,39 +115,39 @@ Spatial index is used to speed up the query:
 
 Comparison of query with or without spatial index:
 
-| Compare | No index | Spatial Index (Bounding box method) |
-|:--|:--|:--|
-| **Cost of CPU** | 316 Unit | 45.3 Unit |
-| **Time** | 16.4 milliseconds | 2.66 milliseconds |
+| Compare         | No index          | Spatial Index (Bounding box method) |
+| :-------------- | :---------------- | :---------------------------------- |
+| **Cost of CPU** | 316 Unit          | 45.3 Unit                           |
+| **Time**        | 16.4 milliseconds | 2.66 milliseconds                   |
 
 ## Utilized Package
 
-| Package                  | Version    |
-|--------------------------|------------|
-| annotated-types          | 0.6.0      |
-| boto3                    | 1.34.147   |
-| botocore                 | 1.34.147   |
-| fastapi                  | 0.111.0    |
-| fastapi-cli              | 0.0.2      |
-| httpcore                 | 1.0.5      |
-| httptools                | 0.6.1      |
-| httpx                    | 0.27.0     |
-| mysql-connector-python   | 8.4.0      |
-| pydantic                 | 2.7.1      |
-| pydantic-extra-types     | 2.8.2      |
-| pydantic_core            | 2.18.2     |
-| Pygments                 | 2.18.0     |
-| PyJWT                    | 2.8.0      |
-| python-dateutil          | 2.9.0.post0|
-| python-dotenv            | 1.0.1      |
-| python-multipart         | 0.0.9      |
-| pytz                     | 2024.1     |
-| PyYAML                   | 6.0.1      |
-| requests                 | 2.32.3     |
-| s3transfer               | 0.10.2     |
-| starlette                | 0.37.2     |
-| shapely                  | 2.0.5      |
-| typer                    | 0.12.3     |
-| typing_extensions        | 4.11.0     |
-| uvicorn                  | 0.29.0     |
-| redis                    | 5.0.8      |
+| Package                | Version     |
+| ---------------------- | ----------- |
+| annotated-types        | 0.6.0       |
+| boto3                  | 1.34.147    |
+| botocore               | 1.34.147    |
+| fastapi                | 0.111.0     |
+| fastapi-cli            | 0.0.2       |
+| httpcore               | 1.0.5       |
+| httptools              | 0.6.1       |
+| httpx                  | 0.27.0      |
+| mysql-connector-python | 8.4.0       |
+| pydantic               | 2.7.1       |
+| pydantic-extra-types   | 2.8.2       |
+| pydantic_core          | 2.18.2      |
+| Pygments               | 2.18.0      |
+| PyJWT                  | 2.8.0       |
+| python-dateutil        | 2.9.0.post0 |
+| python-dotenv          | 1.0.1       |
+| python-multipart       | 0.0.9       |
+| pytz                   | 2024.1      |
+| PyYAML                 | 6.0.1       |
+| requests               | 2.32.3      |
+| s3transfer             | 0.10.2      |
+| starlette              | 0.37.2      |
+| shapely                | 2.0.5       |
+| typer                  | 0.12.3      |
+| typing_extensions      | 4.11.0      |
+| uvicorn                | 0.29.0      |
+| redis                  | 5.0.8       |

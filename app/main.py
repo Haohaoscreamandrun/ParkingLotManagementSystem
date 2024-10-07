@@ -1,4 +1,4 @@
-from fastapi import *
+from fastapi import FastAPI, Request, status, HTTPException
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.exceptions import RequestValidationError
@@ -56,32 +56,32 @@ app.mount("/public", StaticFiles(directory="./public"), name="public")
 # Static Pages
 
 @app.get('/', include_in_schema=False)
-async def inex(request: Request):
+async def static_index(request: Request):
   return FileResponse('./static/index.html', media_type="text/html")
 
 
 @app.get('/admin', include_in_schema=False)
-async def inex(request: Request):
+async def static_admin(request: Request):
   return FileResponse('./static/admin.html', media_type="text/html")
 
 
 @app.get('/choose/{lotID}', include_in_schema=False)
-async def inex(request: Request, lotID: int):
+async def static_choose(request: Request, lotID: int):
   return FileResponse('./static/choose.html', media_type="text/html")
 
 
 @app.get('/payment/{car_id}', include_in_schema=False)
-async def inex(request: Request, car_id: str):
+async def static_payment(request: Request, car_id: str):
   return FileResponse('./static/payment.html', media_type="text/html")
 
 
 @app.get('/camera/{parkinglotID}', include_in_schema=False)
-async def inex(request: Request):
+async def static_camera(request: Request):
   return FileResponse('./static/camera.html', media_type="text/html")
 
 
 @app.get('/thankyou/{parkinglotID}', include_in_schema=False)
-async def inex(request: Request):
+async def static_thankyou(request: Request):
   return FileResponse('./static/thankyou.html', media_type="text/html")
 
 # Error Handler

@@ -1,5 +1,4 @@
-from pydantic import BaseModel, Field, field_validator, ValidationError, EmailStr
-from pydantic_extra_types.coordinate import Coordinate
+from pydantic import BaseModel, Field, field_validator, EmailStr
 from typing import List, Optional
 import re
 from datetime import datetime
@@ -15,17 +14,19 @@ class Success(BaseModel):
 
 
 # Regex pattern
-pattern_password = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,20}$'
+pattern_password = r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,20}$"
+
 
 class AdminCredentials(BaseModel):
     account: str = Field(..., min_length=8, max_length=20)
     password: str = Field(..., min_length=8, max_length=20)
 
-    @field_validator('password')
+    @field_validator("password")
     def password_pattern(cls, v):
         if re.match(pattern_password, v) is None:
             raise ValueError(
-                'password should contain at least 1 uppercase, 1 lowercase and 1 number.')
+                "password should contain at least 1 uppercase, 1 lowercase and 1 number."
+            )
         return v
 
 
@@ -64,16 +65,17 @@ class ReturnCarsObj(BaseModel):
 
 
 class ReturnAdminParkingLots(BaseModel):
-    lot_id : int
-    lot_name : str
+    lot_id: int
+    lot_name: str
 
 
 class ReturnAdminParkingLotsObj(BaseModel):
     data: Optional[List[ReturnAdminParkingLots]]
 
+
 class RetrunParkingLot(BaseModel):
-    id : int
-    name : str
+    id: int
+    name: str
     longitude: float
     latitude: float
     address: Optional[str]
@@ -91,14 +93,17 @@ class PostCarPayment(BaseModel):
     id: int
     sub_total: int
 
+
 class PostHolderPayment(BaseModel):
     phone_number: str
     name: str
     email: EmailStr
 
+
 class PostResultURL(BaseModel):
     frontend_redirect_url: str
     backend_notify_url: str
+
 
 class PostThirdPayment(BaseModel):
     prime: str
@@ -107,11 +112,13 @@ class PostThirdPayment(BaseModel):
     cardholder: PostHolderPayment
     result_url: PostResultURL | None
 
+
 class PutCarInfo(BaseModel):
     carID: int
     lotID: int
     updateLicense: str
     isPaid: bool
+
 
 class DeleteCarInfo(BaseModel):
     car_license: str = Field(..., alias="carLicense")
