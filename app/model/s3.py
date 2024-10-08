@@ -19,8 +19,12 @@ def create_presigned_url(object_name):
             Bucket="wehelp-parkinglot.project",
             Key=f"{object_name}.png",
             ExpiresIn=120,
-            Fields={"Content-Type": "image/png"},
-            Conditions=[{"Content-Type": "image/png"}],
+            Fields={
+                "Content-Type": "image/png"
+            },  # Fields: Sets default values that will be included in the upload form.
+            Conditions=[
+                {"Content-Type": "image/png"}
+            ],  # Conditions: Enforces requirements or restrictions that the upload must comply with.
         )
     except ClientError as e:
         logging.error(e)

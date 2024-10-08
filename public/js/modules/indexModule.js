@@ -26,8 +26,8 @@ async function indexFlow() {
   locationWarning.show();
 
   // load parking lot list nad google map after agree on location utilization
-  let agreeCamera = document.getElementById("agreeCamera");
-  agreeCamera.addEventListener("click", async () => {
+  let agreeLocation = document.getElementById("agreeLocation");
+  agreeLocation.addEventListener("click", async () => {
     // render parking lots and init google map
     let parkingLotList = document.querySelector("#parkingLotList");
     let parkingLots = await getLocation();
