@@ -87,7 +87,7 @@ async function handleLicenseUpdate(license) {
     } else if (window.location.href.includes("camera")) {
       lotID = parseInt(window.location.href.split("/")[4].match(/\d+/g)[0]);
     }
-
+    // Cond 1: Enter parking lot
     if (enterRadio.checked) {
       let responsePost = await postNewCar(lotID, license);
       if (responsePost === true) {
@@ -98,6 +98,7 @@ async function handleLicenseUpdate(license) {
       } else if (typeof responsePost === "string") {
         drawCameraMessage(responsePost);
       }
+    // Cond 2: Exit parking lot
     } else if (exitRadio.checked) {
       let responseDelete = await deleteCar(lotID, license);
       if (responseDelete === true) {

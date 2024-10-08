@@ -42,7 +42,6 @@ function hideSpinner(success = "no") {
 // Login put submission
 export async function signInValidation(event) {
   // check if entered
-  // console.log("Sign-in function is fired.")
   // prevent submit default
   event.preventDefault();
   // submit variables

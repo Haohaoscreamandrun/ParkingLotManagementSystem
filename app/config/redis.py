@@ -10,7 +10,7 @@ REDIS_KEY = os.getenv("REDIS")
 
 
 # Connect to redis on port 6379
-def get_redis_cloud():
+def get_redis():
     try:
         r = redis.Redis(host="redis", port=6379, db=0, decode_responses=True)
         return r
@@ -19,7 +19,7 @@ def get_redis_cloud():
 
 
 def lookup_redis_return(key, parse_time=False):
-    r = get_redis_cloud()
+    r = get_redis()
     store_data = r.get(key)
     if store_data:
         print("Cache hit", key)
@@ -32,7 +32,7 @@ def lookup_redis_return(key, parse_time=False):
 
 
 def setup_redis(key, obj):
-    r = get_redis_cloud()
+    r = get_redis()
     print("Cache miss", key)
     my_result_json = json.dumps(obj, default=datetime_parser_json, ensure_ascii=False)
     r.set(key, my_result_json, ex=300)  # 5mins cache

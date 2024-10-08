@@ -13,7 +13,8 @@ class Success(BaseModel):
     ok: bool
 
 
-# Regex pattern
+# Regex pattern: At least one lowercase, one uppercase and one digit
+# \d equals to [0-9]
 pattern_password = r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,20}$"
 
 

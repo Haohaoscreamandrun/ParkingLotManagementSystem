@@ -77,17 +77,21 @@ function checkUploadCondition() {
 
 // recognition main logic
 async function processRecognition() {
+  // get the recognized license plate and OCR confidence 
   let [license, confidence] = await recognizeLicensePlate();
+  // remove the first result if there are three
   if (arrayLicense.length === 3) {
     arrayLicense.shift();
     arrayConfidence.shift();
   }
+  // push the latest OCR result
   if (license !== "") {
     arrayLicense.push(license);
     arrayConfidence.push(confidence);
   }
   console.log("Array License:", arrayLicense); // Debugging line
-  // check the conditions
+  
+  // Upload Cond: 3 identical OCR result && > 30 average confidence
   if (arrayLicense.length === 3 && checkUploadCondition()) {
     console.log("Upload Condition Met"); // Debugging line
     // show on screen
@@ -99,7 +103,7 @@ async function processRecognition() {
     // clear out previous data
     arrayLicense = [];
     arrayConfidence = [];
-    // return license to callback
+    // upload license
     if (licenseCallback) {
       licenseCallback(license);
     }
@@ -108,7 +112,7 @@ async function processRecognition() {
       licensePromiseResolve(license);
       licensePromiseResolve = null; // Clear the resolve function
     }
-    // give 10 secs break
+    // give 10 secs break and restart recognition loop
     stopRecognition();
     setTimeout(() => {
       console.log("Restarting Recognition"); // Debugging line

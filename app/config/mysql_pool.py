@@ -11,6 +11,7 @@ password_manager = os.getenv("RDS_PASSWORD_MANAGER")
 jwtkey = os.getenv("JWTKEY")
 
 # connection pool
+# Database connection pooling is a way to reduce the cost of opening and closing connections
 dbconfig = {
     "host": host_RDS,
     "user": user_manager,
